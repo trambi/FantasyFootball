@@ -1,0 +1,51 @@
+fantasy_football_tournament_core_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:index }
+getCoaches:
+    path:     /CoachList/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Coach:getCoachList }
+    requirements:
+        edition:  \d+
+getCoach:
+    path:     /Coach/{coachId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Coach:getCoach }
+    requirements:
+        coachId:  \d+
+getMatchs:
+    path:     /MatchList/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchList, round: 0 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+getPlayedMatchs:
+    path:     /PlayedMatchList/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getPlayedMatchList, round: 1 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+getToPlayMatchs:
+    path:     /ToPlayMatchList/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getToPlayMatchList, round: 1 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+getMatchsByCoach:
+    path:     /MatchListByCoach/{coachId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoach }
+    requirements:
+        coachId:  \d+
+getMatchsByCoachTeam:
+    path:     /MatchListByCoachTeam/{coachTeamId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoachTeam }
+    requirements:
+        coachTeamId:  \d+
+getCoachTeams:
+    path:     /CoachTeamList/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeamList }
+    requirements:
+        edition:  \d+
+getCoachTeam:
+    path:     /CoachTeam/{coachTeamId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeam }
+    requirements:
+        coachTeamId:  \d+
