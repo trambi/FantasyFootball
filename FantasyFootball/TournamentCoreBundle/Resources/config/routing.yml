@@ -1,5 +1,5 @@
-fantasy_football_tournament_core_homepage:
-    path:     /hello/{name}
+listFunctions:
+    path:     /ws
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:index }
 getCoaches:
     path:     /CoachList/{edition}
