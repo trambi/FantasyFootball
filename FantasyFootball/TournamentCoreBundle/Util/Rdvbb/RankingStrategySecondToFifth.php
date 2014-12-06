@@ -5,7 +5,7 @@ use FantasyFootball\TournamentCoreBundle\Util\IRankingStrategy;
 
 class RankingStrategySecondToFifth implements IRankingStrategy{
 	
-	public function useTriplettePoints(){
+	public function useCoachTeamPoints(){
 		return false;
 	}
 
@@ -42,7 +42,7 @@ class RankingStrategySecondToFifth implements IRankingStrategy{
     	}
  	}
   
-	public function compareTeams($team1,$team2){
+	public function compareCoachs($team1,$team2){
 		$retour =1;
     
 		$points1 = $team1->points;
@@ -94,8 +94,8 @@ class RankingStrategySecondToFifth implements IRankingStrategy{
 		return -$retour;
 	}
 	
-	public function compareTriplettes($triplette1,$triplette2){
-  		return $this->compareTeams($triplette1,$triplette2);
+	public function compareCoachTeams($coachTeam1,$coachTeam2){
+  		return $this->compareCoachs($coachTeam1,$coachTeam2);
   	}
   	
   public function computeCoachTeamPoints(&$points1,&$points2,$td1Array,$td2Array,$cas1Array,$cas2Array){

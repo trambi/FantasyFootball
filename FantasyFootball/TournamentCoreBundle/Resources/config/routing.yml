@@ -49,3 +49,13 @@ getCoachTeam:
     defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeam }
     requirements:
         coachTeamId:  \d+
+getCoachTeamRanking:
+    path:     /Ranking/CoachTeam/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRanking }
+    requirements:
+        edition:  \d+
+getCoachRanking:
+    path:     /Ranking/Coach/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRanking }
+    requirements:
+        edition:  \d+

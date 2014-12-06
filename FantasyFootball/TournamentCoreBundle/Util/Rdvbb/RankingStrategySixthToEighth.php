@@ -8,7 +8,7 @@ class RankingStrategySixthToEighth implements IRankingStrategy{
   const FINALISTE = 1;
   const NORMAL = 0;
 
-	public function useTriplettePoints(){
+	public function useCoachTeamPoints(){
 		return false;
 	}  
   
@@ -39,7 +39,7 @@ class RankingStrategySixthToEighth implements IRankingStrategy{
     }
   }
 
-  	public function compareTeams($team1,$team2){
+  	public function compareCoachs($team1,$team2){
 		$retour =1;
 		if(isset($team1->special)){
 			$special1 = $team1->special;
@@ -110,8 +110,8 @@ class RankingStrategySixthToEighth implements IRankingStrategy{
 		return -$retour;
 	}
   
-  public function compareTriplettes($triplette1,$triplette2){
-  		return $this->compareTeams($triplette1,$triplette2);
+  public function compareCoachTeam($coachTeam1,$coachTeam2){
+  		return $this->compareCoachs($coachTeam1,$coachTeam2);
   	}
   	
   public function computeCoachTeamPoints(&$points1,&$points2,$td1Array,$td2Array,$cas1Array,$cas2Array){

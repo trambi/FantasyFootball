@@ -89,8 +89,8 @@ class RankingStrategyTwelfth implements IRankingStrategy{
 	}
 
   public function compareCoachTeams($coachTeam1,$coachTeam2){
-  		$points1 = $triplette1->coachTeamPoints;
-    	$points2 = $triplette2->coachTeamPoints;
+  		$points1 = $coachTeam1->coachTeamPoints;
+    	$points2 = $coachTeam2->coachTeamPoints;
     	if( $points1 > $points2 ){
 			return -1;
 		}
