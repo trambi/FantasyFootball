@@ -110,7 +110,7 @@ class RankingStrategySixthToEighth implements IRankingStrategy{
 		return -$retour;
 	}
   
-  public function compareCoachTeam($coachTeam1,$coachTeam2){
+  public function compareCoachTeams($coachTeam1,$coachTeam2){
   		return $this->compareCoachs($coachTeam1,$coachTeam2);
   	}
   	

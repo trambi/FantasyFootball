@@ -101,7 +101,7 @@ class RankingStrategySecondToFifth implements IRankingStrategy{
   public function computeCoachTeamPoints(&$points1,&$points2,$td1Array,$td2Array,$cas1Array,$cas2Array){
   		$points1 = 0;
 		$points2 = 0;
-		for( $i = 0 ; $i < 3 ; $i++){
+		foreach( $td1Array as $i => $value ){
 			$tempPoints1 = 0;
 			$tempPoints2 = 0;
   			$this->computePoints(&$tempPoints1,&$tempPoints,$td1Array[$i],$td2Array[$i],$cas1Array[$i],$cas2Array[$i]);

@@ -84,6 +84,8 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 				$race = $this->resultFetchObject($result);
 				while(null != $race)
 				{
+					$race->nom_fr = mb_convert_encoding($race->nom_fr,'UTF-8');
+					$race->nom_fr_2 = mb_convert_encoding($race->nom_fr_2,'UTF-8');
 					$races[$race->id] = $race;
 					$race = $this->resultFetchObject($result);
 				}
@@ -128,8 +130,11 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			if ($result) 
 			{
 				$preteam = $this->resultFetchObject($result);
+				
 				while(null != $preteam){
 					//print_r($preteam);
+					$preteam->coach = mb_convert_encoding($preteam->coach,'UTF-8');
+					$preteam->name = mb_convert_encoding($preteam->name,'UTF-8');
 					$preteams[$preteam->id] = $preteam;
 					$preteam =$this->resultFetchObject($result);
 				}
@@ -198,15 +203,15 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 		
 		protected function convertRowInCoachTeamElement($row){
 			$coachTeamElt = (object) array();
-			$coachTeamElt->coach = $row[0];
-			$coachTeamElt->coachTeamId = $row[1];
-			$coachTeamElt->coachTeamName = $row[2];
-			$coachTeamElt->teamId = $row[3];
-			$coachTeamElt->teamName = $row[4];
-			$coachTeamElt->points = $row[5];
-			$coachTeamElt->opponentsPoints = $row[6];
-			$coachTeamElt->netTd = $row[7];
-			$coachTeamElt->casualties = $row[8];
+			$coachTeamElt->coach = mb_convert_encoding($row[0],'UTF-8');
+			$coachTeamElt->coachTeamId = intval($row[1]);
+			$coachTeamElt->coachTeamName = mb_convert_encoding($row[2],'UTF-8');
+			$coachTeamElt->teamId = intval($row[3]);
+			$coachTeamElt->teamName = mb_convert_encoding($row[4],'UTF-8');
+			$coachTeamElt->points = intval($row[5]);
+			$coachTeamElt->opponentsPoints = intval($row[6]);
+			$coachTeamElt->netTd = intval($row[7]);
+			$coachTeamElt->casualties = intval($row[8]);
 			$coachTeamElt->isPrebooking = 0;
 			return $coachTeamElt;
 		}
@@ -851,6 +856,9 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			$coachTeamMatchElt = $this->resultFetchObject($result);
 			
 			while(null !== $coachTeamMatchElt){
+				$coachTeamMatchElt->coachTeam = mb_convert_encoding($coachTeamMatchElt->coachTeam, "UTF-8");
+				$coachTeamMatchElt->coachTeamName = mb_convert_encoding($coachTeamMatchElt->coachTeamName, "UTF-8");
+				$coachTeamMatchElt->coach = mb_convert_encoding($coachTeamMatchElt->coach, "UTF-8");
 				if ( ( ( 0 !== $currentCoachTeamId ) 
 						&& ( $currentCoachTeamId !== $coachTeamMatchElt->coachTeam ) ) 
 					|| ( $currentRound !== $coachTeamMatchElt->round ) ) {
@@ -937,9 +945,11 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			foreach ( $coachTeams as $coachTeam ){
 				foreach ( $coachTeam->teams as $coach){
 					foreach ( $coach->opponentIdArray as $opponentId ){
-						$coach->opponentsPoints += $pointsByTeamId[$opponentId];
-						$coachTeam->opponentsPoints += $pointsByTeamId[$opponentId];
-					}	
+						if( true === array_key_exists($opponentId, $pointsByTeamId) ){
+							$coach->opponentsPoints += $pointsByTeamId[$opponentId];
+							$coachTeam->opponentsPoints += $pointsByTeamId[$opponentId];
+						}
+					}
 				}
 			}
 			
