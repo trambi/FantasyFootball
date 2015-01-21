@@ -9,10 +9,10 @@ class RankingStrategyFirst implements IRankingStrategy{
 		return false;
 	}
 
-  public function computePoints(&$points1,&$points,$td1,$td2,$cas1,$cas2){
+  public function computePoints(&$points1,&$points2,$td1,$td2,$cas1,$cas2){
     	if( $td1 === $td2 ){
-     		$points1 = 3;
-     		$points2 = 3;
+     		$points1 = 2;
+     		$points2 = 2;
     	}
 		if( $td1 === $td2+1 ){
      		$points1 = 5;
@@ -43,7 +43,7 @@ class RankingStrategyFirst implements IRankingStrategy{
  	}
   
 	public function compareCoachs($team1,$team2){
-		$retour =1;
+		$retour = 1;
     
 		$points1 = $team1->points;
 		$points2 = $team2->points;
@@ -52,18 +52,18 @@ class RankingStrategyFirst implements IRankingStrategy{
 		$cas1 = $team1->casualties;
 		$cas2 = $team2->casualties;
 		
-		if(($points1 === $points2)  
+		if(( $points1 === $points2 )  
 			&& ($netTd1 == $netTd2) 
 			&& ($cas1 == $cas2) ){
 		  $retour = 0;
 		}else{
-		  if($points1 > $points2){
+		  if( $points1 > $points2 ){
 			$retour = 1;
 		  }
-		  if($points1 < $points2){
+		  if( $points1 < $points2 ){
 			$retour = -1;
 		  }
-		  if($points1 === $points2){
+		  if( $points1 === $points2 ){
 			  	if($netTd1 > $netTd2){
 					$retour = 1;
 			  	}
@@ -99,44 +99,6 @@ class RankingStrategyFirst implements IRankingStrategy{
 		}
   	}
   
-  public function teamsCanPlay($team1,$team2){
-    $opponentCount = 0;
-    $temp = "adv_0";
-    $id1 =  $team1['id'];
-    $id2 =  $team2['id'];
-    $return = 1;
-    while(isset($team1[$temp])){
-      if($team1[$temp] == $id2){
-        $return = 0;
-        break;
-      }
-      $opponentCount++;
-      $temp = "adv_$opponentCount";
-    }
-    if(isset($_GET['debug'])and $_GET['debug']==1){
-      echo '* jouable : equipe 1 ',$id,'(',$team1['coach'],')','equipe 2 ',$id2,'(',$team2['coach'],')','retour ',$return,"<br />\n";
-    }
-    return $return;
-  }
-
-  // retourne l'indice de la premiere equipe libre sur le tableau du classement //
-  public function getFirstFreeTeamIndex(&$avEquipes, $start){
-    $count = $start;
-    $teamNumber = count($avEquipes);
-    if(isset($_GET['debug'])and $_GET['debug']==1){
-      echo "! rang_libre : equipe libre ".$avEquipes[$count]['libre']."<br />\n";
-    }
-    while( ($avEquipes[$count]['libre']==0) && ($count <$teamNumber)){
-      $count ++;
-    }
-    if($count < $teamNumber){
-      $avEquipes[$count]['libre'] = 0;
-    }
-    if(isset($_GET['debug'])and $_GET['debug']==1){
-      echo "! rang_libre rang = $start, return $count<br />\n";
-    }
-    return $count;
-  }
   public function useOpponentPointsOfYourOwnMatch(){
   	return true;	
   }

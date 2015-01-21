@@ -9,7 +9,7 @@ class RankingStrategySecondToFifth implements IRankingStrategy{
 		return false;
 	}
 
-  public function computePoints(&$points1,&$points,$td1,$td2,$cas1,$cas2){
+  public function computePoints(&$points1,&$points2,$td1,$td2,$cas1,$cas2){
     	if( $td1 === $td2 ){
      		$points1 = 3;
      		$points2 = 3;
@@ -109,46 +109,7 @@ class RankingStrategySecondToFifth implements IRankingStrategy{
 			$points2 += $tempPoints2;
 		}
   	}
-  
-  public function teamsCanPlay($team1,$team2){
-    $opponentCount = 0;
-    $temp = "adv_0";
-    $id1 =  $team1['id'];
-    $id2 =  $team2['id'];
-    $return = 1;
-    while(isset($team1[$temp])){
-      if($team1[$temp] == $id2){
-        $return = 0;
-        break;
-      }
-      $opponentCount++;
-      $temp = "adv_$opponentCount";
-    }
-    if(isset($_GET['debug'])and $_GET['debug']==1){
-      echo '* jouable : equipe 1 ',$id,'(',$team1['coach'],')','equipe 2 ',$id2,'(',$team2['coach'],')','retour ',$return,"<br />\n";
-    }
-    return $return;
-  }
 
-  // retourne l'indice de la premiere equipe libre sur le tableau du classement //
-  public function getFirstFreeTeamIndex(&$avEquipes, $start){
-    $count = $start;
-    $teamNumber = count($avEquipes);
-    if(isset($_GET['debug'])and $_GET['debug']==1){
-      echo "! rang_libre : equipe libre ".$avEquipes[$count]['libre']."<br />\n";
-    }
-    while( ($avEquipes[$count]['libre']==0) && ($count <$teamNumber)){
-      $count ++;
-    }
-    if($count < $teamNumber){
-      $avEquipes[$count]['libre'] = 0;
-    }
-    if(isset($_GET['debug'])and $_GET['debug']==1){
-      echo "! rang_libre rang = $start, return $count<br />\n";
-    }
-    return $count;
-  }
-  
   public function useOpponentPointsOfYourOwnMatch(){
   	return false;	
   }
