@@ -54,9 +54,37 @@ class RankingController
     $data = new DataProvider();
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
-    $ranking = $data->getTeamRankingBetweenRounds($edition,$strategy,0,$editionObj->currentRound);
-    return new JsonResponse($ranking);
+    $mainRanking = $data->getMainCoachRanking($editionObj,$strategy);
+    return new JsonResponse($mainRanking);
   }
+  
+  public function getCoachRankingByTouchdownAction($edition)
+  {
+    $data = new DataProvider();
+    $editionObj = $data->getEditionById($edition);
+    $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
+    $tdRanking = $data->getCoachRankingByTouchdown($editionObj,$strategy);
+    return new JsonResponse($tdRanking);
+  }
+  
+  public function getCoachRankingByCasualtiesAction($edition)
+  {
+    $data = new DataProvider();
+    $editionObj = $data->getEditionById($edition);
+    $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
+    $casRanking = $data->getCoachRankingByCasualties($editionObj,$strategy);
+    return new JsonResponse($casRanking);
+  }
+  
+  public function getCoachRankingByComebackAction($edition)
+  {
+    $data = new DataProvider();
+    $editionObj = $data->getEditionById($edition);
+    $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
+    $comebackRanking = $data->getCoachRankingByComeback($editionObj,$strategy);
+    return new JsonResponse($comebackRanking);
+  }
+  
 }
 
 ?>

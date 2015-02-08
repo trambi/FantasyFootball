@@ -69,7 +69,7 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 		const resumeMatchQuery ='UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
 		const deleteMatchQuery ='DELETE FROM tournament_match';
 		const updateRankingQuery ='UPDATE INTO tournament_coach SET points=?,opponents_points=?,net_td=?,casualties=? WHERE id=?';
-		const editionQuery='SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy,pairing_strategy as pairingStrategy FROM tournament_edition';
+		const editionQuery='SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy,pairing_strategy as pairingStrategy, first_day_round as firstDayRound FROM tournament_edition';
 		const deletepreCoachQuery ='DELETE FROM tournament_precoach';
 		const updateTeamQuery ='UPDATE INTO tournament_coach SET team_name=?,name=?,id_race=?,email=?,fan_factor=?,naf_number=?,edition=?,ready=? WHERE id=?';
 	
@@ -333,8 +333,12 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			$match->status = $row[14];
 			$match->edition = intval($row[15]);
 			$match->round = intval($row[16]);
-			$match->finale = intval($row[17]);
-			
+			 
+			if ( "true" === $row[17] ){
+				$match->finale = true;
+			}else{
+				$match->finale = false;	
+			}
 			return $match;
 		}
 		
@@ -683,7 +687,105 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			return $coachs;
 		}
 		
-		public function getTeamRankingBetweenRounds($edition,$rankingStrategy,$beginRound,$endRound){
+		public function getMainCoachRanking($edition,$rankingStrategy)
+		{
+			$mainRanking = $this->getCoachRankingBetweenRounds($edition->id,0,$edition->currentRound);
+			usort($mainRanking, array($rankingStrategy, 'compareCoachs'));
+			//print_r($mainRanking);
+			return $mainRanking;
+		}
+
+		public function compareCoachsByTouchdown($coach1,$coach2)
+		{
+			$td1 = $coach1->td;
+			$td2 = $coach2->td;
+			if( $td1 === $td2 ){
+		  		$return = 0;
+			}elseif ( $td1 > $td2 ){
+			  $return = -1;
+		  	}
+		  	else{
+			  $return = 1;
+		  	}
+		  	return $return;	
+		}
+		
+		public function getCoachRankingByTouchdown($edition,$rankingStrategy)
+		{
+			$tdRanking = $this->getCoachRankingBetweenRounds($edition->id,0,$edition->currentRound);
+			usort($tdRanking, array($this, 'compareCoachsByTouchdown'));
+			return $tdRanking;
+		}
+		
+		public function compareCoachsByCasualties($coach1,$coach2)
+		{
+			$casualties1 = $coach1->casualties;
+			$casualties2 = $coach2->casualties;
+			if( $casualties1 === $casualties2 ){
+		  		$return = 0;
+			}elseif ( $casualties1 > $casualties2 ){
+				$return = -1;
+		  	}else{
+				$return = 1;
+		  	}
+		  return $return;	
+		}
+		
+		public function getCoachRankingByCasualties($edition,$rankingStrategy)
+		{
+			$casualtiesRanking = $this->getCoachRankingBetweenRounds($edition->id,0,$edition->currentRound);
+			usort($casualtiesRanking, array($this, 'compareCoachsByCasualties'));
+			return $casualtiesRanking;
+		}
+		
+		public function compareCoachsByComeback($coach1,$coach2)
+		{
+			$finalRanking1 = $coach1->finalRanking;
+			$finalRanking2 = $coach2->finalRanking;
+			$diffRanking1 = $coach1->diffRanking ;
+			$diffRanking2 = $coach2->diffRanking;
+			if( $diffRanking1 === $diffRanking2 ){
+				if( $finalRanking1 > $finalRanking2 ){
+					$return = -1;	
+				}else{
+					$return = 1;	
+				}
+			}elseif ( $diffRanking1 > $diffRanking2 ){
+				$return = -1;
+		  	}else{
+				$return = 1;
+		  	}
+		  return $return;	
+		}		
+		
+		public function getCoachRankingByComeback($edition,$rankingStrategy)
+		{
+			$finalRanking = $this->getMainCoachRanking($edition,$rankingStrategy);
+			$firstDayRanking = $this->getCoachRankingBetweenRounds($edition->id,0,$edition->firstDayRound);
+			usort($firstDayRanking, array($rankingStrategy, 'compareCoachs'));
+			$coachNumber = count($finalRanking);
+			for( $i = 0 ; $i < $coachNumber ; $i++ ){
+				$finalCoach = $finalRanking[$i];
+				$idToFind = $finalCoach->id;
+				$finalCoach->finalRanking = $i + 1;
+				for ( $j = 0 ; $j < $coachNumber ; $j++ ){
+					$firstDayCoach = $firstDayRanking[$j];
+					if( $firstDayCoach-> id === $idToFind ){
+						break;
+					}
+				}
+				// We find it !
+				if( $j !== $coachNumber){
+					$finalCoach->firstDayRanking = $j + 1;
+				}
+				$finalCoach->diffRanking = $j - $i ; 
+				$finalRanking[$i] = $finalCoach;
+			}			
+			usort($finalRanking, array($this, 'compareCoachsByComeback'));
+			return $finalRanking;
+		}		
+		
+		protected function getCoachRankingBetweenRounds($edition,$beginRound,$endRound){
 			$coachs = $this->getCoachsByEdition($edition,true);
 			
 			$query = self::matchQuery;
@@ -703,13 +805,13 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 				$coach1->opponentDirectPoints = $match->points2;
 				$coach1->opponents[]=$match->teamId2;
 				$coach2 = $coachs[$match->teamId2];
-				if("true" == $match->finale){
+				if( true === $match->finale ){
 					if($match->td1 > $match->td2){
-						$coach1->special=2;
-						$coach2->special=1;
+						$coach1->special = 2;
+						$coach2->special = 1;
 					}else{
-						$coach1->special=1;
-						$coach2->special=2;
+						$coach1->special = 1;
+						$coach2->special = 2;
 					}
 				}
 				
@@ -743,10 +845,10 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 				}
 				$coach->opponentsPoints = $OpponentsPoints;
 			}
-			usort($coachs,array($rankingStrategy,'compareCoachs'));
-			
 			return $coachs;
 		}
+		
+		
 		
 		public function updateRanking($edition,$coachs){
 			$error = 0;

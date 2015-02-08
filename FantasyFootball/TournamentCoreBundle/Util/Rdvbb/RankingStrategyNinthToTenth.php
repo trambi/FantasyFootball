@@ -13,41 +13,41 @@ class RankingStrategyNinthToTenth implements IRankingStrategy{
 	}  
   
   public function computePoints(&$points1,&$points2,$td1,$td2,$cas1,$cas2){
-    if($td1 == $td2){
+    if($td1 === $td2){
      $points1 = 4;
      $points2 = 4;
-    }else if( $td1 == ($td2+1) ){
+    }else if( $td1 === ($td2+1) ){
      $points1 = 10;
      $points2 = 1;
     }else if($td1 > ($td2+1) ){
      $points1 = 10;
      $points2 = 0;
-    }else if( $td2 == ($td1+1) ){
+    }else if( $td2 === ($td1+1) ){
      $points1 = 1;
      $points2 = 10;
     }else if($td2 > ($td1+1) ){
      $points1 = 0;
      $points2 = 10;
-    }else if(-1 == $td1 ){
+    }else if(-1 === $td1 ){
       $points1 = -1;
       $points2 = 10;
       $td2 = 2;
-    }else if(-1 == $td2 ){
+    }else if(-1 === $td2 ){
       $points2 = -1;
       $points1 = 10;
       $td1 = 2;
     }
   }
 	
-	public function compareCoachs($team1,$team2){
-		$retour =1;
-		if(isset($team1->special)){
-			$special1 = $team1->special;
+	public function compareCoachs($coach1,$coach2){
+		$return = 1;
+		if( isset($coach1->special) ){
+			$special1 = $coach1->special;
 		}else{
 			$special1 = 0;
 		}
-		if(isset($team2->special)){
-			$special2 = $team2->special;
+		if(isset($coach2->special)){
+			$special2 = $coach2->special;
 		}else{
 			$special2 = 0;
 		}
@@ -60,53 +60,53 @@ class RankingStrategyNinthToTenth implements IRankingStrategy{
 		}else if(self::FINALISTE == $special2){
 			return 1;
 		}
-		$points1 = $team1->points;
-		$points2 = $team2->points;
-		$opponentPoints1 = $team1->opponentsPoints;
-		$opponentPoints2 = $team2->opponentsPoints;
-		$netTd1 = $team1->netTd;
-		$netTd2 = $team2->netTd;
-		$cas1 = $team1->casualties;
-		$cas2 = $team2->casualties;
+		$points1 = $coach1->points;
+		$points2 = $coach2->points;
+		$opponentPoints1 = $coach1->opponentsPoints;
+		$opponentPoints2 = $coach2->opponentsPoints;
+		$netTd1 = $coach1->netTd;
+		$netTd2 = $coach2->netTd;
+		$cas1 = $coach1->casualties;
+		$cas2 = $coach2->casualties;
 		
-		if(($points1 == $points2) 
-			&& ($opponentPoints1 == $opponentPoints2) 
-			&& ($netTd1 == $netTd2) 
-			&& ($cas1 == $cas2) ){
-			$retour = 0;
+		if(($points1 === $points2) 
+			&& ($opponentPoints1 === $opponentPoints2) 
+			&& ($netTd1 === $netTd2) 
+			&& ($cas1 === $cas2) ){
+			$return = 0;
 		}else{
 			if($points1 > $points2){
-				$retour = 1;
+				$return = -1;
 		  	}
 		  	if($points1 < $points2){
-				$retour = -1;
+				$return = 1;
 		  	}
-		  	if($points1 == $points2){
+		  	if($points1 === $points2){
 				if($opponentPoints1 > $opponentPoints2){
-			  		$retour = 1;
+			  		$return = -1;
 				}
 				if($opponentPoints1 < $opponentPoints2){
-			  		$retour = -1;
+			  		$return = 1;
 				}
-				if($opponentPoints1 == $opponentPoints2){
+				if($opponentPoints1 === $opponentPoints2){
 			 		if($netTd1 > $netTd2){
-						$retour = 1;
+						$return = -1;
 			  		}
 			  		if($netTd1 < $netTd2){
-						$retour = -1;
+						$return = 1;
 			  		}
-			  		if($netTd1 == $netTd2){
+			  		if($netTd1 === $netTd2){
 						if($cas1 > $cas2){
-				  			$retour = 1;
+				  			$return = -1;
 						}
 						if($cas1 < $cas2){
-				  			$retour = -1;
+				  			$return = 1;
 						}
 			  		}
 				}
 		  	}
 		}
-		return -$retour;
+		return $return;
 	}
 
   
