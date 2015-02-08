@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Lun 24 Novembre 2014 à 01:34
+-- Généré le: Dim 08 Février 2015 à 02:26
 -- Version du serveur: 5.1.60
 -- Version de PHP: 5.3.8
 
@@ -810,6 +810,9 @@ CREATE TABLE IF NOT EXISTS `tournament_edition` (
   `current_round` int(11) NOT NULL,
   `use_finale` tinyint(1) NOT NULL DEFAULT '1',
   `full_triplette` tinyint(4) NOT NULL DEFAULT '1',
+  `ranking_strategy` varchar(65) COLLATE utf8_unicode_ci NOT NULL,
+  `pairing_strategy` varchar(65) COLLATE utf8_unicode_ci NOT NULL,
+  `first_day_round` int(11) NOT NULL DEFAULT '3',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -817,19 +820,19 @@ CREATE TABLE IF NOT EXISTS `tournament_edition` (
 -- Contenu de la table `tournament_edition`
 --
 
-INSERT INTO `tournament_edition` (`id`, `day_1`, `day_2`, `round_number`, `current_round`, `use_finale`, `full_triplette`) VALUES
-(1, '2003-05-10', '2003-05-11', 6, 6, 1, 0),
-(2, '2004-07-03', '2004-07-04', 6, 6, 1, 0),
-(3, '2005-06-25', '2005-06-26', 6, 6, 1, 0),
-(4, '2006-06-24', '2006-06-25', 6, 6, 1, 0),
-(5, '2007-06-30', '2007-07-01', 5, 5, 1, 0),
-(6, '2008-07-05', '2008-07-06', 5, 5, 1, 0),
-(7, '2009-07-04', '2009-07-05', 5, 5, 1, 0),
-(8, '2010-06-26', '2010-06-27', 5, 5, 1, 0),
-(9, '2011-07-02', '2011-07-02', 5, 5, 1, 0),
-(10, '2012-06-30', '2012-07-01', 5, 5, 1, 0),
-(11, '2013-09-28', '2013-09-29', 5, 5, 0, 1),
-(12, '2014-10-04', '2014-10-05', 5, 5, 0, 1);
+INSERT INTO `tournament_edition` (`id`, `day_1`, `day_2`, `round_number`, `current_round`, `use_finale`, `full_triplette`, `ranking_strategy`, `pairing_strategy`, `first_day_round`) VALUES
+(1, '2003-05-10', '2003-05-11', 6, 6, 1, 0, 'RdvbbFirst', '', 3),
+(2, '2004-07-03', '2004-07-04', 6, 6, 1, 0, 'RdvbbSecondToFifth', '', 3),
+(3, '2005-06-25', '2005-06-26', 6, 6, 1, 0, 'RdvbbSecondToFifth', '', 3),
+(4, '2006-06-24', '2006-06-25', 6, 6, 1, 0, 'RdvbbSecondToFifth', '', 3),
+(5, '2007-06-30', '2007-07-01', 5, 5, 1, 0, 'RdvbbSecondToFifth', '', 3),
+(6, '2008-07-05', '2008-07-06', 5, 5, 1, 0, 'RdvbbSixthToEighth', '', 3),
+(7, '2009-07-04', '2009-07-05', 5, 5, 1, 0, 'RdvbbSixthToEighth', '', 3),
+(8, '2010-06-26', '2010-06-27', 5, 5, 1, 0, 'RdvbbSixthToEighth', '', 3),
+(9, '2011-07-02', '2011-07-02', 5, 5, 1, 0, 'RdvbbNinthToTenth', '', 3),
+(10, '2012-06-30', '2012-07-01', 5, 5, 1, 0, 'RdvbbNinthToTenth', '', 3),
+(11, '2013-09-28', '2013-09-29', 5, 5, 0, 1, 'RdvbbEleventh', '', 3),
+(12, '2014-10-04', '2014-10-05', 5, 5, 0, 1, 'RdvbbTwelfth', '', 3);
 
 -- --------------------------------------------------------
 
@@ -2360,7 +2363,7 @@ INSERT INTO `tournament_match` (`id`, `id_coach_1`, `id_coach_2`, `td_1`, `td_2`
 (1935, 543, 531, 0, 1, 4, 1, 10, 0, 5, 'false', 10, 'resume', 17),
 (1936, 539, 513, 2, 1, 4, 10, 1, 5, 0, 'false', 10, 'resume', 18),
 (1937, 515, 511, 1, 1, 4, 4, 4, 1, 2, 'false', 10, 'resume', 19),
-(1938, 523, 528, 1, 2, 5, 1, 10, 1, 4, 'false', 10, 'resume', 1),
+(1938, 523, 528, 1, 2, 5, 1, 10, 1, 4, 'true', 10, 'resume', 1),
 (1939, 529, 516, 0, 0, 5, 4, 4, 5, 2, 'false', 10, 'resume', 2),
 (1940, 522, 540, 1, 2, 5, 1, 10, 2, 2, 'false', 10, 'resume', 3),
 (1941, 541, 526, 0, 5, 5, 0, 10, 1, 4, 'false', 10, 'resume', 4),
@@ -2590,10 +2593,10 @@ CREATE TABLE IF NOT EXISTS `tournament_precoach` (
 CREATE TABLE IF NOT EXISTS `tournament_race` (
   `edition` tinyint(4) NOT NULL DEFAULT '1',
   `id_race` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
-  `nom_fr` varchar(33) CHARACTER SET latin1 DEFAULT '',
-  `nom_en` varchar(33) CHARACTER SET latin1 DEFAULT '',
-  `nom_en_2` varchar(33) CHARACTER SET latin1 DEFAULT '',
-  `nom_fr_2` varchar(33) CHARACTER SET latin1 DEFAULT '',
+  `nom_fr` varchar(33) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nom_en` varchar(33) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nom_en_2` varchar(33) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nom_fr_2` varchar(33) COLLATE utf8_unicode_ci DEFAULT NULL,
   `reroll` tinyint(3) unsigned DEFAULT '5',
   PRIMARY KEY (`id_race`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=25 ;
