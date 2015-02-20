@@ -2,15 +2,17 @@
 
 namespace FantasyFootball\TournamentCoreBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 
-class CoachController
+class CoachController extends Controller
 {
   public function getCoachListAction($edition)
   {
-    $data = new DataProvider();
+  	 $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $coaches = $data->getCoachsByEdition($edition);
 /*    
     foreach($coaches as $coach){
@@ -29,7 +31,8 @@ class CoachController
   }
   public function getCoachAction($coachId)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $coach = $data->getCoachById($coachId);
     return new JsonResponse($coach);
   }

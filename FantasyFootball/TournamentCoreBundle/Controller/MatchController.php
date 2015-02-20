@@ -2,38 +2,44 @@
 
 namespace FantasyFootball\TournamentCoreBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
 
-class MatchController
+class MatchController extends Controller
 {
   public function getPlayedMatchListAction($edition,$round)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getPlayedMatchsByEditionAndRound($edition,$round);
     return new JsonResponse($matchs);
   }
   public function getToPlayMatchListAction($edition,$round)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getToPlayMatchsByEditionAndRound($edition,$round);
     return new JsonResponse($matchs);
   }
   public function getMatchListAction($edition,$round)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getMatchsByEditionAndRound($edition,$round);
     return new JsonResponse($matchs);
   }
   public function getMatchListByCoachAction($coachId)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getMatchsByCoach($coachId);
     return new JsonResponse($matchs);
   }
   public function getMatchListByCoachTeamAction($coachTeamId)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getMatchsByCoachTeam($coachTeamId);
     return new JsonResponse($matchs);
   }

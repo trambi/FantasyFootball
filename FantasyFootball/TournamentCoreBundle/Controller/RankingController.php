@@ -2,15 +2,17 @@
 
 namespace FantasyFootball\TournamentCoreBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
 use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 
-class RankingController
+class RankingController extends Controller
 {
   public function getCoachTeamRankingAction($edition)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
     $ranking = $data->getCoachTeamRanking($edition,$strategy);
@@ -51,7 +53,8 @@ class RankingController
   
   public function getCoachRankingAction($edition)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
     $mainRanking = $data->getMainCoachRanking($editionObj,$strategy);
@@ -60,7 +63,8 @@ class RankingController
   
   public function getCoachRankingByTouchdownAction($edition)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
     $tdRanking = $data->getCoachRankingByTouchdown($editionObj,$strategy);
@@ -69,7 +73,8 @@ class RankingController
   
   public function getCoachRankingByCasualtiesAction($edition)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
     $casRanking = $data->getCoachRankingByCasualties($editionObj,$strategy);
@@ -78,7 +83,8 @@ class RankingController
   
   public function getCoachRankingByComebackAction($edition)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
     $comebackRanking = $data->getCoachRankingByComeback($editionObj,$strategy);
