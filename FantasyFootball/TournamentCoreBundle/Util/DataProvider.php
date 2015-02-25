@@ -240,7 +240,7 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 		protected function getCoachTeamsByClause($clause){
 			$query = self::coachTeamQuery;
 			$query .= ' WHERE '.$clause;
-			$query .= ' ORDER BY c.id_coach_team ASC';
+			$query .= ' ORDER BY c.id_coach_team,c.id ASC';
 			//echo 'request : [',$query,']<br />';
 			$result = $this->query($query);
 			$coachTeams = array();
