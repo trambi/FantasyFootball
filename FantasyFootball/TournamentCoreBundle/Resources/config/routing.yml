@@ -59,3 +59,18 @@ getCoachRanking:
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRanking }
     requirements:
         edition:  \d+
+getCoachRankingByTouchdown:
+    path:     /Ranking/Touchdown/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByTouchdown }
+    requirements:
+        edition:  \d+
+getCoachRankingByCasualties:
+    path:     /Ranking/Casualties/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByCasualties }
+    requirements:
+        edition:  \d+
+getCoachRankingByComeback:
+    path:     /Ranking/Comeback/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByComeback }
+    requirements:
+        edition:  \d+

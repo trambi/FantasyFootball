@@ -114,7 +114,7 @@ class RankingStrategyEleventh implements IRankingStrategy{
 		for( $i = 0 ; $i < 3 ; $i++){
 			$tempPoints1 = 0;
 			$tempPoints2 = 0;
-  			$this->computePoints(&$tempPoints1,&$tempPoints2,$td1Array[$i],$td2Array[$i],$cas1Array[$i],$cas2Array[$i]);
+  			$this->computePoints($tempPoints1,$tempPoints2,$td1Array[$i],$td2Array[$i],$cas1Array[$i],$cas2Array[$i]);
   			$points1 += $tempPoints1;
 			$points2 += $tempPoints2;
 		}

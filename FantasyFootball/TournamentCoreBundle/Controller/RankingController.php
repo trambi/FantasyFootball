@@ -2,15 +2,17 @@
 
 namespace FantasyFootball\TournamentCoreBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
 use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 
-class RankingController
+class RankingController extends Controller
 {
   public function getCoachTeamRankingAction($edition)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
     $ranking = $data->getCoachTeamRanking($edition,$strategy);
@@ -53,14 +55,51 @@ class RankingController
   
   public function getCoachRankingAction($edition)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
+<<<<<<< HEAD
     $ranking = $data->getTeamRankingBetweenRounds($edition,$strategy,0,$editionObj->currentRound);
     $response = new JsonResponse($ranking);
 	$response->headers->set('Access-Control-Allow-Origin','*');
 	return $response;
+=======
+    $mainRanking = $data->getMainCoachRanking($editionObj,$strategy);
+    return new JsonResponse($mainRanking);
+>>>>>>> origin/master
   }
+  
+  public function getCoachRankingByTouchdownAction($edition)
+  {
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
+    $editionObj = $data->getEditionById($edition);
+    $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
+    $tdRanking = $data->getCoachRankingByTouchdown($editionObj,$strategy);
+    return new JsonResponse($tdRanking);
+  }
+  
+  public function getCoachRankingByCasualtiesAction($edition)
+  {
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
+    $editionObj = $data->getEditionById($edition);
+    $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
+    $casRanking = $data->getCoachRankingByCasualties($editionObj,$strategy);
+    return new JsonResponse($casRanking);
+  }
+  
+  public function getCoachRankingByComebackAction($edition)
+  {
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
+    $editionObj = $data->getEditionById($edition);
+    $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
+    $comebackRanking = $data->getCoachRankingByComeback($editionObj,$strategy);
+    return new JsonResponse($comebackRanking);
+  }
+  
 }
 
 ?>

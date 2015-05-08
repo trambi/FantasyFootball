@@ -1,16 +1,24 @@
 <?php
 namespace FantasyFootball\TournamentCoreBundle\Util;
+
+use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
+
 	class DataProvider
 	{
 		protected $mySQL;
-		public function __construct(){
+		public function __construct($DbConf){
 			if (FALSE == class_exists('mysqli') ){
-				$this->link = mysql_connect('localhost', 'tournament', 'tournament');
-				mysql_select_db('tournament',$this->link);
+				$this->link = mysql_connect(	$DbConf->getHost(),
+														$DbConf->getUser(),
+														$DbConf->getPassword());
+				mysql_select_db($DbConf->getName(),$this->link);
 				//echo "print_r($this->link)";
 				$this->mySQL = NULL;
 			}else{
-				$this->mySQL = new \mysqli('localhost', 'tournament', 'tournament', 'tournament');
+				$this->mySQL = new \mysqli(	$DbConf->getHost(),
+														$DbConf->getName(),
+														$DbConf->getUser(),
+														$DbConf->getPassword());
 			}
 		} 
 		
@@ -69,7 +77,7 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 		const resumeMatchQuery ='UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
 		const deleteMatchQuery ='DELETE FROM tournament_match';
 		const updateRankingQuery ='UPDATE INTO tournament_coach SET points=?,opponents_points=?,net_td=?,casualties=? WHERE id=?';
-		const editionQuery='SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy,pairing_strategy as pairingStrategy FROM tournament_edition';
+		const editionQuery='SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy,pairing_strategy as pairingStrategy, first_day_round as firstDayRound FROM tournament_edition';
 		const deletepreCoachQuery ='DELETE FROM tournament_precoach';
 		const updateTeamQuery ='UPDATE INTO tournament_coach SET team_name=?,name=?,id_race=?,email=?,fan_factor=?,naf_number=?,edition=?,ready=? WHERE id=?';
 	
@@ -232,7 +240,7 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 		protected function getCoachTeamsByClause($clause){
 			$query = self::coachTeamQuery;
 			$query .= ' WHERE '.$clause;
-			$query .= ' ORDER BY c.id_coach_team ASC';
+			$query .= ' ORDER BY c.id_coach_team,c.id ASC';
 			//echo 'request : [',$query,']<br />';
 			$result = $this->query($query);
 			$coachTeams = array();
@@ -333,8 +341,12 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			$match->status = $row[14];
 			$match->edition = intval($row[15]);
 			$match->round = intval($row[16]);
-			$match->finale = intval($row[17]);
-			
+			 
+			if ( "true" === $row[17] ){
+				$match->finale = true;
+			}else{
+				$match->finale = false;	
+			}
 			return $match;
 		}
 		
@@ -434,238 +446,7 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			return $matches;
 		}
 		
-		public function insertTeam($coach){
-		  $coachs = array($coach);
-		  $this->insertTeams($coachs);
-		}
-    
-		public function insertTeams($coachs){
-			if ( NULL != $this->mySQL ){
-				if ($stmt = $this->mySQL->prepare(self::insertTeamQuery)){
-					foreach ($coachs as $coach){
-						$teamName = (property_exists($coach,'teamName')?$coach->teamName:'');
-						$name = (property_exists($coach,'name')?$coach->name:'');
-						$race = (property_exists($coach,'race')?intval($coach->race):0);
-						$email = (property_exists($coach,'email')?$coach->email:'');
-						$ff = (property_exists($coach,'ff')?intval($coach->ff):0);
-						$naf = (property_exists($coach,'naf')?intval($coach->naf):0);
-						$edition = (property_exists($coach,'edition')?intval($coach->edition):0);
-						$ready = (property_exists($coach,'ready')?intval($coach->ready):0);
-						$coachTeam = (property_exists($coach,'coach_team')?intval($coach->coach_team):0);
-
-						$stmt->bind_param('ssdsddddd', $teamName,$name,$race,$email,$ff,$naf,$edition,$ready,$coachTeam);
-						$stmt->execute();
-					}
-					$stmt->close();
-				}
-			}else{
-				foreach ($coachs as $coach){
-					$teamName = mysql_real_escape_string((property_exists($coach,'teamName')?$coach->teamName:''));
-					$name = mysql_real_escape_string((property_exists($coach,'name')?$coach->name:''));
-					$race = (property_exists($coach,'race')?intval($coach->race):0);
-					$email = mysql_real_escape_string((property_exists($coach,'email')?$coach->email:''));
-					$ff = (property_exists($coach,'ff')?intval($coach->ff):0);
-					$naf = (property_exists($coach,'naf')?intval($coach->naf):0);
-					$edition = (property_exists($coach,'edition')?intval($coach->edition):0);
-					$ready = (property_exists($coach,'ready')?intval($coach->ready):0);
-					$coachTeam = (property_exists($coach,'coachTeam')?intval($coach->coachTeam):0);
-
-					$query = "INSERT INTO tournament_coach (team_name,name,id_race,email,fan_factor,naf_number,edition,ready,id_coach_team) VALUES('$teamName','$name',$race,'$email',$ff,$naf,$edition,$ready,$coachTeam)";
-					//echo 'Insert team query  : [',$query,']<br />';
-					$this->query($query);
-				}
-			}
-		}
-	
-      public function modifyTeam($coach){
-		  $coachs = array($coach);
-		  $this->modifyTeams($coachs);
-		}
-    
-		public function modifyTeams($coachs){
-			if ( NULL != $this->mySQL ){
-				if ($stmt = $this->mySQL->prepare(self::updateTeamQuery)){
-					foreach ($coachs as $coach){
-						$teamName = (property_exists($coach,'teamName')?$coach->teamName:'');
-						$name = (property_exists($coach,'name')?$coach->name:'');
-						$race = (property_exists($coach,'raceId')?intval($coach->raceId):0);
-						$email = (property_exists($coach,'email')?$coach->email:'');
-						$ff = (property_exists($coach,'ff')?intval($coach->ff):0);
-						$naf = (property_exists($coach,'nafNumber')?intval($coach->nafNumber):0);
-						$edition = (property_exists($coach,'edition')?intval($coach->edition):0);
-						$ready = (property_exists($coach,'ready')?intval($coach->ready):0);
-						$id = (property_exists($coach,'id')?intval($coach->id):0);
-						$stmt->bind_param('ssisiiiii', $teamName,$name,$race,$email,$ff,$naf,$edition,$ready,$id);
-						$stmt->execute();
-					}
-					$stmt->close();
-				}
-			}else{
-				foreach ($coachs as $coach){
-					$name = mysql_real_escape_string((property_exists($coach,'name')?$coach->name:''));
-					$teamName = mysql_real_escape_string((property_exists($coach,'teamName')?$coach->teamName:''));
-					$race = (property_exists($coach,'raceId')?intval($coach->raceId):0);
-					$email = mysql_real_escape_string((property_exists($coach,'email')?$coach->email:''));
-					$ff = (property_exists($coach,'ff')?intval($coach->ff):0);
-					$naf = (property_exists($coach,'nafNumber')?intval($coach->nafNumber):0);
-					$edition = (property_exists($coach,'edition')?intval($coach->edition):0);
-					$ready = (property_exists($coach,'ready')?intval($coach->ready):0);
-					$id = (property_exists($coach,'id')?intval($coach->id):0);
-
-					$query = "UPDATE tournament_coach SET ";
-					$query .= "team_name='$teamName',name='$name',id_race=$race,email='$email',";
-					$query .= "fan_factor=$ff,naf_number=$naf,edition=$edition,ready=$ready";
-					$query .= "WHERE id=$id";
-					//echo 'Update team query  : [',$query,']<br />';
-					$this->query($query);
-				}
-			}
-		}	
-	
-		public function insertMatch($match){
-			$coach1 = intval($match->teamId1);
-			$coach2 = intval($match->teamId2);
-			$round = intval($match->round);
-			$edition = intval($match->edition);
-			$table = intval($match->table);
-			$result = 0;
-			if( NULL != $this->mySQL ){
-				if ($stmt = $this->mySQL->prepare(self::insertMatchQuery)) {
-					$stmt->bind_param('ddddd', $coach1, $coach2, $round, $edition,$table);
-					$stmt->execute();
-					$result =  $stmt->insert_id;
-					$stmt->close();
-				}
-			}else{
-				$query ="INSERT INTO tournament_match (id_coach_1,id_coach_2,round,edition,table_number) VALUES($coach1,$coach2,$round,$edition,$table)";
-				if (TRUE == $this->query($query) ){
-					$result = mysql_insert_id();
-				}
-			}
-			
-			return $result;
-		}
-		
-		public function resumeMatch($match){
-			$id = intval($match->id);
-			$td1 = intval($match->td1);
-			$td2 = intval($match->td2);
-			$cas1 = intval($match->casualties1);
-			$cas2 = intval($match->casualties2);
-			$points1 = intval($match->points1);
-			$points2 = intval($match->points2);
-			$result = 0;
-			if ( NULL != $this->mySQL ){
-				$stmt = $this->mySQL->prepare(self::resumeMatchQuery);
-
-				if (NULL != $stmt) {
-					$stmt->bind_param('ddddddd', $td1, $td2, $cas1, $cas2, $points1, $points2, $id);
-					$tempResult = $stmt->execute();
-					$result = intval($tempResult);
-					$stmt->close();
-				}
-			}else{
-				$query = "UPDATE tournament_match SET td_1=$td1,td_2=$td2,sortie_1=$cas1,sortie_2=$cas2,points_1=$points1,points_2=$points2,status='resume'	WHERE id=$id";
-				if( TRUE == $this->query($query)){
-					$result = 1;
-				}
-			}
-			return $result;
-		}
-		
-		public function deleteMatchById($id){
-			$id = intval($id);
-			$result = 0;
-			$query = self::deleteMatchQuery;
-			if(NULL != $this->mySQL){
-				$query .= ' WHERE id=?';
-				$stmt = $this->mySQL->prepare($query);
-
-				if (NULL != $stmt) {
-					$stmt->bind_param('d', $id);
-					$tempResult = $stmt->execute();
-					$result = intval($tempResult);
-					$stmt->close();
-				}
-			}else{
-				$query .= " WHERE id=$id";
-				if( TRUE == $this->query($query) )
-				{
-					$result = 1;
-				}
-			}
-			return $result;
-		}
-		
-		public function getAvailableTeamsByEditionAndRound($edition,$roundNumber){
-			$query = 'SELECT m.id_coach_1,m.id_coach_2';
-			$query .= ' FROM tournament_match m';
-			$query .= ' WHERE m.edition='.intval($edition);
-			$query .= ' AND m.round='.intval($roundNumber);
-			$query .= ' ORDER BY m.table_number ASC';
-			$result = $this->query($query);
-			$unavailableTeams = '';
-			$row = $this->resultFetchRow($result);
-			$first = true;
-			while(null != $row){
-				if( true != $first ){
-					$unavailableTeams .= ','; 	
-				}else{
-					$first = false;
-				}
-				$unavailableTeams .= $row[0]; 
-				$unavailableTeams .= ','; 	
-				$unavailableTeams .= $row[1];
-				$row = $this->resultFetchRow($result);
-			}
-			$this->resultClose($result);
-			$query = self::teamQuery;
-			$query .= ' WHERE c.edition = '.intval($edition);
-			if( 0 != strlen($unavailableTeams) ){
-				$query .= ' AND c.id NOT IN ('.$unavailableTeams.')';
-			}
-			$query .= ' ORDER BY c.id ASC';
-			$result = $this->query($query);
-			$coachs = array();
-			$row = $this->resultFetchRow($result);
-			while(null != $row){
-				$coach = $this->convertRowInCoach($row);
-				$coachs[] = $coach;
-				$row = $this->resultFetchRow($result);
-			}
-			$this->resultClose($result);
-			return $coachs;
-		}
-		
-		public function getAvailableTablesByEditionAndRound($edition,$roundNumber){
-			$query = 'SELECT count(c.id) FROM tournament_coach c';
-			$query .= ' WHERE c.edition='.intval($edition);
-			$result = $this->query($query);
-			$row = $this->resultFetchRow($result);
-			$first = true;
-			while(null != $row){
-				$coachNb = $row[0];
-				$row = $this->resultFetchRow($result);
-			}
-			$this->resultClose($result);
-			$tableNb = ($coachNb - ($coachNb % 2) )/ 2;
-			$unavailableTables = range(1,$tableNb,1);
-			
-			$query = 'SELECT m.table_number FROM tournament_match m';
-			$query .= ' WHERE m.edition='.intval($edition);
-			$query .= ' AND m.round='.intval($roundNumber);
-			$query .= ' ORDER BY m.table_number ASC';
-			$result = $this->query($query);
-			$row = $this->resultFetchRow($result);
-			while( null != $row ){
-				unset($unavailableTables[$row[0]-1]);
-				$row = $this->resultFetchRow($result);
-			}
-			$this->resultClose($result);
-			
-			return $unavailableTables;
-		}
-		
+				
 		public function getTeamRanking($edition){
 			$query = self::teamQuery;
 			$query .= ' WHERE c.edition = '.intval($edition);
@@ -683,7 +464,104 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			return $coachs;
 		}
 		
-		public function getTeamRankingBetweenRounds($edition,$rankingStrategy,$beginRound,$endRound){
+		public function getMainCoachRanking($edition,$rankingStrategy)
+		{
+			$mainRanking = $this->getCoachRankingBetweenRounds($edition->id,0,$edition->currentRound);
+			usort($mainRanking, array($rankingStrategy, 'compareCoachs'));
+			return $mainRanking;
+		}
+
+		public function compareCoachsByTouchdown($coach1,$coach2)
+		{
+			$td1 = $coach1->td;
+			$td2 = $coach2->td;
+			if( $td1 === $td2 ){
+		  		$return = 0;
+			}elseif ( $td1 > $td2 ){
+			  $return = -1;
+		  	}
+		  	else{
+			  $return = 1;
+		  	}
+		  	return $return;	
+		}
+		
+		public function getCoachRankingByTouchdown($edition,$rankingStrategy)
+		{
+			$tdRanking = $this->getCoachRankingBetweenRounds($edition->id,0,$edition->currentRound);
+			usort($tdRanking, array($this, 'compareCoachsByTouchdown'));
+			return $tdRanking;
+		}
+		
+		public function compareCoachsByCasualties($coach1,$coach2)
+		{
+			$casualties1 = $coach1->casualties;
+			$casualties2 = $coach2->casualties;
+			if( $casualties1 === $casualties2 ){
+		  		$return = 0;
+			}elseif ( $casualties1 > $casualties2 ){
+				$return = -1;
+		  	}else{
+				$return = 1;
+		  	}
+		  return $return;	
+		}
+		
+		public function getCoachRankingByCasualties($edition,$rankingStrategy)
+		{
+			$casualtiesRanking = $this->getCoachRankingBetweenRounds($edition->id,0,$edition->currentRound);
+			usort($casualtiesRanking, array($this, 'compareCoachsByCasualties'));
+			return $casualtiesRanking;
+		}
+		
+		public function compareCoachsByComeback($coach1,$coach2)
+		{
+			$finalRanking1 = $coach1->finalRanking;
+			$finalRanking2 = $coach2->finalRanking;
+			$diffRanking1 = $coach1->diffRanking ;
+			$diffRanking2 = $coach2->diffRanking;
+			if( $diffRanking1 === $diffRanking2 ){
+				if( $finalRanking1 > $finalRanking2 ){
+					$return = -1;	
+				}else{
+					$return = 1;	
+				}
+			}elseif ( $diffRanking1 > $diffRanking2 ){
+				$return = -1;
+		  	}else{
+				$return = 1;
+		  	}
+		  return $return;	
+		}		
+		
+		public function getCoachRankingByComeback($edition,$rankingStrategy)
+		{
+			$finalRanking = $this->getMainCoachRanking($edition,$rankingStrategy);
+			$firstDayRanking = $this->getCoachRankingBetweenRounds($edition->id,0,$edition->firstDayRound);
+			usort($firstDayRanking, array($rankingStrategy, 'compareCoachs'));
+			$coachNumber = count($finalRanking);
+			for( $i = 0 ; $i < $coachNumber ; $i++ ){
+				$finalCoach = $finalRanking[$i];
+				$idToFind = $finalCoach->id;
+				$finalCoach->finalRanking = $i + 1;
+				for ( $j = 0 ; $j < $coachNumber ; $j++ ){
+					$firstDayCoach = $firstDayRanking[$j];
+					if( $firstDayCoach-> id === $idToFind ){
+						break;
+					}
+				}
+				// We find it !
+				if( $j !== $coachNumber){
+					$finalCoach->firstDayRanking = $j + 1;
+				}
+				$finalCoach->diffRanking = $j - $i ; 
+				$finalRanking[$i] = $finalCoach;
+			}			
+			usort($finalRanking, array($this, 'compareCoachsByComeback'));
+			return $finalRanking;
+		}		
+		
+		protected function getCoachRankingBetweenRounds($edition,$beginRound,$endRound){
 			$coachs = $this->getCoachsByEdition($edition,true);
 			
 			$query = self::matchQuery;
@@ -703,13 +581,13 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 				$coach1->opponentDirectPoints = $match->points2;
 				$coach1->opponents[]=$match->teamId2;
 				$coach2 = $coachs[$match->teamId2];
-				if("true" == $match->finale){
+				if( true === $match->finale ){
 					if($match->td1 > $match->td2){
-						$coach1->special=2;
-						$coach2->special=1;
+						$coach1->special = 2;
+						$coach2->special = 1;
 					}else{
-						$coach1->special=1;
-						$coach2->special=2;
+						$coach1->special = 1;
+						$coach2->special = 2;
 					}
 				}
 				
@@ -743,50 +621,11 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 				}
 				$coach->opponentsPoints = $OpponentsPoints;
 			}
-			usort($coachs,array($rankingStrategy,'compareCoachs'));
-			
 			return $coachs;
 		}
 		
-		public function updateRanking($edition,$coachs){
-			$error = 0;
-			$result = 0;
-			if( NULL != $this->mySQL ){
-				$stmt = $this->mySQL->prepare(self::updateRankingQuery);
-				if (NULL != $stmt)
-				{
-					foreach($coachs as $coach){
-						$stmt->bind_param('ddddd', $coach->points, $coach->opponentsPoints, $coach->netTd, $coach->casualties, $coach->id);
-						$tempResult = $stmt->execute();
-						if(false == $tempResult)
-						{
-							$error ++;
-						}
-					}
-					$stmt->close();
-				}
-			}else{
-				foreach($coachs as $coach){
-						$query = 'UPDATE tournament_coach SET points='.intval($coach->points);
-						$query .= ',opponents_points='.intval($coach->opponentsPoints);
-						$query .= ',net_td='.intval($coach->netTd);
-						$query .= ',casualties='.intval($coach->casualties);
-						$query .= ' WHERE id='.intval($coach->id);
-						$tempResult = $this->query($query);
-						if(FALSE == $tempResult)
-						{
-							$error ++;
-						}
-				}
-			}
-			if(0 == $error)
-			{
-				$result = 1;
-			}
-			return $result;
-			
-		}
 		
+				
 		protected function initCoachTeamForRanking(){
 			$coachTeam = (object) array();
 			$coachTeam = (object) array();
@@ -991,36 +830,5 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 			$this->resultClose($result);
 			return $editions;
 		}
-    
-		protected function setPreteams($clause,$fields){
-			$query = 'UPDATE tournament_precoach SET ';
-			$isFirst = true;
-			foreach($fields as $field => $value){
-				if(true == $isFirst){	
-					$isFirst = false;
-				}else{
-					$query .= ',';
-				}
-				$query .= $field .'='.$value;
-			}
-			$query .= ' WHERE '.$clause;
-			//echo "request :|$query|\n"; 
-			$result = $this->query($query);
-			return $result;
-		}
-    
-		public function deletePreteams($ids){
-		  $query = self::deletePreCoachQuery;
-		  $clause = ' WHERE id IN('.implode(',',$ids).')';
-		  $query .= $clause;
-		  echo "request :|$query|\n"; 
-		  $result = $this->query($query);
-		}
-		
-		public function setContactedPreteamById($id){
-		  return $this->setPreteams('id='.intval($id),array('contact'=> 1));
-		}
-		
-
 	}
 ?>

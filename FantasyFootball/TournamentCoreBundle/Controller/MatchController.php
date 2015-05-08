@@ -2,14 +2,16 @@
 
 namespace FantasyFootball\TournamentCoreBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
 
-class MatchController
+class MatchController extends Controller
 {
   public function getPlayedMatchListAction($edition,$round)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getPlayedMatchsByEditionAndRound($edition,$round);
     $response = new JsonResponse($matchs);
 	$response->headers->set('Access-Control-Allow-Origin','*');
@@ -17,7 +19,8 @@ class MatchController
   }
   public function getToPlayMatchListAction($edition,$round)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getToPlayMatchsByEditionAndRound($edition,$round);
     $response = new JsonResponse($matchs);
 	$response->headers->set('Access-Control-Allow-Origin','*');
@@ -25,7 +28,8 @@ class MatchController
   }
   public function getMatchListAction($edition,$round)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getMatchsByEditionAndRound($edition,$round);
     $response = new JsonResponse($matchs);
 	$response->headers->set('Access-Control-Allow-Origin','*');
@@ -33,7 +37,8 @@ class MatchController
   }
   public function getMatchListByCoachAction($coachId)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getMatchsByCoach($coachId);
     $response = new JsonResponse($matchs);
 	$response->headers->set('Access-Control-Allow-Origin','*');
@@ -41,7 +46,8 @@ class MatchController
   }
   public function getMatchListByCoachTeamAction($coachTeamId)
   {
-    $data = new DataProvider();
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
     $matchs = $data->getMatchsByCoachTeam($coachTeamId);
     $response = new JsonResponse($matchs);
 	$response->headers->set('Access-Control-Allow-Origin','*');

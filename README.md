@@ -1,4 +1,7 @@
-FantasyFootballTournamentWS
+FantasyFootballTournament
 ===========================
 
-Symfony2 Bundle for create a json web service for a fantasy football tournament
+Symfony2 Bundles for fantasy football tournament
+
+ - TournamentCoreBundle to create a json web service for a fantasy football tournament ;
+ - TournamentAdminBundle to administrate fantast football tournament (not yet implemented)

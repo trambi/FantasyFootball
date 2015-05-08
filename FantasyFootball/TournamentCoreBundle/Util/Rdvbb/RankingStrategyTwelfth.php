@@ -110,7 +110,7 @@ class RankingStrategyTwelfth implements IRankingStrategy{
 		for( $i = 0 ; $i < 3 ; $i++){
 			$tempPoints1 = 0;
 			$tempPoints2 = 0;
-  			$this->computePoints(&$tempPoints1,&$tempPoints2,$td1Array[$i],$td2Array[$i],$cas1Array[$i],$cas2Array[$i]);
+  			$this->computePoints($tempPoints1,$tempPoints2,$td1Array[$i],$td2Array[$i],$cas1Array[$i],$cas2Array[$i]);
   			$sum1 += $tempPoints1;
 			$sum2 += $tempPoints2;
 		}
