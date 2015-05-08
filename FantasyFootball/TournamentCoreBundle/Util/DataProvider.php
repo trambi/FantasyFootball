@@ -339,11 +339,11 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 		}
 		
 		public function getPlayedMatchsByEditionAndRound($edition,$round){
-			return $this->getPlayedMatchsByEditionAndRound($edition,$round,'!programme');
+			return $this->getMatchsByEditionAndRound($edition,$round,'!programme');
 		}
 		
 		public function getToPlayMatchsByEditionAndRound($edition,$round){
-			return $this->getPlayedMatchsByEditionAndRound($edition,$round,'programme');
+			return $this->getMatchsByEditionAndRound($edition,$round,'programme');
 		}		
 		
 		public function getMatchsByEditionAndRound($edition,$round,$state=''){
