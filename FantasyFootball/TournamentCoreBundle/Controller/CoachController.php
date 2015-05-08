@@ -25,13 +25,17 @@ class CoachController
 			}
 		}
     }*/
-    return new JsonResponse($coaches);
+	$response = new JsonResponse($coaches);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+    return $response;
   }
   public function getCoachAction($coachId)
   {
     $data = new DataProvider();
     $coach = $data->getCoachById($coachId);
-    return new JsonResponse($coach);
+    $response = new JsonResponse($coach);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+    return $response;
   }
 }
 

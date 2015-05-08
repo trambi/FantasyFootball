@@ -16,7 +16,9 @@ class RankingController
     $ranking = $data->getCoachTeamRanking($edition,$strategy);
     /*$error = 0;
     try{*/
-    	return new JsonResponse($ranking);
+    $response = new JsonResponse($ranking);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
  /*   }catch(\Exception $e){
     	$error = 1;
     	
@@ -55,7 +57,9 @@ class RankingController
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
     $ranking = $data->getTeamRankingBetweenRounds($edition,$strategy,0,$editionObj->currentRound);
-    return new JsonResponse($ranking);
+    $response = new JsonResponse($ranking);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
 }
 

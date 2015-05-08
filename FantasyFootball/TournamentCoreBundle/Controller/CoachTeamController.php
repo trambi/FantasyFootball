@@ -11,13 +11,17 @@ class CoachTeamController
   {
     $data = new DataProvider();
     $coachTeamArray = $data->getCoachTeamsByEdition($edition);
-    return new JsonResponse($coachTeamArray);
+    $response = new JsonResponse($coachTeamArray);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
   public function getCoachTeamAction($coachTeamId)
   {
     $data = new DataProvider();
     $coachTeam = $data->getCoachTeamById($coachTeamId);
-    return new JsonResponse($coachTeam);
+    $response = new JsonResponse($coachTeam);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
 }
 

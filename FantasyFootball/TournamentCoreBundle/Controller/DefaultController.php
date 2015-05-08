@@ -30,6 +30,8 @@ class DefaultController extends Controller
         		}
 			}
 		}
-		return new JsonResponse($routes);
+		$response = new JsonResponse($routes);
+		$response->headers->set('Access-Control-Allow-Origin','*');
+		return $response;
 	}
 }

@@ -11,31 +11,41 @@ class MatchController
   {
     $data = new DataProvider();
     $matchs = $data->getPlayedMatchsByEditionAndRound($edition,$round);
-    return new JsonResponse($matchs);
+    $response = new JsonResponse($matchs);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
   public function getToPlayMatchListAction($edition,$round)
   {
     $data = new DataProvider();
     $matchs = $data->getToPlayMatchsByEditionAndRound($edition,$round);
-    return new JsonResponse($matchs);
+    $response = new JsonResponse($matchs);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
   public function getMatchListAction($edition,$round)
   {
     $data = new DataProvider();
     $matchs = $data->getMatchsByEditionAndRound($edition,$round);
-    return new JsonResponse($matchs);
+    $response = new JsonResponse($matchs);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
   public function getMatchListByCoachAction($coachId)
   {
     $data = new DataProvider();
     $matchs = $data->getMatchsByCoach($coachId);
-    return new JsonResponse($matchs);
+    $response = new JsonResponse($matchs);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
   public function getMatchListByCoachTeamAction($coachTeamId)
   {
     $data = new DataProvider();
     $matchs = $data->getMatchsByCoachTeam($coachTeamId);
-    return new JsonResponse($matchs);
+    $response = new JsonResponse($matchs);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
 }
 
