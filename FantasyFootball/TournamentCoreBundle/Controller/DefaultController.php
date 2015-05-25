@@ -8,17 +8,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class DefaultController extends Controller
 {
 	public function indexAction()
-   {
-		/** @var $router \Symfony\Component\Routing\Router */
+	{
 		$router = $this->container->get('router');
-	   /** @var $collection \Symfony\Component\Routing\RouteCollection */
     	$collection = $router->getRouteCollection();
     	$allRoutes = $collection->all();
 
     	$routes = array();
 
-
-		/** @var $params \Symfony\Component\Routing\Route */
     	foreach ($allRoutes as $route => $params)
     	{
 			$defaults = $params->getDefaults();

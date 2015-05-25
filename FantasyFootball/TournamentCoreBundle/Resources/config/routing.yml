@@ -1,75 +1,75 @@
-listFunctions:
+_ws_list_functions:
     path:     /ws
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:index }
-getCoaches:
+_ws_get_coaches:
     path:     /CoachList/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Coach:getCoachList }
     requirements:
         edition:  \d+
-getCoach:
+_ws_get_coach:
     path:     /Coach/{coachId}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Coach:getCoach }
     requirements:
         coachId:  \d+
-getMatchs:
+_ws_get_matchs:
     path:     /MatchList/{edition}/{round}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchList, round: 0 }
     requirements:
         edition:  \d+
         round:  \d+
-getPlayedMatchs:
+_ws_get_played_matchs:
     path:     /PlayedMatchList/{edition}/{round}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getPlayedMatchList, round: 1 }
     requirements:
         edition:  \d+
         round:  \d+
-getToPlayMatchs:
+_ws_get_to_play_matchs:
     path:     /ToPlayMatchList/{edition}/{round}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getToPlayMatchList, round: 1 }
     requirements:
         edition:  \d+
         round:  \d+
-getMatchsByCoach:
+_ws_get_matchs_by_coach:
     path:     /MatchListByCoach/{coachId}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoach }
     requirements:
         coachId:  \d+
-getMatchsByCoachTeam:
+_ws_get_matchs_by_coach_team:
     path:     /MatchListByCoachTeam/{coachTeamId}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoachTeam }
     requirements:
         coachTeamId:  \d+
-getCoachTeams:
+_ws_get_coach_teams:
     path:     /CoachTeamList/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeamList }
     requirements:
         edition:  \d+
-getCoachTeam:
+_ws_get_coach_team:
     path:     /CoachTeam/{coachTeamId}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeam }
     requirements:
         coachTeamId:  \d+
-getCoachTeamRanking:
+_ws_get_coach_team_ranking:
     path:     /Ranking/CoachTeam/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRanking }
     requirements:
         edition:  \d+
-getCoachRanking:
+_ws_get_coach_ranking:
     path:     /Ranking/Coach/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRanking }
     requirements:
         edition:  \d+
-getCoachRankingByTouchdown:
+_ws_get_coach_ranking_by_touchdown:
     path:     /Ranking/Touchdown/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByTouchdown }
     requirements:
         edition:  \d+
-getCoachRankingByCasualties:
+_ws_get_coach_ranking_by_casualties:
     path:     /Ranking/Casualties/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByCasualties }
     requirements:
         edition:  \d+
-getCoachRankingByComeback:
+_ws_get_coach_ranking_by_comeback:
     path:     /Ranking/Comeback/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByComeback }
     requirements:

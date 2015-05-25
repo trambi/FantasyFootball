@@ -72,7 +72,7 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 		const coachTeamQuery='SELECT c.name,c.id_coach_team,ct.name,c.id,c.team_name,c.points,c.opponents_points,c.net_td,c.casualties FROM tournament_coach c INNER JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
 		const coachTeamPreCoachQuery='SELECT p.name,p.id_coach_team,ct.name,p.id,\'\',0,0,0,0 FROM tournament_precoach p INNER JOIN tournament_coach_team ct ON p.id_coach_team=ct.id';
 		const matchQuery ='SELECT c1.name,c1.team_name,c1.id,m.td_1,m.casualties_1,m.points_1, c2.name,c2.team_name,c2.id,m.td_2,m.casualties_2,m.points_2,m.id,m.table_number,m.status,m.edition,m.round,m.finale FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
-	   const insertTeamQuery ='INSERT INTO tournament_coach (team_name,name,id_race,email,fan_factor,naf_number,edition,ready,id_coach_team) VALUES(?,?,?,?,?,?,?,?,?)';
+	   
 		const insertMatchQuery ='INSERT INTO tournament_match (id_coach_1,id_coach_2,round,edition,table_number) VALUES(?,?,?,?,?)';
 		const resumeMatchQuery ='UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
 		const deleteMatchQuery ='DELETE FROM tournament_match';
@@ -350,6 +350,19 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 			return $match;
 		}
 		
+		protected function convertRowInInvertedMatch($row){
+			$match = $this->convertRowInMatch($row);
+			$toSwap = array('coach','teamName','teamId','td','casualties','points');
+			foreach($toSwap as $var){
+				$toSwap1 = $var.'1';
+				$toSwap2 = $var.'2';
+				$tmp = $match->$toSwap1;
+				$match->$toSwap1 = $match->$toSwap2;
+				$match->$toSwap2 = $tmp;	
+			}
+			return $match;
+		}
+		
 		public function getPlayedMatchsByEditionAndRound($edition,$round){
 			return $this->getMatchsByEditionAndRound($edition,$round,'!programme');
 		}
@@ -403,11 +416,24 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 			return $match;
 		}		
 		
+		public function compareMatchByRound($match1,$match2)
+		{
+			$round1 = $match1->round;
+			$round2 = $match2->round;
+			if( $round1 === $round2 ){
+		  		$return = 0;
+			}elseif ( $round1 > $round2 ){
+				$return = -1;
+		  	}else{
+				$return = 1;
+		  	}
+		  return $return;	
+		}		
+		
 		public function getMatchsByCoach($coachId){
 			$convertedCoachId = intval($coachId);
 			$query = self::matchQuery;
 			$query .= ' WHERE m.id_coach_1='.$convertedCoachId;
-			$query .= ' OR m.id_coach_2='.$convertedCoachId;
 			$query .= ' ORDER BY m.edition, m.round ASC';
 			$result = $this->query($query);
 			$matches = array();
@@ -421,9 +447,24 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 				}
 				$this->resultClose($result);
 			}
+			$query = self::matchQuery;
+			$query .= ' WHERE m.id_coach_2='.$convertedCoachId;
+			$query .= ' ORDER BY m.edition, m.round ASC';
+			$result = $this->query($query);
+			if( $result )
+			{
+				$row = $this->resultFetchRow($result);
+				while(null != $row){
+					$match = $this->convertRowInInvertedMatch($row);
+					$matches[] = $match;
+					$row = $this->resultFetchRow($result);
+				}
+				$this->resultClose($result);
+			}
+			usort($matches, array($this, 'compareMatchByRound'));
 			return $matches;
-		}		
-				
+		}
+
 		public function getMatchsByCoachTeam($coachTeamId){
 			$convertedCoachTeamId = intval($coachTeamId);
 			$query = self::matchQuery;
