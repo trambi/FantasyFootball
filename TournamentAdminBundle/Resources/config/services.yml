@@ -1,0 +1,4 @@
+services:
+#    fantasy_football_tournament_admin.example:
+#        class: FantasyFootball\TournamentAdminBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

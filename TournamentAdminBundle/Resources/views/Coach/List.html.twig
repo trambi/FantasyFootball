@@ -1,0 +1,13 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}FantasyFootballTournamentAdminBundle:Coach:List{% endblock %}
+
+{% block body %}
+<h1>Welcome to the Coach:List page</h1>
+<ul>
+{% for coach in coachs %}
+	<li>{{coach.coach}} - {{coach.nafNumber}} <a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" >Voir</a> <a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a></li>
+{% endfor %}
+</ul>
+<a href="{{ path('_add_coach',{'edition':edition} )  }}" >Ajouter un coach</a>
+{% endblock %}

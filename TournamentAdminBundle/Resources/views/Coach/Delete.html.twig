@@ -1,0 +1,11 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}FantasyFootballTournamentAdminBundle:Coach:Delete{% endblock %}
+
+{% block body %}
+<h1>Welcome to the Coach:Delete page</h1>
+{% if form.delete is defined %}
+      Are you sure you want to delete the coach page: {{ form.vars.value.title }} ?
+{% endif %}
+{{ form(form) }}
+{% endblock %}

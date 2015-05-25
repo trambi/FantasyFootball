@@ -1,0 +1,33 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}FantasyFootballTournamentAdminBundle:Coach:Add{% endblock %}
+
+{% block body %}
+<h1>Coach : {{ coach.coach }}</h1>
+<dl>
+<dt>Identifiant en base</dt><dd>{{ coach.id }}</dd>
+<dt>Pseudo</dt><dd>{{ coach.coach }}</dd>
+<dt>Numéro NAF</dt><dd>{{ coach.nafNumber }}</dd>
+<dt>Nom d'&eacute;quipe</dt><dd>{{ coach.name }}</dd>
+<dt>Race</dt><dd>{{ coach.raceName }} ({{ coach.raceId }})</dd>
+<dt>Courriel</dt><dd>{{ coach.email }}</dd>
+<dt>Pr&ecirc;t</dt><dd>{{ coach.ready }}</dd>
+<dt>Triplette</dt><dd><a href="{{ path('_view_coach_team',{'coachTeamId':coach.coachTeamId} ) }}">{{ coach.coachTeamName}}</a> ({{ coach.coachTeamId }})</dd>
+<dt>Matchs</dt>
+<dd>
+<ul>
+{% for match in matchs %}
+	<li><a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" >{{match.coach1}}</a> {{match.td1}}
+	 vs {{match.td2}} <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" >{{match.coach2}}</a></li>
+	<li>{{match.casualties1}} sorties et {{match.points1}} points 
+	- {{match.casualties2}} sorties et {{match.points2}} points </li>
+{% endfor %}
+</ul></dd>
+<dt>Points : </dt><dd>{{coach.points}}</dd>
+<dt>Points adverses : </dt><dd>{{coach.opponentsPoints}}</dd>
+<dt>Diff&eacute;rence de touchdown</dt><dd>{{coach.netTd}}</dd>
+<dt>Sorties</dt><dd>{{coach.casualties}}</dd>
+</dl>
+<a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a>
+<a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a>
+{% endblock %}
