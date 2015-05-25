@@ -59,15 +59,11 @@ class RankingController extends Controller
     $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
     $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy); 
-<<<<<<< HEAD
     $ranking = $data->getTeamRankingBetweenRounds($edition,$strategy,0,$editionObj->currentRound);
     $response = new JsonResponse($ranking);
-	$response->headers->set('Access-Control-Allow-Origin','*');
-	return $response;
-=======
-    $mainRanking = $data->getMainCoachRanking($editionObj,$strategy);
-    return new JsonResponse($mainRanking);
->>>>>>> origin/master
+    $response->headers->set('Access-Control-Allow-Origin','*');
+    return $response;
+
   }
   
   public function getCoachRankingByTouchdownAction($edition)
