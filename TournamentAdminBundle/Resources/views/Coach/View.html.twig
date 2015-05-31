@@ -5,15 +5,14 @@
 {% block body %}
 <h1>Coach : {{ coach.coach }}</h1>
 <dl>
-<dt>Identifiant en base</dt><dd>{{ coach.id }}</dd>
-<dt>Pseudo</dt><dd>{{ coach.coach }}</dd>
-<dt>Numéro NAF</dt><dd>{{ coach.nafNumber }}</dd>
-<dt>Nom d'&eacute;quipe</dt><dd>{{ coach.name }}</dd>
-<dt>Race</dt><dd>{{ coach.raceName }} ({{ coach.raceId }})</dd>
-<dt>Courriel</dt><dd>{{ coach.email }}</dd>
-<dt>Pr&ecirc;t</dt><dd>{{ coach.ready }}</dd>
-<dt>Triplette</dt><dd><a href="{{ path('_view_coach_team',{'coachTeamId':coach.coachTeamId} ) }}">{{ coach.coachTeamName}}</a> ({{ coach.coachTeamId }})</dd>
-<dt>Matchs</dt>
+<dt>Identifiant en base :</dt><dd>{{ coach.id }}</dd>
+<dt>Numéro NAF :</dt><dd>{{ coach.nafNumber }}</dd>
+<dt>Nom d'&eacute;quipe :</dt><dd>{{ coach.name }}</dd>
+<dt>Race :</dt><dd>{{ coach.raceName }} ({{ coach.raceId }})</dd>
+<dt>Courriel :</dt><dd>{{ coach.email }}</dd>
+<dt>Pr&ecirc;t :</dt><dd>{{ coach.ready }}</dd>
+<dt>Triplette :</dt><dd><a href="{{ path('_view_coach_team',{'coachTeamId':coach.coachTeamId} ) }}">{{ coach.coachTeamName}}</a> ({{ coach.coachTeamId }})</dd>
+<dt>Matchs :</dt>
 <dd>
 <ul>
 {% for match in matchs %}
@@ -25,8 +24,8 @@
 </ul></dd>
 <dt>Points : </dt><dd>{{coach.points}}</dd>
 <dt>Points adverses : </dt><dd>{{coach.opponentsPoints}}</dd>
-<dt>Diff&eacute;rence de touchdown</dt><dd>{{coach.netTd}}</dd>
-<dt>Sorties</dt><dd>{{coach.casualties}}</dd>
+<dt>Diff&eacute;rence de touchdown :</dt><dd>{{coach.netTd}}</dd>
+<dt>Sorties :</dt><dd>{{coach.casualties}}</dd>
 </dl>
 <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a>
 <a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a>
