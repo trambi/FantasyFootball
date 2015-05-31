@@ -1,55 +1,55 @@
 fantasy_football_tournament_admin_homepage:
-   path:    /hello/{name}
+   path:    /main
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Default:index }
 
 _add_coach:
-   path:    Admin/Coach/Add/{edition}
+   path:    Coach/Add/{edition}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Add }
    requirements:
       edition:  \d+
 
 _modify_coach:
-   path:    Admin/Coach/Modify/{coachId}
+   path:    Coach/Modify/{coachId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Modify }
    requirements:
       coachId:  \d+
 _delete_coach:
-   path:    Admin/Coach/Delete/{coachId}
+   path:    Coach/Delete/{coachId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Delete }
    requirements:
       coachId:  \d+
 _list_coach:
-   path:    Admin/Coach/List/{edition}
+   path:    Coach/List/{edition}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:List }
    requirements:
       edition:  \d+
 _view_coach:
-   path:    Admin/Coach/View/{coachId}
+   path:    Coach/View/{coachId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:View }
    requirements:
       coachId:  \d+
 _add_coach_team:
-   path:    Admin/CoachTeam/Add/{edition}
+   path:    CoachTeam/Add/{edition}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Add }
    requirements:
       edition:  \d+
 _modify_coach_team:
-   path:    Admin/CoachTeam/Modify/{coachTeamId}
+   path:    CoachTeam/Modify/{coachTeamId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Modify }
    requirements:
       coachTeamId:  \d+
 _delete_coach_team:
-   path:    Admin/CoachTeam/Delete/{coachTeamId}
+   path:    CoachTeam/Delete/{coachTeamId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Delete }
    requirements:
       coachTeamId:  \d+
 _load_coach_team:
-   path:    Admin/CoachTeam/Load/{edition}
+   path:    CoachTeam/Load/{edition}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Load }
    requirements:
       edition:  \d+
 _view_coach_team:
-   path:    Admin/CoachTeam/View/{coachTeamId}
+   path:    CoachTeam/View/{coachTeamId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:View }
    requirements:
       coachTeamId:  \d+
