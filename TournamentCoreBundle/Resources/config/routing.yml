@@ -1,5 +1,5 @@
-_ws_list_functions:
-    path:     /ws
+_ws_index:
+    path:     /index
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:index }
 _ws_get_coaches:
     path:     /CoachList/{edition}
