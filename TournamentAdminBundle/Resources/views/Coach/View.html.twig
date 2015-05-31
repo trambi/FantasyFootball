@@ -17,10 +17,10 @@
 <dd>
 <ul>
 {% for match in matchs %}
-	<li><a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" >{{match.coach1}}</a> {{match.td1}}
-	 vs {{match.td2}} <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" >{{match.coach2}}</a></li>
-	<li>{{match.casualties1}} sorties et {{match.points1}} points 
-	- {{match.casualties2}} sorties et {{match.points2}} points </li>
+	<li> {{match.td1}}
+	 vs {{match.td2}} <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" >{{match.coach2}}</a>
+	({{match.casualties1}} sorties et {{match.points1}} points 
+	- {{match.casualties2}} sorties et {{match.points2}} points ) </li>
 {% endfor %}
 </ul></dd>
 <dt>Points : </dt><dd>{{coach.points}}</dd>
