@@ -6,19 +6,19 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 	class DataProvider
 	{
 		protected $mySQL;
-		public function __construct($DbConf){
+		public function __construct(DatabaseConfiguration $DbConf){
 			if (FALSE == class_exists('mysqli') ){
 				$this->link = mysql_connect(	$DbConf->getHost(),
-														$DbConf->getUser(),
-														$DbConf->getPassword());
+								$DbConf->getUser(),
+								$DbConf->getPassword());
 				mysql_select_db($DbConf->getName(),$this->link);
 				//echo "print_r($this->link)";
 				$this->mySQL = NULL;
 			}else{
-				$this->mySQL = new \mysqli(	$DbConf->getHost(),
-														$DbConf->getName(),
-														$DbConf->getUser(),
-														$DbConf->getPassword());
+				$this->mySQL = new \mysqli($DbConf->getHost(),
+                                        $DbConf->getUser(),
+					$DbConf->getPassword(),
+                                        $DbConf->getName());
 			}
 		} 
 		
