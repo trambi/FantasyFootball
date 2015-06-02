@@ -26,22 +26,21 @@ class CoachController extends Controller
 		}
 		
 		$form = $this->createFormBuilder($coach)
-				->add('teamName', 'text')
-				->add('name', 'text')
+				->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'))
+				->add('name', 'text',array('label'=>'Nom :'))
 				->add('race', 'choice',array(
-				   'label'		=>	'Race',
+				   'label'		=>	'Race :',
 					'choices'   => $raceChoice,
 					'required'  => true))
-				->add('emailAddress', 'email')
-				->add('nafNumber', 'integer')
+				->add('emailAddress', 'email',array('label'=>'Courriel :'))
+				->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'))
 				->add('ready', 'checkbox',array(
-					'label' => 'coach prêt ?',
+					'label' => 'Coach prêt ?',
 					'required' => false))
-				->add('save','submit')
+				->add('save','submit',array('label'=>'Valider'))
 				->getForm();
 
 		$form->handleRequest($request);
-		print_r($coach);
 		if ($form->isValid()) {
 			$data->insertCoach($coach);
       	return $this->redirect($this->generateUrl('task_success'));
