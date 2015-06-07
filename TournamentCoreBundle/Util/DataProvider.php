@@ -461,7 +461,6 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 			$convertedCoachTeamId = intval($coachTeamId);
 			$query = self::matchQuery;
 			$query .= ' WHERE c1.id_coach_team='.$convertedCoachTeamId;
-			$query .= ' OR c2.id_coach_team='.$convertedCoachTeamId;
 			$query .= ' ORDER BY m.edition, m.round, m.table_number ASC';
 			//echo "query : |",$query,"|<br />\n";
 			$result = $this->query($query);
@@ -476,6 +475,22 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 				}
 				$this->resultClose($result);
 			}
+                        $query = self::matchQuery;
+			$query .= ' WHERE c2.id_coach_team='.$convertedCoachTeamId;
+			$query .= ' ORDER BY m.edition, m.round, m.table_number ASC';
+			//echo "query : |",$query,"|<br />\n";
+			$result = $this->query($query);
+			if( $result )
+			{
+				$row = $this->resultFetchRow($result);
+				while(null != $row){
+					$match = $this->convertRowInInvertedMatch($row);
+					$matches[] = $match;
+					$row = $this->resultFetchRow($result);
+				}
+				$this->resultClose($result);
+			}
+                        usort($matches, array($this, 'compareMatchByRound'));
 			return $matches;
 		}
 		
