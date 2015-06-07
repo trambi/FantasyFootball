@@ -1,6 +1,9 @@
 fantasy_football_tournament_admin_homepage:
-   path:    /main
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Default:index }
+   path:    /main/{edition}/{round}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Default:index,edition :13,round :-1 }
+   requirements:
+      edition:  \d+
+      round:  \d+
 
 _add_coach:
    path:    Coach/Add/{edition}

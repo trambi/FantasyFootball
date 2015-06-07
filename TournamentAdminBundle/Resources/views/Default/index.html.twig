@@ -1,1 +1,50 @@
-Hello {{ name }}!
+{% extends "::base.html.twig" %}
+
+{% block title %}Administration &eacute;dition {{edition}} - tour : {{round}}{% endblock %}
+
+{% block body %}
+<h1>Administration &eacute;dition {{edition}} - tour : {{round}}</h1>
+{% if 0 == round %}
+<h2>Coachs</h2>
+<ul>
+{% for coach in coachs %}
+	<li>{{coach.coach}} - {{coach.nafNumber}} <a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" >Voir</a> <a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a></li>
+{% endfor %}
+</ul>
+<h2>Triplettes</h2>
+<ul>
+{% for coachTeam in coachTeams %}
+	<li>{{coachTeam.name}} - {{coachTeam.coachTeamMates[0].coach}}, {{coachTeam.coachTeamMates[1].coach}} et {{coachTeam.coachTeamMates[2].coach}} <a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Voir</a> <a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Modifier</a></li>
+{% endfor %}
+</ul>
+<a href="{{ path('_add_coach',{'edition':edition} )  }}" >Ajouter un coach</a>
+<a href="{{ path('_add_coach_team',{'edition':edition} )  }}" >Ajouter une triplette</a>
+{% else %}
+{% if matchesToPlay %}
+<h2>Matchs &agrave; jouer</h2>
+
+<dl>
+{% for match in matchesToPlay %}
+    <dt>&nbsp;</dt>
+    <dd><a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" >{{match.coach1}}</a>
+	 vs <a href="{{ path('_view_coach',{'coachId':match.teamId2} ) }}" >{{match.coach2}}</a>
+    </dd>
+{% endfor %}
+</dl>
+{% endif %}
+{% if playedMatches %}
+<h2>Matchs jou&eacute;s</h2>
+<dl>
+{% for match in playedMatches %}
+    <dt>Table {{match.table}} :</dt> 
+    <dd><a href="{{ path('_view_coach',{'coachId':match.teamId1} ) }}" >{{match.coach1}}</a>
+            ({{match.casualties1}} sorties et {{match.points1}} points ) {{match.td1}}
+	 vs {{match.td2}} <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" >{{match.coach2}}</a>
+	({{match.casualties2}} sorties et {{match.points2}} points ) </dd>
+{% endfor %}
+</dl>
+{% endif %}
+{% endif %}
+
+{% endblock %}
+
