@@ -1,0 +1,34 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}FantasyFootballTournamentAdminBundle:CoachTeam:Add{% endblock %}
+
+{% block body %}
+<h1>Triplette : {{ coachTeam.name }}</h1>
+<dl>
+<dt>Identifiant en base :</dt><dd>{{ coachTeam.id }}</dd>
+<dt>Membres :</dt>
+<dd>
+<ul>
+{% for coach in coachTeam.coachTeamMates %}
+	<li><a href="{{ path('_view_coach',{'coachId':coach.teamId} )  }}" >{{coach.coach}}</a> <a href="{{ path('_delete_coach',{'coachId':coach.teamId} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach',{'coachId':coach.teamId} )  }}" >Modifier</a></li>
+{% endfor %}
+</ul></dd>
+<dt>Matchs :</dt>
+<dd>
+<ul>
+{% for match in matchs %}
+	<li>J{{match.round}} Table {{match.table}} : 
+            <a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" >{{match.coach1}}</a>
+            ({{match.casualties1}} sorties et {{match.points1}} points ) {{match.td1}}
+	 vs {{match.td2}} <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" >{{match.coach2}}</a>
+	({{match.casualties2}} sorties et {{match.points2}} points ) </li>
+{% endfor %}
+</ul></dd>
+<dt>Points : </dt><dd>{{coachTeam.points}}</dd>
+<dt>Points adverses : </dt><dd>{{coachTeam.opponentsPoints}}</dd>
+<dt>Diff&eacute;rence de touchdown :</dt><dd>{{coachTeam.netTd}}</dd>
+<dt>Sorties :</dt><dd>{{coachTeam.casualties}}</dd>
+</dl>
+<a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Modifier</a>
+<a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Supprimer</a>
+{% endblock %}

@@ -52,3 +52,9 @@ _view_coach_team:
    path:    CoachTeam/View/{coachTeamId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:View }
    requirements:
+      coachTeamId:  \d+
+_list_coach_team:
+   path:    CoachTeam/List/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:List }
+   requirements:
+      edition:  \d+
