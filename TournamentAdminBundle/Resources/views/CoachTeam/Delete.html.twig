@@ -3,5 +3,8 @@
 {% block title %}FantasyFootballTournamentAdminBundle:CoachTeam:Delete{% endblock %}
 
 {% block body %}
-<h1>Welcome to the CoachTeam:Delete page</h1>
+{% if form.delete is defined %}
+      &Ecirc;tes-vous s&ucirc;r de vouloir effacer la triplette : {{ coachTeam.name }} ({{coachTeam.id}})?
+{% endif %}
+{{ form(form) }}
 {% endblock %}
