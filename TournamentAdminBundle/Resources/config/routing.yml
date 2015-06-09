@@ -16,6 +16,16 @@ _modify_coach:
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Modify }
    requirements:
       coachId:  \d+
+_ready_coach:
+   path:    Coach/Ready/{coachId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Ready }
+   requirements:
+      coachId:  \d+
+_unready_coach:
+   path:    Coach/Unready/{coachId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Unready }
+   requirements:
+      coachId:  \d+
 _delete_coach:
    path:    Coach/Delete/{coachId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Delete }
