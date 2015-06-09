@@ -12,6 +12,7 @@
 <dt>Courriel :</dt><dd>{{ coach.email }}</dd>
 <dt>Pr&ecirc;t :</dt><dd>{{ coach.ready }}</dd>
 <dt>Triplette :</dt><dd><a href="{{ path('_view_coach_team',{'coachTeamId':coach.coachTeamId} ) }}">{{ coach.coachTeamName}}</a> ({{ coach.coachTeamId }})</dd>
+{%if matchs %}
 <dt>Matchs :</dt>
 <dd>
 <ul>
@@ -22,6 +23,7 @@
 	- {{match.casualties2}} sorties et {{match.points2}} points ) </li>
 {% endfor %}
 </ul></dd>
+{% endif %}
 <dt>Points : </dt><dd>{{coach.points}}</dd>
 <dt>Points adverses : </dt><dd>{{coach.opponentsPoints}}</dd>
 <dt>Diff&eacute;rence de touchdown :</dt><dd>{{coach.netTd}}</dd>

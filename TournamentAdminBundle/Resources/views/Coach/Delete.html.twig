@@ -3,9 +3,8 @@
 {% block title %}FantasyFootballTournamentAdminBundle:Coach:Delete{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Coach:Delete page</h1>
 {% if form.delete is defined %}
-      Are you sure you want to delete the coach page: {{ form.vars.value.title }} ?
+      &Ecirc;tes-vous s&ucirc;r de vouloir effacer le coach : {{ coach.name }}  ({{coach.id}}) ?
 {% endif %}
 {{ form(form) }}
 {% endblock %}
