@@ -11,15 +11,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CoachController extends Controller
 {
-    protected function createCustomForm(Coach $coach,array $raceChoice)
+    protected function createCustomForm(Coach $coach,array $races)
     {
+        $raceChoice = array();
+        foreach($races as $key=>$obj){
+            $raceChoice[$key]=$obj->nom_fr;
+        }
         $form = $this->createFormBuilder($coach)
                     ->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'))
                     ->add('name', 'text',array('label'=>'Nom :'))
-                    ->add('race', 'choice',array(
-                        'label'		=>	'Race :',
-			'choices'   => $raceChoice,
-			'required'  => true))
+                    ->add('race', 'choice',
+                        array('label'=>'Race :',
+                            'choices'   => $raceChoice,
+                            'required'  => true))
                     ->add('emailAddress', 'email',array('label'=>'Courriel :'))
                     ->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'))
                     ->add('ready', 'checkbox',array(
@@ -37,12 +41,9 @@ class CoachController extends Controller
 		
         $conf = $this->get('fantasy_football_core_db_conf');
         $data = new DataUpdater($conf);
-        $raceArray = $data->getRacesByEdition($edition);
-        $raceChoice = array();
-        foreach($raceArray as $key=>$obj){
-            $raceChoice[$key]=$obj->nom_fr;
-        }
-        $form = $this->createCustomForm($coach, $raceArray);
+        $races = $data->getRacesByEdition($edition);
+        
+        $form = $this->createCustomForm($coach, $races);
         /*    $form = $this->createFormBuilder($coach)
 				->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'))
 				->add('name', 'text',array('label'=>'Nom :'))
@@ -67,7 +68,7 @@ class CoachController extends Controller
                                 'form' => $form->createView() ) );    
     }
 
-    public function ReadyAction(Request $request,$coachId)
+    public function ReadyAction($coachId)
     {
 	$conf = $this->get('fantasy_football_core_db_conf');
     	$data = new DataUpdater($conf);
@@ -81,7 +82,7 @@ class CoachController extends Controller
         return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
     }
     
-    public function UnreadyAction(Request $request,$coachId)
+    public function UnreadyAction($coachId)
     {
 	$conf = $this->get('fantasy_football_core_db_conf');
     	$data = new DataUpdater($conf);
@@ -96,13 +97,9 @@ class CoachController extends Controller
     	$data = new DataUpdater($conf);
     	$coach = new Coach($data->getCoachById($coachId));
     	$edition = $coach->getEdition();
-	$raceArray = $data->getRacesByEdition($edition);
-	$raceChoice = array();
-	foreach($raceArray as $key=>$obj){
-            $raceChoice[$key]=$obj->nom_fr;
-	}
+	$races = $data->getRacesByEdition($edition);
 		
-	$form = $this->createCustomForm($coach,$raceChoice);
+	$form = $this->createCustomForm($coach,$races);
 	$form->handleRequest($request);
 	$coach->id = $coachId;
 	if ($form->isValid()) {
