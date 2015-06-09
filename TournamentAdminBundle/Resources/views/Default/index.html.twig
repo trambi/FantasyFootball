@@ -5,13 +5,16 @@
 {% block body %}
 <h1>Administration &eacute;dition {{edition}} - tour : {{round}}</h1>
 {% if 0 == round %}
-<h2>Coachs</h2>
+<h2>Coachs ({{ coachs|length }})</h2>
 <ul>
 {% for coach in coachs %}
-	<li>{{coach.coach}} - {{coach.nafNumber}} <a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" >Voir</a> <a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a></li>
+	<li>{{coach.coach}} - {{coach.nafNumber}} 
+            {% if coach.ready %}<a href="{{ path('_unready_coach',{'coachId':coach.id} )  }}" >Pr&ecirc;t</a>
+            {% else %}<a href="{{ path('_ready_coach',{'coachId':coach.id} )  }}" >Pas pr&ecirc;t</a>{% endif %}
+            <a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" >Voir</a> <a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a></li>
 {% endfor %}
 </ul>
-<h2>Triplettes</h2>
+<h2>Triplettes ({{ coachTeams|length }})</h2>
 <ul>
 {% for coachTeam in coachTeams %}
 	<li>{{coachTeam.name}} - {{coachTeam.coachTeamMates[0].coach}}, {{coachTeam.coachTeamMates[1].coach}} et {{coachTeam.coachTeamMates[2].coach}} <a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Voir</a> <a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Modifier</a></li>
@@ -19,6 +22,7 @@
 </ul>
 <a href="{{ path('_add_coach',{'edition':edition} )  }}" >Ajouter un coach</a>
 <a href="{{ path('_add_coach_team',{'edition':edition} )  }}" >Ajouter une triplette</a>
+<a href="{{ path('_load_coach_team',{'edition':edition} ) }}">Charger le fichier</a>
 {% else %}
 {% if matchesToPlay %}
 <h2>Matchs &agrave; jouer</h2>
