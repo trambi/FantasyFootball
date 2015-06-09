@@ -122,18 +122,5 @@ class DataUpdater extends DataProvider
 		}
         }
     }
-    
-    public function insertCoachTeams($coachTeams){
-	if ( NULL != $this->mySQL ){
-            if ($stmt = $this->mySQL->prepare(self::insertCoachTeamQuery)){
-		foreach ($coachTeams as $coachTeam){
-                    $name = $coachTeam->getName();
-                    $stmt->bind_param('ssdsdddd', $name);
-                    $stmt->execute();
-		}
-		$stmt->close();
-            }
-	}
-    }
 }
 ?>
