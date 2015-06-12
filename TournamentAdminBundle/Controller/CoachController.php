@@ -68,26 +68,29 @@ class CoachController extends Controller
                                 'form' => $form->createView() ) );    
     }
 
+    protected function setReady($coachId, $ready)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);
+        
+	//$conf = $this->get('fantasy_football_core_db_conf');
+    	//$data = new DataUpdater($conf);
+    	//$coach = new Coach($data->getCoachById($coachId));
+        $coach->setReady($ready);
+        $em->flush();
+        //$data->setUnreadyCoach($coach);
+    }
+    
     public function ReadyAction($coachId)
     {
-	$conf = $this->get('fantasy_football_core_db_conf');
-    	$data = new DataUpdater($conf);
-    	$coach = new Coach($data->getCoachById($coachId));
-        //$coach->id = $coachId;
-        $data->setReadyCoach($coach);
-        //return $this->render('FantasyFootballTournamentAdminBundle:Coach:View.html.twig', array(
-      	//	'coach'=>$coach,
-          //      'matchs'=>array()
-	//		));
+        $this->setReady($coachId,true);
         return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
     }
     
     public function UnreadyAction($coachId)
     {
-	$conf = $this->get('fantasy_football_core_db_conf');
-    	$data = new DataUpdater($conf);
-    	$coach = new Coach($data->getCoachById($coachId));
-        $data->setUnreadyCoach($coach);
+        $this->setReady($coachId,false);
         return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
     }
     
@@ -136,18 +139,24 @@ class CoachController extends Controller
 	{
             $conf = $this->get('fantasy_football_core_db_conf');
             $data = new DataUpdater($conf);
-            $coach = $data->getCoachById($coachId);
+            $em = $this->getDoctrine()->getManager();
+            $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findOneByIdJoined($coachId);
+            if(! $coach){
+                return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+            }
+
             $matchs = $data->getMatchsByCoach($coachId);
             return $this->render('FantasyFootballTournamentAdminBundle:Coach:View.html.twig', array(
       		'coach'=>$coach,
-                'matchs'=>$matchs
+                'race'=>$coach->getRace(),
+                'coachTeam'=>$coach->getCoachTeam(),
+                'matchs'=>$matchs,
 			));
 	}
       
 	public function ListAction($edition){
-		$conf = $this->get('fantasy_football_core_db_conf');
-		$data = new DataProvider($conf);
-		$coachs = $data->getCoachsByEdition($edition);
+                $em = $this->getDoctrine()->getManager();
+                $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
 		return $this->render('FantasyFootballTournamentAdminBundle:Coach:List.html.twig', array(
       		'coachs' => $coachs, 'edition'=>$edition));
    }

@@ -3,15 +3,18 @@
 {% block title %}FantasyFootballTournamentAdminBundle:Coach:Add{% endblock %}
 
 {% block body %}
-<h1>Coach : {{ coach.coach }}</h1>
+<h1>Coach : {{ coach.getName() }}</h1>
 <dl>
-<dt>Identifiant en base :</dt><dd>{{ coach.id }}</dd>
-<dt>Numéro NAF :</dt><dd>{{ coach.nafNumber }}</dd>
-<dt>Nom d'&eacute;quipe :</dt><dd>{{ coach.name }}</dd>
-<dt>Race :</dt><dd>{{ coach.raceName }} ({{ coach.raceId }})</dd>
-<dt>Courriel :</dt><dd>{{ coach.email }}</dd>
-<dt>Pr&ecirc;t :</dt><dd>{{ coach.ready }}</dd>
-<dt>Triplette :</dt><dd><a href="{{ path('_view_coach_team',{'coachTeamId':coach.coachTeamId} ) }}">{{ coach.coachTeamName}}</a> ({{ coach.coachTeamId }})</dd>
+<dt>Identifiant en base :</dt><dd>{{ coach.getId() }}</dd>
+<dt>Numéro NAF :</dt><dd>{{ coach.getNafNumber() }}</dd>
+<dt>Nom d'&eacute;quipe :</dt><dd>{{ coach.getTeamName() }}</dd>
+<dt>Race :</dt><dd>{%if race %}{{ race.getNomFr() }} ({{ race.getId() }}){% endif %}</dd>
+<dt>Courriel :</dt><dd>{{ coach.getEmail() }}</dd>
+<dt>Pr&ecirc;t :</dt><dd>{{ coach.getReady() }}</dd>
+<dt>Triplette :</dt>
+<dd>{%if coachTeam %}
+    <a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.getId()} ) }}">{{ coachTeam.getName()}}</a>
+    ({{ coachTeam.getId() }}){% endif %}</dd>
 {%if matchs %}
 <dt>Matchs :</dt>
 <dd>
@@ -24,10 +27,10 @@
 {% endfor %}
 </ul></dd>
 {% endif %}
-<dt>Points : </dt><dd>{{coach.points}}</dd>
-<dt>Points adverses : </dt><dd>{{coach.opponentsPoints}}</dd>
-<dt>Diff&eacute;rence de touchdown :</dt><dd>{{coach.netTd}}</dd>
-<dt>Sorties :</dt><dd>{{coach.casualties}}</dd>
+<dt>Points : </dt><dd>{{coach.getPoints()}}</dd>
+<dt>Points adverses : </dt><dd>{{coach.getOpponentsPoints()}}</dd>
+<dt>Diff&eacute;rence de touchdown :</dt><dd>{{coach.getNetTd()}}</dd>
+<dt>Sorties :</dt><dd>{{coach.getCasualties()}}</dd>
 </dl>
 <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a>
 <a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a>

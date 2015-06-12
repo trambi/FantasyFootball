@@ -12,10 +12,41 @@ use FantasyFootball\TournamentCoreBundle\Entity\CoachTeam;
 
 class CoachTeamController extends Controller
 {
-    public function AddAction()
+    /*
+    protected function createCustomForm(Coach $coach,array $races)
     {
+        $coachChoice = array();
+        foreach($races as $key=>$obj){
+            $raceChoice[$key]=$obj->nom_fr;
+        }
+        $form = $this->createFormBuilder($coach)
+                    ->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'))
+                    ->add('name', 'text',array('label'=>'Nom :'))
+                    ->add('race', 'choice',
+                        array('label'=>'Race :',
+                            'choices'   => $raceChoice,
+                            'required'  => true))
+                    ->add('emailAddress', 'email',array('label'=>'Courriel :'))
+                    ->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'))
+                    ->add('ready', 'checkbox',array(
+                        'label' => 'Coach prêt ?',
+                        'required' => false))
+                    ->add('save','submit',array('label'=>'Valider'))
+                    ->getForm();
+        return $form;
+    }*/
+    
+    public function AddAction(Request $request,$edition)
+    {
+        $coachTeam = new CoachTeam();
+        $form = $this->createFormBuilder($coachTeam)->getForm();
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            //$data->insertCoach($coach);
+            //return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+        }
         return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Add.html.twig', array(
-                // ...
+            'form' => $form->createView()
             ));    }
 
     public function ModifyAction()
@@ -128,9 +159,13 @@ class CoachTeamController extends Controller
             
     public function viewAction($coachTeamId)
     {
+        
 	$conf = $this->get('fantasy_football_core_db_conf');
     	$data = new DataUpdater($conf);
-    	$coachTeam = $data->getCoachTeamById($coachTeamId);
+    	//$coachTeam = $data->getCoachTeamById($coachTeamId);
+        $coachTeam = $this->getDoctrine()
+        ->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')
+        ->find($coachTeamId);
     	$matchs = $data->getMatchsByCoachTeam($coachTeamId);
 	return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:View.html.twig', array(
   		'coachTeam'=>$coachTeam,'matchs'=>$matchs));
@@ -138,9 +173,7 @@ class CoachTeamController extends Controller
       
     public function ListAction($edition)
     {
-        $conf = $this->get('fantasy_football_core_db_conf');
-	$data = new DataProvider($conf);
-        $coachTeams = $data->getCoachTeamsByEdition($edition);
+        $coachTeams = $this->getDoctrine()->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->findByEditionJoined($edition);
 	return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:List.html.twig', array(
       	'coachTeams' => $coachTeams, 'edition'=>$edition));
     }

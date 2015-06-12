@@ -6,10 +6,12 @@
 <h1>Welcome to the Coach:List page</h1>
 <ul>
 {% for coach in coachs %}
-	<li>{{coach.coach}} - {{coach.nafNumber}}
-            {% if coach.ready %}<a href="{{ path('_unready_coach',{'coachId':coach.id} )  }}" >Pr&ecirc;t</a>
-            {% else %}<a href="{{ path('_ready_coach',{'coachId':coach.id} )  }}" >Pas pr&ecirc;t</a>{% endif %} 
-            <a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" >Voir</a> <a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a></li>
+	<li>{{coach.getName()}} - {{coach.getNafNumber()}}
+            {% if coach.getReady() %}<a href="{{ path('_unready_coach',{'coachId':coach.getId()} )  }}" >Pr&ecirc;t</a>
+            {% else %}<a href="{{ path('_ready_coach',{'coachId':coach.getId()} )  }}" >Pas pr&ecirc;t</a>{% endif %} 
+            <a href="{{ path('_view_coach',{'coachId':coach.getId()} )  }}" >Voir</a>
+            <a href="{{ path('_delete_coach',{'coachId':coach.getId()} )  }}" >Supprimer</a>
+            <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a></li>
 {% endfor %}
 </ul>
 <a href="{{ path('_add_coach',{'edition':edition} )  }}" >Ajouter un coach</a>

@@ -9,8 +9,8 @@
 <dt>Membres :</dt>
 <dd>
 <ul>
-{% for coach in coachTeam.coachTeamMates %}
-	<li><a href="{{ path('_view_coach',{'coachId':coach.teamId} )  }}" >{{coach.coach}}</a> <a href="{{ path('_delete_coach',{'coachId':coach.teamId} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach',{'coachId':coach.teamId} )  }}" >Modifier</a></li>
+{% for coach in coachTeam.getCoachs() %}
+	<li><a href="{{ path('_view_coach',{'coachId':coach.getId()} )  }}" >{{coach.getName()}}</a> <a href="{{ path('_delete_coach',{'coachId':coach.getId()} )  }}" >Supprimer</a> <a href="{{ path('_modify_coach',{'coachId':coach.getId()} )  }}" >Modifier</a></li>
 {% endfor %}
 </ul></dd>
 {% if matchs %}
@@ -26,11 +26,8 @@
 {% endfor %}
 </ul></dd>
 {% endif %}
-<dt>Points : </dt><dd>{{coachTeam.points}}</dd>
-<dt>Points adverses : </dt><dd>{{coachTeam.opponentsPoints}}</dd>
-<dt>Diff&eacute;rence de touchdown :</dt><dd>{{coachTeam.netTd}}</dd>
-<dt>Sorties :</dt><dd>{{coachTeam.casualties}}</dd>
+
 </dl>
-<a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Modifier</a>
-<a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.id} )  }}" >Supprimer</a>
+<a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.getId()} )  }}" >Modifier</a>
+<a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.getId()} )  }}" >Supprimer</a>
 {% endblock %}
