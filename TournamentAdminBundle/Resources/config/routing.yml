@@ -1,73 +1,11 @@
-fantasy_football_tournament_admin_homepage:
-   path:    /main/{edition}/{round}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Default:index,edition :13,round :-1 }
-   requirements:
-      edition:  \d+
-      round:  \d+
+fantasy_football_tournament_admin_main:
+    resource: "routing/main.yml"
+    prefix:   /main
 
-_add_coach:
-   path:    Coach/Add/{edition}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Add }
-   requirements:
-      edition:  \d+
+fantasy_football_tournament_admin_coach:
+    resource: "routing/coach.yml"
+    prefix:   /coach
 
-_modify_coach:
-   path:    Coach/Modify/{coachId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Modify }
-   requirements:
-      coachId:  \d+
-_ready_coach:
-   path:    Coach/Ready/{coachId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Ready }
-   requirements:
-      coachId:  \d+
-_unready_coach:
-   path:    Coach/Unready/{coachId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Unready }
-   requirements:
-      coachId:  \d+
-_delete_coach:
-   path:    Coach/Delete/{coachId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Delete }
-   requirements:
-      coachId:  \d+
-_list_coach:
-   path:    Coach/List/{edition}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:List }
-   requirements:
-      edition:  \d+
-_view_coach:
-   path:    Coach/View/{coachId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:View }
-   requirements:
-      coachId:  \d+
-_add_coach_team:
-   path:    CoachTeam/Add/{edition}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Add }
-   requirements:
-      edition:  \d+
-_modify_coach_team:
-   path:    CoachTeam/Modify/{coachTeamId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Modify }
-   requirements:
-      coachTeamId:  \d+
-_delete_coach_team:
-   path:    CoachTeam/Delete/{coachTeamId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Delete }
-   requirements:
-      coachTeamId:  \d+
-_load_coach_team:
-   path:    CoachTeam/Load/{edition}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Load }
-   requirements:
-      edition:  \d+
-_view_coach_team:
-   path:    CoachTeam/View/{coachTeamId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:View }
-   requirements:
-      coachTeamId:  \d+
-_list_coach_team:
-   path:    CoachTeam/List/{edition}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:List }
-   requirements:
-      edition:  \d+
+fantasy_football_tournament_admin_coach_team:
+    resource: "routing/coach_team.yml"
+    prefix:   /coachTeam

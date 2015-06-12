@@ -2,106 +2,400 @@
 
 namespace FantasyFootball\TournamentCoreBundle\Entity;
 
-class Coach {
+use Doctrine\ORM\Mapping as ORM;
 
-    public $id;
-    protected $teamName;
-    protected $name;
+/**
+ * Coach
+ *
+ * @ORM\Table(name="tournament_coach")
+ * @ORM\Entity(repositoryClass="FantasyFootball\TournamentCoreBundle\Entity\CoachRepository")
+ */
+class Coach
+{
+    /**
+     * @ORM\ManyToOne(targetEntity="Race", inversedBy="coachs")
+     * @ORM\JoinColumn(name="id_race", referencedColumnName="id_race")
+     */
     protected $race;
-    protected $emailAddress;
-    protected $nafNumber;
-    protected $ready;
-    protected $edition;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="CoachTeam", inversedBy="coachs")
+     * @ORM\JoinColumn(name="id_coach_team", referencedColumnName="id")
+     */
     protected $coachTeam;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Game", mappedBy="coach")
+     */
+    protected $games;
 
-    public function __construct($stdClass = null) {
-        if (null === $stdClass) {
-            $this->id = 0;
-            $this->teamName = "";
-            $this->name = "";
-            $this->race = 0;
-            $this->emailAddress = "";
-            $this->nafNumber = 0;
-            $this->ready = false;
-            $this->edition = 0;
-            $this->coachTeam = 0;
-        } else {
-            $this->id = $stdClass->id;
-            $this->teamName = $stdClass->name;
-            $this->name = $stdClass->coach;
-            $this->race = $stdClass->raceId;
-            $this->emailAddress = $stdClass->email;
-            $this->nafNumber = $stdClass->nafNumber;
-            $this->ready = (1 == $stdClass->ready ? true : false);
-            $this->edition = $stdClass->edition;
-            $this->coachTeam = \intval($stdClass->coachTeamId);
-        }
+    public function __construct()
+    {
+        $this->games = new ArrayCollection();
+    }
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="team_name", type="string", length=255)
+     */
+    private $teamName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255)
+     */
+    private $email;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="edition", type="smallint")
+     */
+    private $edition;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="naf_number", type="integer")
+     */
+    private $nafNumber;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="points", type="integer")
+     */
+    private $points;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="opponents_points", type="integer")
+     */
+    private $opponentsPoints;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="net_td", type="integer")
+     */
+    private $netTd;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="casualties", type="integer")
+     */
+    private $casualties;    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="ready", type="boolean")
+     */
+    private $ready;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
-    public function getTeamName() {
+    /**
+     * Set teamName
+     *
+     * @param string $teamName
+     * @return Coach
+     */
+    public function setTeamName($teamName)
+    {
+        $this->teamName = $teamName;
+
+        return $this;
+    }
+
+    /**
+     * Get teamName
+     *
+     * @return string 
+     */
+    public function getTeamName()
+    {
         return $this->teamName;
     }
 
-    public function setTeamName($teamName) {
-        $this->teamName = \mb_convert_encoding($teamName, 'UTF-8');
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Coach
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
-    public function getName() {
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function setName($name) {
-        $this->name = \mb_convert_encoding($name, 'UTF-8');
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return Coach
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
     }
 
-    public function getRace() {
-        return $this->race;
+    /**
+     * Get email
+     *
+     * @return string 
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
-    public function setRace($raceId) {
-        $this->race = \intval($raceId);
+    /**
+     * Set edition
+     *
+     * @param integer $edition
+     * @return Coach
+     */
+    public function setEdition($edition)
+    {
+        $this->edition = $edition;
+
+        return $this;
     }
 
-    public function getEmailAddress() {
-        return $this->emailAddress;
-    }
-
-    public function setEmailAddress($email) {
-        $this->emailAddress = \mb_convert_encoding($email, 'UTF-8');
-    }
-
-    public function getNafNumber() {
-        return $this->nafNumber;
-    }
-
-    public function setNafNumber($nafNumber) {
-        $this->nafNumber = \intval($nafNumber);
-    }
-
-    public function getReady() {
-        return $this->ready;
-    }
-
-    public function setReady($ready) {
-        $this->ready = \boolval($ready);
-    }
-
-    public function getEdition() {
+    /**
+     * Get edition
+     *
+     * @return integer 
+     */
+    public function getEdition()
+    {
         return $this->edition;
     }
 
-    public function setEdition($edition) {
-        $this->edition = \intval($edition);
+    /**
+     * Set nafNumber
+     *
+     * @param integer $nafNumber
+     * @return Coach
+     */
+    public function setNafNumber($nafNumber)
+    {
+        $this->nafNumber = $nafNumber;
+
+        return $this;
     }
 
-    public function getCoachTeam() {
+    /**
+     * Get nafNumber
+     *
+     * @return integer 
+     */
+    public function getNafNumber()
+    {
+        return $this->nafNumber;
+    }
+
+    /**
+     * Set ready
+     *
+     * @param boolean $ready
+     * @return Coach
+     */
+    public function setReady($ready)
+    {
+        $this->ready = $ready;
+
+        return $this;
+    }
+
+    /**
+     * Get ready
+     *
+     * @return boolean 
+     */
+    public function getReady()
+    {
+        return $this->ready;
+    }
+
+    /**
+     * Set race
+     *
+     * @param \FantasyFootball\TournamentCoreBundle\Entity\Race $race
+     * @return Coach
+     */
+    public function setRace(\FantasyFootball\TournamentCoreBundle\Entity\Race $race = null)
+    {
+        $this->race = $race;
+
+        return $this;
+    }
+
+    /**
+     * Get race
+     *
+     * @return \FantasyFootball\TournamentCoreBundle\Entity\Race 
+     */
+    public function getRace()
+    {
+        return $this->race;
+    }
+
+    /**
+     * Set coachTeam
+     *
+     * @param \FantasyFootball\TournamentCoreBundle\Entity\CoachTeam $coachTeam
+     * @return Coach
+     */
+    public function setCoachTeam(\FantasyFootball\TournamentCoreBundle\Entity\CoachTeam $coachTeam = null)
+    {
+        $this->coachTeam = $coachTeam;
+
+        return $this;
+    }
+
+    /**
+     * Get coachTeam
+     *
+     * @return \FantasyFootball\TournamentCoreBundle\Entity\CoachTeam 
+     */
+    public function getCoachTeam()
+    {
         return $this->coachTeam;
     }
 
-    public function setCoachTeam($coachTeamId) {
-        $this->coachTeam = \intval($coachTeamId);
+    /**
+     * Set points
+     *
+     * @param integer $points
+     * @return Coach
+     */
+    public function setPoints($points)
+    {
+        $this->points = $points;
+
+        return $this;
     }
 
-}
+    /**
+     * Get points
+     *
+     * @return integer 
+     */
+    public function getPoints()
+    {
+        return $this->points;
+    }
 
-?>
+    /**
+     * Set opponentsPoints
+     *
+     * @param integer $opponentsPoints
+     * @return Coach
+     */
+    public function setOpponentsPoints($opponentsPoints)
+    {
+        $this->opponentsPoints = $opponentsPoints;
+
+        return $this;
+    }
+
+    /**
+     * Get opponentsPoints
+     *
+     * @return integer 
+     */
+    public function getOpponentsPoints()
+    {
+        return $this->opponentsPoints;
+    }
+
+    /**
+     * Set netTd
+     *
+     * @param integer $netTd
+     * @return Coach
+     */
+    public function setNetTd($netTd)
+    {
+        $this->netTd = $netTd;
+
+        return $this;
+    }
+
+    /**
+     * Get netTd
+     *
+     * @return integer 
+     */
+    public function getNetTd()
+    {
+        return $this->netTd;
+    }
+
+    /**
+     * Set casualties
+     *
+     * @param integer $casualties
+     * @return Coach
+     */
+    public function setCasualties($casualties)
+    {
+        $this->casualties = $casualties;
+
+        return $this;
+    }
+
+    /**
+     * Get casualties
+     *
+     * @return integer 
+     */
+    public function getCasualties()
+    {
+        return $this->casualties;
+    }
+}

@@ -1,0 +1,41 @@
+_add_coach:
+   path:    /add/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Add }
+   requirements:
+      edition:  \d+
+
+_modify_coach:
+   path:    /modify/{coachId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Modify }
+   requirements:
+      coachId:  \d+
+
+_ready_coach:
+   path:    /ready/{coachId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Ready }
+   requirements:
+      coachId:  \d+
+
+_unready_coach:
+   path:    /unready/{coachId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Unready }
+   requirements:
+      coachId:  \d+
+
+_delete_coach:
+   path:    /delete/{coachId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:Delete }
+   requirements:
+      coachId:  \d+
+
+_list_coach:
+   path:    /list/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:List }
+   requirements:
+      edition:  \d+
+
+_view_coach:
+   path:    /view/{coachId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:View }
+   requirements:
+      coachId:  \d+
