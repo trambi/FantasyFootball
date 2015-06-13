@@ -75,6 +75,7 @@ class DataProvider {
     const editionQuery = 'SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy,pairing_strategy as pairingStrategy, first_day_round as firstDayRound FROM tournament_edition';
     const deletepreCoachQuery = 'DELETE FROM tournament_precoach';
     const updateTeamQuery = 'UPDATE INTO tournament_coach SET team_name=?,name=?,id_race=?,email=?,fan_factor=?,naf_number=?,edition=?,ready=? WHERE id=?';
+    const coachTeamGames = 'SELECT DISTINCT c1.id_coach_team as id1, c2.id_coach_team as id2 FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
 
     public function getRacesByEdition($edition) {
         $query = self::raceQuery;
@@ -840,6 +841,68 @@ class DataProvider {
         }
         $this->resultClose($result);
         return $editions;
+    }
+
+    private static function hydrateGames(Array $games, $id1, $id2)
+    {
+        if ( array_key_exists($id1, $games) )
+        {
+            $tmpArray = $games[$id1];
+            $tmpArray[] = $id2;
+            $games[$id1] = $tmpArray;
+        }
+        else
+        {
+            $games[$id1] = array($id2);
+        }
+        if ( array_key_exists($id2, $games) )
+        {
+            $tmpArray = $games[$id2];
+            $tmpArray[] = $id1;
+            $games[$id2] = $tmpArray;
+        }
+        else
+        {
+            $games[$id2] = array($id1);
+        }
+        return $games;
+    }
+
+    protected function getCoachTeamGames($clause)
+    {
+        $query = self::coachTeamGames;
+        $query .= ' WHERE ' . $clause;
+        //echo 'request : [',$query,']<br />';
+        $result = $this->query($query);
+        $coachTeamGames = array();
+        $row = $this->resultFetchRow($result);
+        while (null != $row) {
+            $id1 = $row['id1'];
+            $id2 = $row['id2'];
+            $coachTeamGames = self::hydrateGames($coachTeamGames,$id1,$id2);
+            $row = $this->resultFetchRow($result);
+        }
+        $this->resultClose($result);
+        return $coachTeamGames;
+    }
+
+    public function getCoachTeamGamesByEdition($edition)
+    {
+        $clause = 'edition = '.intval($edition);
+        return $this->getCoachTeamGames($clause);
+    }
+    
+    public function getCoachGamesByEdition($edition)
+    {
+        $matchs = $this->getMatchsByEditionAndRound($edition,0);
+        $games = array();
+        foreach($matchs as $match)
+        {
+            $id1 = $match->teamId1;
+            $id2 = $match->teamId2;
+            $games = self::hydrateGames($games,$id1,$id2);
+        }
+        return $games;
     }
 
 }
