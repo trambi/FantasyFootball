@@ -12,7 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Game
 {
-    const ALLOWED_STATUS = array('programme','resume','detail');
+    static private $allowedStatus = array(self::SCHEDULED,self::RESUMED,self::DETAILED);
+    const SCHEDULED = 'programme';
+    const RESUMED = 'resume';
+    const DETAILED = 'detail';
     /**
      * @var integer
      *
@@ -99,6 +102,10 @@ class Game
      */
     private $tableNumber;
 
+    public function __construct()
+    {
+        $this->status = self::SCHEDULED;
+    }
 
     /**
      * Get id
@@ -325,7 +332,7 @@ class Game
      */
     public function setStatus($status)
     {
-        if ( in_array($status,ALLOWED_STATUS) ){
+        if ( in_array($status,self::allowedStatus) ){
             $this->status = $status;    
         }else{
             //@TODO FIXME
