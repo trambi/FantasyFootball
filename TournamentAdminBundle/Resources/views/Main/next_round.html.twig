@@ -1,0 +1,10 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Administration &eacute;dition {{edition}} - Appariement apres le tour : {{round}}{% endblock %}
+
+{% block body %}
+<h1>Administration &eacute;dition {{edition}} - tour : {{round}}</h1>
+
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}" >Administration</a>
+{% endblock %}
+
