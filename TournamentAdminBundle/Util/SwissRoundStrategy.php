@@ -23,10 +23,13 @@ class SwissRoundStrategy extends PairingStrategy{
         if ( 2 === $nbToPaired ) {
             if ($this->isAllowed($toPaired[0], $toPaired[1], $constraints)) {
                 $paired[] = array($toPaired[0], $toPaired[1]);
-                
                 return $paired;
             }
             return null;
+        }
+        
+        if( 1 === $nbToPaired){
+            return $paired;
         }
 
         $roster = $toPaired[0];
@@ -41,9 +44,9 @@ class SwissRoundStrategy extends PairingStrategy{
                 $newToPaired = $this->removeValuesByKeys($toPaired, array(0, $i));
                 
                 $tab_pairs = $this->pairing($paired, $newToPaired, $constraints);
-                if ( null === $tab_pairs )
+                if ( null === $tab_pairs ){
                     continue;
-                
+                }
                 return $tab_pairs;
             }
         }
