@@ -5,11 +5,6 @@ namespace FantasyFootball\TournamentCoreBundle\Tests\Util;
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
 use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 
-/*
-  $conf = $this->get('fantasy_football_core_db_conf');
-  $data = new DataProvider($conf);
-  $coaches = $data->getCoachsByEdition($edition);
- */
 
 class DataProviderTest extends \PHPUnit_Framework_TestCase {
 
