@@ -113,9 +113,8 @@ class MainController extends Controller
         $em = $this->getDoctrine()->getManager();
         $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
         $round = $editionObj->getCurrentRound();
-        
         $isFullTeam = $editionObj->getFullTriplette();
-        
+        $games = array();
         if ( 0 == $round )
         {
             if (1 === $isFullTeam )
@@ -141,11 +140,26 @@ class MainController extends Controller
         }
         
         $pairing = new SwissRoundStrategy();
-        $coachTeamPairing = $pairing->pairing(array(), $toPair,$constraints);
-        echo "<pre>coachTeamPairing",print_r($coachTeamPairing),"</pre>";
-        //$coachTeamPairing = array();
-        //echo "<pre>toPair : ",print_r($toPair),"</pre>";
-        //echo "<pre>constraints : ",print_r($constraints),"</pre>";
+        if (1 === $isFullTeam )
+        {
+            $coachTeamPairing = $pairing->pairing(array(), $toPair,$constraints);
+            foreach($coachTeamPairing as $teamGame){
+                $teamCoachId1 = $teamGame[0];
+                $teamCoachId2 = $teamGame[1];
+                
+                foreach( $sortedCoachsByTeamCoachId[$teamCoachId1] as $index => $rosterId ){
+                    $opponentRosterIds = $sortedCoachsByTeamCoachId[$teamCoachId2];
+                    $opponentRosterId = $opponentRosterIds[$index];
+                    $games[]=[$rosterId,$opponentRosterId];
+                }
+            }
+        }else{
+            $coachPairing = $pairing->pairing(array(), $toPair,$constraints);
+            foreach($coachPairing as $game){
+                $games[]=[$teamGame[0],$teamGame[1]];
+            }
+        }
+        echo 'games : <pre>',print_r($games),'</pre>';
         return $this->render('FantasyFootballTournamentAdminBundle:Main:next_round.html.twig',
                 array('edition'=>$edition,
                     'round'=>$round,
