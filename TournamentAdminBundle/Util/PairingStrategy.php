@@ -10,7 +10,7 @@ namespace FantasyFootball\TournamentAdminBundle\Util;
 abstract class PairingStrategy 
 {
 
-    protected function isAllowed($roster1, $roster2, $constraints = array())
+    public function isAllowed($roster1, $roster2, $constraints = array())
     {
         $isAllowed = true;
         if (array_key_exists($roster1, $constraints))
