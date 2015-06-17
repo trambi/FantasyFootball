@@ -1,0 +1,29 @@
+_add_game:
+   path:    /add/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:Add }
+   requirements:
+      edition:  \d+
+
+_modify_game:
+   path:    /modify/{gameId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:Modify }
+   requirements:
+      gameId:  \d+
+
+_resume_game:
+   path:    /resume/{gameId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:Resume }
+   requirements:
+      gameId:  \d+
+
+_delete_game:
+   path:    /delete/{gameId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:Delete }
+   requirements:
+      gameId:  \d+
+
+_view_game:
+   path:    /view/{gameId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:View }
+   requirements:
+      gameId:  \d+

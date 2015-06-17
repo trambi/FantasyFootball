@@ -1,37 +1,66 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}FantasyFootballTournamentAdminBundle:Coach:Add{% endblock %}
+{% block title %}D&eacute;tail sur le coach {{ coach.getName() }}{% endblock %}
 
 {% block body %}
-<h1>Coach : {{ coach.getName() }}</h1>
-<dl>
-<dt>Identifiant en base :</dt><dd>{{ coach.getId() }}</dd>
-<dt>Numéro NAF :</dt><dd>{{ coach.getNafNumber() }}</dd>
-<dt>Nom d'&eacute;quipe :</dt><dd>{{ coach.getTeamName() }}</dd>
-<dt>Race :</dt><dd>{%if race %}{{ race.getNomFr() }} ({{ race.getId() }}){% endif %}</dd>
-<dt>Courriel :</dt><dd>{{ coach.getEmail() }}</dd>
-<dt>Pr&ecirc;t :</dt><dd>{{ coach.getReady() }}</dd>
-<dt>Triplette :</dt>
-<dd>{%if coachTeam %}
-    <a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.getId()} ) }}">{{ coachTeam.getName()}}</a>
-    ({{ coachTeam.getId() }}){% endif %}</dd>
+<h1>Coach : {{ coach.getName() }} <span class="badge">{{ coach.getId() }}</span></h1>
+<ul class="list-group">
+{%if coach.getNafNumber() %}<li class="list-group-item"><label>Numéro NAF :</label> {{ coach.getNafNumber() }}</li>{% endif %}
+{%if coach.getTeamName() %}<li class="list-group-item"><label>Nom d'&eacute;quipe :</label> {{ coach.getTeamName() }}</li>{% endif %}
+{%if race %}<li class="list-group-item"><label>Race :</label>
+    {{ race.getNomFr() }}<span class="badge">{{ race.getId() }}</span></li>{% endif %}
+<li class="list-group-item"><label>Courriel :</label> {{ coach.getEmail() }}</li>
+<li class="list-group-item"><label>Pr&ecirc;t :</label> {{ coach.getReady() }}</li>
+<li class="list-group-item"><label>Triplette :{%if coachTeam %}
+    <a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.getId()} ) }}" class="btn btn-info" role="button" >
+    {{ coachTeam.getName()}}</a>
+    <span class="badge">{{ coachTeam.getId() }}</span>{% endif %}</li>
 {%if matchs %}
-<dt>Matchs :</dt>
-<dd>
-<ul>
+<li class="list-group-item"><label>Matchs </label>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tour</th>
+            <th>Table</th>
+            <th>Adversaire</th>
+            <th>Score</th>
+            <th>Sorties</th>
+            <th>Sorties adverses</th>
+            <th>Points</th>
+            <th>Points adverses</th>
+        </tr>
+    </thead>
+    <tbody>
 {% for match in matchs %}
-	<li> {{match.td1}}
-	 vs {{match.td2}} <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" >{{match.coach2}}</a>
-	({{match.casualties1}} sorties et {{match.points1}} points 
-	- {{match.casualties2}} sorties et {{match.points2}} points ) </li>
+    <tr>
+        <td>{{match.round}}</td>
+        <td>{{match.table}}</td>
+        <td><a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" class="btn btn-info" role="button" >{{match.coach2}}</a></td>
+        {% if match.status == 'programme' %}
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        {% else %}
+        <td>{{match.td1}} - {{match.td2}}</td>
+        <td>{{match.casualties1}}</td>
+        <td>{{match.casualties2}}</td>
+        <td>{{match.points1}}</td>
+        <td>{{match.points2}}</td>    
+        {% endif %}
+        </tr>
 {% endfor %}
-</ul></dd>
+    </tbody>
+</table>
+</li>
 {% endif %}
-<dt>Points : </dt><dd>{{coach.getPoints()}}</dd>
-<dt>Points adverses : </dt><dd>{{coach.getOpponentsPoints()}}</dd>
-<dt>Diff&eacute;rence de touchdown :</dt><dd>{{coach.getNetTd()}}</dd>
-<dt>Sorties :</dt><dd>{{coach.getCasualties()}}</dd>
-</dl>
-<a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" >Modifier</a>
-<a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" >Supprimer</a>
+<li class="list-group-item"><label>Points : </label> {{coach.getPoints()}}</li>
+<li class="list-group-item"><label>Points adverses : </label> {{coach.getOpponentsPoints()}}</li>
+<li class="list-group-item"><label>Diff&eacute;rence de touchdown : </label> {{coach.getNetTd()}}</li>
+<li class="list-group-item"><label>Sorties : </label> {{coach.getCasualties()}}</li>
+</ul>
+<a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" class="btn btn-primary" role="button" >Modifier</a>
+<a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':coach.edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}
