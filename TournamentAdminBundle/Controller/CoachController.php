@@ -85,13 +85,13 @@ class CoachController extends Controller
     public function ReadyAction($coachId)
     {
         $this->setReady($coachId,true);
-        return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+        return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
     
     public function UnreadyAction($coachId)
     {
         $this->setReady($coachId,false);
-        return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+        return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
     
     public function ModifyAction(Request $request,$coachId)

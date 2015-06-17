@@ -24,11 +24,6 @@ class Coach
      */
     protected $coachTeam;
     
-    /**
-     * @ORM\OneToMany(targetEntity="Game", mappedBy="coach")
-     */
-    protected $games;
-
     public function __construct()
     {
         $this->games = new ArrayCollection();

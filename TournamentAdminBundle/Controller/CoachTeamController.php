@@ -167,8 +167,9 @@ class CoachTeamController extends Controller
         ->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')
         ->find($coachTeamId);
     	$matchs = $data->getMatchsByCoachTeam($coachTeamId);
+        $edition = $coachTeam->getCoachs()[0]->getEdition();
 	return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:View.html.twig', array(
-  		'coachTeam'=>$coachTeam,'matchs'=>$matchs));
+  		'coachTeam'=>$coachTeam,'matchs'=>$matchs,'edition'=>$edition));
     }
       
     public function ListAction($edition)
