@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Game
  *
- * @ORM\Table()
+ * @ORM\Table(name="tournament_match")
  * @ORM\Entity(repositoryClass="FantasyFootball\TournamentCoreBundle\Entity\GameRepository")
  */
 class Game
@@ -24,7 +24,19 @@ class Game
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Coach")
+     * @ORM\JoinColumn(name="id_coach_1", referencedColumnName="id")
+     */
+    private $coach1;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Coach")
+     * @ORM\JoinColumn(name="id_coach_2", referencedColumnName="id")
+     */
+    private $coach2;
+    
     /**
      * @var integer
      *
@@ -105,6 +117,13 @@ class Game
     public function __construct()
     {
         $this->status = self::SCHEDULED;
+        $this->finale = false;
+        $this->points1 = 0;
+        $this->points2 = 0;
+        $this->td1 = 0;
+        $this->td2 = 0;
+        $this->casualties1 = 0;
+        $this->casualties2 = 0;
     }
 
     /**
@@ -117,6 +136,50 @@ class Game
         return $this->id;
     }
 
+    /**
+     * Set coach1
+     *
+     * @param Coach $coach
+     * @return Game
+     */
+    public function setCoach1($coach)
+    {
+        $this->coach1 = $coach;
+        return $this;
+    }
+
+    /**
+     * Get coach1
+     *
+     * @return Coach
+     */
+    public function getCoach1()
+    {
+        return $this->coach1;
+    }
+
+        /**
+     * Set coach2
+     *
+     * @param Coach $coach
+     * @return Game
+     */
+    public function setCoach2($coach)
+    {
+        $this->coach2 = $coach;
+        return $this;
+    }
+
+    /**
+     * Get coach2
+     *
+     * @return Coach
+     */
+    public function getCoach2()
+    {
+        return $this->coach2;
+    }
+    
     /**
      * Set td1
      *
