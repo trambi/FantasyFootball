@@ -1,0 +1,141 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Synth&egrave;se de l'&eacute;dition {{edition}}{% endblock %}
+
+{% block body %}
+<div class="container">
+<h2>Synth&egrave;se de l'&eacute;dition {{edition}}</h2>
+<div class="row">
+<div class="col-lg-6">
+<h3>Individuel</h3>
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Coach</th>
+            <th>Points</th>
+            <th>Points adverses</th>
+            <th>Touchdowns et sorties</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for coach in ranking|slice(0,3) %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
+            <td>{{coach.points}}</td>
+            <td>{{coach.opponentsPoints}}</td>
+            <td>{{coach.td + coach.casualties }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+</div>
+<div class="col-lg-6">
+<h3>Sorties</h3>
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Coach</th>
+            <th>Sorties</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for coach in casRanking|slice(0,3) %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
+            <td>{{ coach.casualties }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+<div class="row">
+<div class="col-lg-6">
+<h3>Touchdowns</h3>
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Coach</th>
+            <th>Touchdowns</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for coach in tdRanking|slice(0,3) %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
+            <td>{{ coach.td }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+</div>
+<div class="col-lg-6">
+<h3>Retour</h3>
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Coach</th>
+            <th>Places gagn&eacute;es</th>
+            <th>Place J1</th>
+            <th>Place J2</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for coach in comebackRanking|slice(0,3) %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
+            <td>{{ coach.diffRanking }}</td>
+            <td>{{ coach.firstDayRanking }}</td>
+            <td>{{ coach.finalRanking }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+<div class="row">
+<div class="col-lg-12">
+<h3>Triplette</h3>
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Triplette</th>
+            <th>Participants</th>
+            <th>Points d'&eacute;quipe</th>
+            <th>Points des participants</th>
+            <th>Points adverses</th>
+            <th>Touchdowns et sorties</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for coachTeam in coachTeamRanking|slice(0,3) %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td><a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.id} )  }}" class="btn btn-info" role="button" >{{coachTeam.name}}</a></td>
+            <td>
+    {% for innerCoach in coachTeam.teams %}{% if loop.last %} et {% else %}{% if loop.first == false %}, {% endif %}{% endif %}{{ innerCoach.coach }}{% endfor %}
+            <td>{{coachTeam.coachTeamPoints}}</td>
+            <td>{{coachTeam.points}}</td>
+            <td>{{coachTeam.opponentsPoints}}</td>
+            <td>{{coachTeam.tdFor + coachTeam.casFor }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+</div>
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}" class="btn btn-primary" role="button">Administration</a>
+<a href="{{ path('_coach_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement individuel</a>
+<a href="{{ path('_coach_team_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement triplette</a>
+<a href="{{ path('_td_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement touchdowns</a>
+<a href="{{ path('_casualties_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement sorties</a>
+<a href="{{ path('_comeback_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement retour</a>
+{% endblock %}

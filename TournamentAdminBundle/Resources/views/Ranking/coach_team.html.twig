@@ -1,0 +1,40 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Classement par triplette &eacute;dition {{edition}}{% endblock %}
+
+{% block body %}
+<h2>Classement par triplette &eacute;dition {{edition}}</h2>
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Triplette</th>
+            <th>Participants</th>
+            <th>Points</th>
+            <th>Points adverses</th>
+            <th>Touchdowns et sorties</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for coachTeam in ranking %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td><a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.id} )  }}" class="btn btn-info" role="button" >{{coachTeam.name}}</a></td>
+            <td>
+    {% for innerCoach in coachTeam.teams %}{% if loop.last %} et {% else %}{% if loop.first == false %}, {% endif %}{% endif %}{{ innerCoach.coach }}{% endfor %}
+            <td>{{coachTeam.coachTeamPoints}}</td>
+            <td>{{coachTeam.opponentsPoints}}</td>
+            <td>{{coachTeam.tdFor + coachTeam.casFor }}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}" class="btn btn-primary" role="button">Administration</a>
+<a href="{{ path('_coach_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement individuel</a>
+<a href="{{ path('_coach_team_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement triplette</a>
+<a href="{{ path('_td_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement touchdowns</a>
+<a href="{{ path('_casualties_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement sorties</a>
+<a href="{{ path('_comeback_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Classement retour</a>
+<a href="{{ path('_all_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Synth&egrave;se</a>
+{% endblock %}

@@ -1,0 +1,35 @@
+_coach_ranking:
+   path:    /coach/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Ranking:coach }
+   requirements:
+      edition:  \d+
+
+_coach_team_ranking:
+   path:    /coachteam/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Ranking:coachTeam }
+   requirements:
+      edition:  \d+
+
+_td_ranking:
+   path:    /td/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Ranking:coachByTouchdown }
+   requirements:
+      edition:  \d+
+
+_casualties_ranking:
+   path:    /cas/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Ranking:coachByCasualties }
+   requirements:
+      edition:  \d+
+
+_comeback_ranking:
+   path:    /comeback/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Ranking:coachByComeback }
+   requirements:
+      edition:  \d+
+      
+_all_ranking:
+   path:    /all/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Ranking:all }
+   requirements:
+      edition:  \d+
