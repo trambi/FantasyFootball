@@ -162,6 +162,9 @@ class DataProvider {
                     $coach->netTd = 0;
                     $coach->casualties = 0;
                     $coach->special = 0;
+                    $coach->td = 0;
+                    $coach->opponentDirectPoints = 0;
+                    $coach->opponents = array();
                 }
                 $coachs[$coach->id] = $coach;
                 $row = $this->resultFetchRow($result);
@@ -370,7 +373,7 @@ class DataProvider {
             $query .= ' AND m.round=' . $roundConverted;
         }
         if ('programme' === $state) {
-            $query .= ' AND m.status == \'programme\'';
+            $query .= ' AND m.status = \'programme\'';
         } elseif ('!programme' === $state) {
             $query .= ' AND m.status != \'programme\'';
         }
@@ -532,6 +535,30 @@ class DataProvider {
         return $casualtiesRanking;
     }
 
+    public function getAllRanking($edition,$rankingStrategy){
+        $ranking = $this->getCoachRankingBetweenRounds($edition->id, 0, $edition->currentRound);
+        
+        $casualtiesRanking = $ranking;
+        usort($casualtiesRanking, array($this, 'compareCoachsByCasualties'));
+
+        $tdRanking = $ranking;
+        usort($tdRanking, array($this, 'compareCoachsByTouchdown'));
+        
+        $comebackRanking = $this->getCoachRankingByComeback($edition,$rankingStrategy);
+        
+        $coachTeamRaning = $this->getCoachTeamRanking($edition->id, $rankingStrategy);
+
+        usort($ranking,array($rankingStrategy, 'compareCoachs'));
+
+        return ([
+            'ranking' => $ranking,
+            'casRanking' => $casualtiesRanking,
+            'tdRanking' => $tdRanking,
+            'comebackRanking' => $comebackRanking,
+            'coachTeamRanking' => $coachTeamRaning
+        ]);
+    }
+    
     public function compareCoachsByComeback($coach1, $coach2) {
         $finalRanking1 = $coach1->finalRanking;
         $finalRanking2 = $coach2->finalRanking;
