@@ -4,7 +4,6 @@ namespace FantasyFootball\TournamentAdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FantasyFootball\TournamentCoreBundle\Entity\Coach;
-use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
 use FantasyFootball\TournamentAdminBundle\Util\DataUpdater;
 use FantasyFootball\TournamentAdminBundle\Form\CoachType;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,15 +70,9 @@ class CoachController extends Controller
     protected function setReady($coachId, $ready)
     {
         $em = $this->getDoctrine()->getManager();
-        
         $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);
-        
-	//$conf = $this->get('fantasy_football_core_db_conf');
-    	//$data = new DataUpdater($conf);
-    	//$coach = new Coach($data->getCoachById($coachId));
-        $coach->setReady($ready);
+	$coach->setReady($ready);
         $em->flush();
-        //$data->setUnreadyCoach($coach);
     }
     
     public function ReadyAction($coachId)
