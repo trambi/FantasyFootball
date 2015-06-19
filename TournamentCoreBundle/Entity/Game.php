@@ -395,7 +395,7 @@ class Game
      */
     public function setStatus($status)
     {
-        if ( in_array($status,self::allowedStatus) ){
+        if ( in_array($status,self::$allowedStatus) ){
             $this->status = $status;    
         }else{
             //@TODO FIXME
