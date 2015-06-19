@@ -1,6 +1,6 @@
 _add_game:
-   path:    /add/{edition}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:Add }
+   path:    /schedule/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:Schedule }
    requirements:
       edition:  \d+
 

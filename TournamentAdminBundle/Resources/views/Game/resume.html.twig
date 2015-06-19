@@ -1,7 +1,9 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}FantasyFootballTournamentAdminBundle:Game:resume{% endblock %}
+{% block title %}Resum&eacute; du match {{ game.coach1.name}} vs {{ game.coach2.name}}{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Game:resume page</h1>
+<h1>match {{ game.coach1.name}} vs {{ game.coach2.name}} <span class="badge">{{game.id}}</span></h1>
+<h2>Tour {{game.round}} - table {{game.tableNumber}}</h2>
+{{ form(form) }}
 {% endblock %}
