@@ -36,26 +36,21 @@
     <thead>
         <tr>
             <th>Table</th>
-            <th>Joueur</th>
-            <th>Adversaire</th>
+            <th>Adversaires</th>
             <th>Score</th>
             <th>Sorties</th>
-            <th>Sorties adverses</th>
             <th>Points</th>
-            <th>Points adverses</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
 {% for match in playedMatches %}
     <td>{{match.table}}</td>
-    <td><a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" class="btn btn-info" role="button"  >{{match.coach1}}</a></td>
-    <td><a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" class="btn btn-info" role="button"  >{{match.coach2}}</a></td>
+    <td><a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" class="btn btn-info" role="button"  >{{match.coach1}}</a>
+    - <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" class="btn btn-info" role="button"  >{{match.coach2}}</a></td>
     <td>{{match.td1}} - {{match.td2}}</td>
-    <td>{{match.casualties1}}</td>
-    <td>{{match.casualties2}}</td>
-    <td>{{match.points1}}</td>
-    <td>{{match.points2}}</td>    
+    <td>{{match.casualties1}} - {{match.casualties2}}</td>
+    <td>{{match.points1}} - {{match.points2}}</td>    
     <td>
         <a href="{{ path('_modify_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >Modifier</a>
         <a href="{{ path('_delete_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >Supprimer</a></td>
