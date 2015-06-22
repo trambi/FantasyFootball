@@ -3,14 +3,16 @@
 namespace FantasyFootball\TournamentAdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use FantasyFootball\TournamentCoreBundle\Entity\Coach;
-use FantasyFootball\TournamentAdminBundle\Util\DataUpdater;
-use FantasyFootball\TournamentAdminBundle\Form\CoachType;
 use Symfony\Component\HttpFoundation\Request;
+
+use FantasyFootball\TournamentAdminBundle\Util\DataUpdater;
+
+use FantasyFootball\TournamentCoreBundle\Entity\Coach;
+use FantasyFootball\TournamentAdminBundle\Form\CoachType;
 
 class CoachController extends Controller
 {
-    protected function createCustomForm(Coach $coach,array $races)
+    /*protected function createCustomForm(Coach $coach,array $races)
     {
         $raceChoice = array();
         foreach($races as $key=>$obj){
@@ -19,11 +21,11 @@ class CoachController extends Controller
         $form = $this->createFormBuilder($coach)
                     ->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'))
                     ->add('name', 'text',array('label'=>'Nom :'))
-                    ->add('race', 'choice',
+                    ->add('race', 'entity',
                         array('label'=>'Race :',
                             'choices'   => $raceChoice,
                             'required'  => true))
-                    ->add('emailAddress', 'email',array('label'=>'Courriel :'))
+                    ->add('email', 'email',array('label'=>'Courriel :'))
                     ->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'))
                     ->add('ready', 'checkbox',array(
                         'label' => 'Coach prêt ?',
@@ -31,36 +33,20 @@ class CoachController extends Controller
                     ->add('save','submit',array('label'=>'Valider'))
                     ->getForm();
         return $form;
-    }
+    }*/
     
     public function AddAction(Request $request,$edition)
     {
         $coach = new Coach();
         $coach->setEdition($edition);
 		
-        $conf = $this->get('fantasy_football_core_db_conf');
-        $data = new DataUpdater($conf);
-        $races = $data->getRacesByEdition($edition);
-        
-        $form = $this->createCustomForm($coach, $races);
-        /*    $form = $this->createFormBuilder($coach)
-				->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'))
-				->add('name', 'text',array('label'=>'Nom :'))
-				->add('race', 'choice',array(
-				   'label'		=>	'Race :',
-					'choices'   => $raceChoice,
-					'required'  => true))
-				->add('emailAddress', 'email',array('label'=>'Courriel :'))
-				->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'))
-				->add('ready', 'checkbox',array(
-					'label' => 'Coach prêt ?',
-					'required' => false))
-				->add('save','submit',array('label'=>'Valider'))
-				->getForm();*/
+        $form = $this->createForm(new CoachType($edition),$coach);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $data->insertCoach($coach);
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($coach);
+            $em->flush();
+            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
         }
 
         return $this->render('FantasyFootballTournamentAdminBundle:Coach:Add.html.twig', array(
@@ -89,21 +75,18 @@ class CoachController extends Controller
     
     public function ModifyAction(Request $request,$coachId)
     {
-	$conf = $this->get('fantasy_football_core_db_conf');
-    	$data = new DataUpdater($conf);
-    	$coach = new Coach($data->getCoachById($coachId));
+    	$em = $this->getDoctrine()->getManager();
+        $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);
     	$edition = $coach->getEdition();
-	$races = $data->getRacesByEdition($edition);
-		
-	$form = $this->createCustomForm($coach,$races);
+        $form = $this->createForm(new CoachType($edition),$coach);
 	$form->handleRequest($request);
-	$coach->id = $coachId;
 	if ($form->isValid()) {
-            $data->modifyCoach($coach);
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+            $em->flush();
+            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
 	}
 	return $this->render('FantasyFootballTournamentAdminBundle:Coach:Modify.html.twig', array(
-				'form' => $form->createView() ) );    
+				'form' => $form->createView(),
+                                'coach' => $coach) );    
     }
 
     public function DeleteAction(Request $request,$coachId)
@@ -137,7 +120,6 @@ class CoachController extends Controller
             if(! $coach){
                 return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
             }
-
             $matchs = $data->getMatchsByCoach($coachId);
             return $this->render('FantasyFootballTournamentAdminBundle:Coach:View.html.twig', array(
       		'coach'=>$coach,
