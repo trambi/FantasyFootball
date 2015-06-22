@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Race
  *
  * @ORM\Table(name="tournament_race")
- * @ORM\Entity
+  * @ORM\Entity(repositoryClass="FantasyFootball\TournamentCoreBundle\Entity\RaceRepository")
  */
 class Race
 {
@@ -43,28 +43,28 @@ class Race
      *
      * @ORM\Column(name="nom_fr", type="string", length=33)
      */
-    private $nomFr;
+    private $frenchName;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom_en", type="string", length=33)
      */
-    private $nomEn;
+    private $englishName;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom_en_2", type="string", length=33)
      */
-    private $nomEn2;
+    private $englishName2;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom_fr_2", type="string", length=33)
      */
-    private $nomFr2;
+    private $frenchName2;
 
     /**
      * @var integer
@@ -108,97 +108,194 @@ class Race
     }
 
     /**
-     * Set nomFr
+     * Set frenchName
      *
      * @param string $nomFr
+     * @deprecated since version 1
      * @return Race
      */
     public function setNomFr($nomFr)
     {
-        $this->nomFr = $nomFr;
+        $this->frenchName = $nomFr;
+
+        return $this;
+    }
+    
+    /**
+     * Set frenchName
+     *
+     * @param string $frenchName
+     * @return Race
+     */
+    public function setFrenchName($frenchName)
+    {
+        $this->frenchName = $frenchName;
 
         return $this;
     }
 
     /**
-     * Get nomFr
-     *
+     * Get frenchName
+     * @deprecated since version 1
      * @return string 
      */
     public function getNomFr()
     {
-        return $this->nomFr;
+        return $this->frenchName;
+    }
+    
+    /**
+     * Get frenchName
+     *
+     * @return string 
+     */
+    public function getFrenchName()
+    {
+        return $this->frenchName;
     }
 
     /**
-     * Set nomEn
+     * Set englishName
      *
+     * @deprecated since version 1
      * @param string $nomEn
      * @return Race
      */
     public function setNomEn($nomEn)
     {
-        $this->nomEn = $nomEn;
+        $this->englishName = $nomEn;
 
         return $this;
     }
 
     /**
-     * Get nomEn
+     * Get englishName
      *
+     * @deprecated since version 1
      * @return string 
      */
     public function getNomEn()
     {
-        return $this->nomEn;
+        return $this->englishName;
     }
 
     /**
-     * Set nomEn2
+     * Set englishName2
      *
+     * @deprecated since version 1
      * @param string $nomEn2
      * @return Race
      */
     public function setNomEn2($nomEn2)
     {
-        $this->nomEn2 = $nomEn2;
+        $this->englishName2 = $nomEn2;
 
         return $this;
     }
 
     /**
-     * Get nomEn2
-     *
+     * Get englishName2
+     * @deprecated since version 1
      * @return string 
      */
     public function getNomEn2()
     {
-        return $this->nomEn2;
+        return $this->englishName2;
     }
 
     /**
-     * Set nomFr2
+     * Set frenchName2
      *
+     * @deprecated since version 1
      * @param string $nomFr2
      * @return Race
      */
     public function setNomFr2($nomFr2)
     {
-        $this->nomFr2 = $nomFr2;
+        $this->frenchName2 = $nomFr2;
 
         return $this;
     }
 
     /**
-     * Get nomFr2
-     *
+     * Get frenchName2
+     * @deprecated since version 1
      * @return string 
      */
     public function getNomFr2()
     {
-        return $this->nomFr2;
+        return $this->frenchNameFr2;
     }
 
+    /**
+     * Set englishName
+     *
+     * @param string $englishName
+     * @return Race
+     */
+    public function setEnglishName($englishName)
+    {
+        $this->englishName = $englishName;
+
+        return $this;
+    }
+
+    /**
+     * Get englishName
+     *
+     * @return string 
+     */
+    public function getEnglishName()
+    {
+        return $this->englishName;
+    }
+
+    /**
+     * Set englishName2
+     *
+     * @param string $englishName2
+     * @return Race
+     */
+    public function setEnglishName2($englishName2)
+    {
+        $this->englishName2 = $englishName2;
+
+        return $this;
+    }
+
+    /**
+     * Get englishName2
+     *
+     * @return string 
+     */
+    public function getEnglishName2()
+    {
+        return $this->englishName2;
+    }
+
+    /**
+     * Set frenchName2
+     *
+     * @param string $frenchName2
+     * @return Race
+     */
+    public function setFrenchName2($frenchName2)
+    {
+        $this->frenchName2 = $frenchName2;
+
+        return $this;
+    }
+
+    /**
+     * Get frenchName2
+     *
+     * @return string 
+     */
+    public function getFrenchName2()
+    {
+        return $this->frenchName2;
+    }
+    
     /**
      * Set reroll
      *
