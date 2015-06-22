@@ -43,7 +43,7 @@
         <td>-</td>
         <td>-</td>
         {% else %}
-        <td>{{match.td1}} - {{match.td2}}</td>
+        <td><span class="label {% if match.td1 == match.td2 %}label-warning{% elseif match.td1>match.td2 %}label-success{% else %}label-danger{%endif %}">{{match.td1}} - {{match.td2}}</span></td>
         <td>{{match.casualties1}}</td>
         <td>{{match.casualties2}}</td>
         <td>{{match.points1}}</td>
