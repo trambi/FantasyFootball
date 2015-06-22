@@ -17,3 +17,6 @@ fantasy_football_tournament_admin_game:
 fantasy_football_tournament_admin_ranking:
     resource: "routing/ranking.yml"
     prefix:   /ranking
+fantasy_football_tournament_admin_simulate:
+    resource: "routing/simulate.yml"
+    prefix:   /simulate

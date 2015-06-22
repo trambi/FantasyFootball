@@ -1,0 +1,6 @@
+fantasy_football_tournament_simulate_games:
+   path:    /{edition}/{round}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Simulate:games }
+   requirements:
+      edition:  \d+
+      round:  \d+
