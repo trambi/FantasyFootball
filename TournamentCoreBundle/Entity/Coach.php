@@ -3,6 +3,7 @@
 namespace FantasyFootball\TournamentCoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Coach
@@ -27,6 +28,15 @@ class Coach
     public function __construct()
     {
         $this->games = new ArrayCollection();
+        $this->points = 0;
+        $this->opponentsPoints = 0;
+        $this->netTd = 0;
+        $this->casualties = 0;    
+        $this->edition = 0;    
+        $this->nafNumber = 0;    
+        $this->name = '';    
+        $this->teamName = '';    
+        $this->ready = false;
     }
     
     /**
@@ -302,6 +312,44 @@ class Coach
         return $this->coachTeam;
     }
 
+    /**
+     * Has coachTeam
+     *
+     * @return boolean 
+     */
+    public function hasCoachTeam()
+    {
+        return ( null != $this->coachTeam );
+    }
+    
+    public function getStatusString()
+    {
+        $statusStrings = array('success' => 'Ok',
+            'warning' => 'Pas présent',
+            'danger' => 'Pas de triplette'
+            );
+        return ($statusStrings[$this->getStatus()]);
+    }
+    
+    public function getStatus()
+    {
+        if($this->hasCoachTeam())
+        {
+            if( $this->getReady() )
+            {
+                return 'success';
+            }
+            else{
+                return 'warning';
+            }
+                
+        }
+        else
+            {
+            return 'danger';
+        }
+    }
+    
     /**
      * Set points
      *

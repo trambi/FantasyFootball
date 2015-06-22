@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use FantasyFootball\TournamentCoreBundle\Entity\Coach;
 use FantasyFootball\TournamentCoreBundle\Entity\CoachTeam;
 
+use FantasyFootball\TournamentAdminBundle\Form\CoachTeamType;
+
 class CoachTeamController extends Controller
 {
     /*
@@ -39,15 +41,27 @@ class CoachTeamController extends Controller
     public function AddAction(Request $request,$edition)
     {
         $coachTeam = new CoachTeam();
-        $form = $this->createFormBuilder($coachTeam)->getForm();
+        $em = $this->getDoctrine()->getManager();
+        $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')
+                ->getQueryBuilderForCoachsWithoutCoachTeamByEdition($edition)
+                ->setMaxResults(3)
+                ->getQuery()
+                ->getResult();
+        foreach ($coachs as $coach)
+        {
+            $coachTeam->addCoach($coach);
+        }
+        $form = $this->createForm(new CoachTeamType($edition),$coachTeam);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            //$data->insertCoach($coach);
-            //return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+            $em->persist($coachTeam);
+            $em->flush();
+            //return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
         }
         return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Add.html.twig', array(
             'form' => $form->createView()
-            ));    }
+            ));
+    }
 
     public function ModifyAction()
     {

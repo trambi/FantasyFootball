@@ -24,37 +24,43 @@ class CoachRepository  extends EntityRepository {
         }
     }
     
-    public function qbForFreeCoachsCurrentEditionAndCurrentRound()
+    public function getQueryBuilderForCoachsWithoutGameByEditionAndRound($editionId,$round)
     {
         $qb = $this->createQueryBuilder('c');
-        $edition = $this->getEntityManager()
-            ->createQuery('
-                SELECT e FROM FantasyFootballTournamentCoreBundle:Edition e
-                ORDER BY e.day1 DESC')
-             ->setMaxResults(1)
-            ->getSingleResult();
-        $editionId = $edition->getId();
-        $currentRound = $edition->getCurrentRound();
-        $games = $this->getEntityManager()
-            ->createQuery(
+        $games = $this->getEntityManager()->createQuery(
                 'SELECT g
                 FROM FantasyFootballTournamentCoreBundle:Game g
                 WHERE g.edition=:edition
                 AND g.round=:round')
             ->setParameter('edition',$editionId)
-            ->setParameter('round',$currentRound)
+            ->setParameter('round',$round)
             ->getResult();
-
+        $unavailableCoachs = array();
         foreach($games as $game)
         {
             $unavailableCoachs[] = $game->getCoach1()->getId();
             $unavailableCoachs[] = $game->getCoach2()->getId();
         }
         
-        return $qb
-            ->where($qb->expr()->eq('c.edition', $editionId))
-            ->andWhere($qb->expr()->notIn('c.id', $unavailableCoachs));
+        $qb->where($qb->expr()->eq('c.edition', $editionId));
+        if ( 0 != count($unavailableCoachs)){
+            $qb->andWhere($qb->expr()->notIn('c.id', $unavailableCoachs));
+        }
+        $qb->orderBy('c.name', 'ASC');
+        return $qb;
+    }
+    
+    public function getQueryBuilderForCoachsWithoutCoachTeamByEdition($editionId)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->where($qb->expr()->andX(
+                $qb->expr()->eq('c.edition', $editionId),
+                $qb->expr()->orX(
+                        $qb->expr()->eq('c.coachTeam', 0),
+                        $qb->expr()->isNull('c.coachTeam')
+                )));
+        $qb->orderBy('c.name', 'ASC');
+        return $qb;
     }
     
 }
-?>

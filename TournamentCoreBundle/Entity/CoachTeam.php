@@ -72,15 +72,15 @@ class CoachTeam
     }
 
     /**
-     * Add coachs
+     * Add coach
      *
-     * @param \FantasyFootball\TournamentCoreBundle\Entity\Coach $coachs
+     * @param \FantasyFootball\TournamentCoreBundle\Entity\Coach $coach
      * @return CoachTeam
      */
-    public function addCoach(\FantasyFootball\TournamentCoreBundle\Entity\Coach $coachs)
+    public function addCoach(\FantasyFootball\TournamentCoreBundle\Entity\Coach $coach)
     {
-        $this->coachs[] = $coachs;
-
+        $this->coachs[] = $coach;
+        $coach->setCoachTeam($this);
         return $this;
     }
 
@@ -89,9 +89,10 @@ class CoachTeam
      *
      * @param \FantasyFootball\TournamentCoreBundle\Entity\Coach $coachs
      */
-    public function removeCoach(\FantasyFootball\TournamentCoreBundle\Entity\Coach $coachs)
+    public function removeCoach(\FantasyFootball\TournamentCoreBundle\Entity\Coach $coach)
     {
-        $this->coachs->removeElement($coachs);
+        $this->coachs->removeElement($coach);
+        $coach->setCoachTeam();
     }
 
     /**
