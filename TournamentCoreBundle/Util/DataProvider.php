@@ -163,6 +163,8 @@ class DataProvider {
                     $coach->casualties = 0;
                     $coach->special = 0;
                     $coach->td = 0;
+                    $coach->tdFor = 0;
+                    $coach->tdAgainst = 0;
                     $coach->opponentDirectPoints = 0;
                     $coach->opponents = array();
                 }
@@ -618,6 +620,7 @@ class DataProvider {
             $coach1 = $coachs[$match->teamId1];
             $coach1->points += $match->points1;
             $coach1->td += $match->td1;
+            $coach1->tdFor += $match->td1;
             $coach1->netTd += $match->td1 - $match->td2;
             $coach1->casualties += $match->casualties1;
             $coach1->opponentDirectPoints = $match->points2;
@@ -635,13 +638,13 @@ class DataProvider {
 
             $coach2->points += $match->points2;
             $coach2->td += $match->td2;
+            $coach2->tdFor += $match->td2;
             $coach2->netTd += $match->td2 - $match->td1;
             $coach2->casualties += $match->casualties2;
             $coach2->opponentDirectPoints = $match->points1;
             $coach2->opponents[] = $match->teamId1;
             $coachs[$match->teamId1] = $coach1;
             $coachs[$match->teamId2] = $coach2;
-
             $row = $this->resultFetchRow($result);
         }
         $this->resultClose($result);
@@ -669,6 +672,8 @@ class DataProvider {
         $coach->id = 0;
         $coach->points = 0;
         $coach->opponentsPoints = 0;
+        $coach->tdFor = 0;
+        $coach->tdAgainst = 0;
         $coach->netTd = 0;
         $coach->casualties = 0;
         return $coach;
@@ -814,6 +819,8 @@ class DataProvider {
             }
             $coach->opponentIdArray[] = $coachTeamMatchElt->opponentTeam;
             $coach->netTd += $coachTeamMatchElt->td - $coachTeamMatchElt->opponentTd;
+            $coach->tdFor += $coachTeamMatchElt->td;
+            $coach->tdAgainst += $coachTeamMatchElt->opponentTd;
             $coach->casualties += $coachTeamMatchElt->casualties;
             $coachTeam->teams[$coachTeamMatchElt->team] = $coach;
             $coachTeamMatchElt = $this->resultFetchObject($result);
@@ -904,8 +911,8 @@ class DataProvider {
         $coachTeamGames = array();
         $row = $this->resultFetchRow($result);
         while (null != $row) {
-            $id1 = $row['id1'];
-            $id2 = $row['id2'];
+            $id1 = $row[0];
+            $id2 = $row[1];
             $coachTeamGames = self::hydrateGames($coachTeamGames,$id1,$id2);
             $row = $this->resultFetchRow($result);
         }
@@ -915,7 +922,7 @@ class DataProvider {
 
     public function getCoachTeamGamesByEdition($edition)
     {
-        $clause = 'edition = '.intval($edition);
+        $clause = 'm.edition = '.intval($edition);
         return $this->getCoachTeamGames($clause);
     }
     
