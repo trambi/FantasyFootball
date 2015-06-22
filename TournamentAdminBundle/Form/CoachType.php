@@ -6,24 +6,35 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 
+use FantasyFootball\TournamentCoreBundle\Entity\RaceRepository;
+
 class CoachType extends AbstractType
 {
+    public function __construct($editionId)
+    {
+        $this->editionId = $editionId;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'))
-            ->add('name', 'text',array('label'=>'Nom :'))
-            ->add('race', 'choice',array(
-                'label' =>  'Race :',
-                'choices'   => array(),
-		'required'  => true))
-            ->add('emailAddress', 'email',array('label'=>'Courriel :'))
-            ->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'))
-            ->add('ready', 'checkbox',array(
+        $editionId = $this->editionId;
+        $builder->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'));
+        $builder->add('name', 'text',array('label'=>'Nom :'));
+        $builder->add('race', 'entity',
+                array('label'=>'Race :',
+                            'class'   => 'FantasyFootballTournamentCoreBundle:Race',
+                            'property'  => 'frenchName',
+                            'query_builder' => function(RaceRepository $rr) use ($editionId) {
+                                return $rr->getQueryBuilderForRaceByEditionOrLesser($editionId);
+                            }));
+        $builder->add('email', 'email',array('label'=>'Courriel :'));
+        $builder->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'));
+        $builder->add('ready', 'checkbox',array(
                 'label' => 'Coach prêt ?',
 		'required' => false))
         ;
-        $formModifier = function(FormInterface $form, Edition $edition) {
+        $builder->add('save','submit',array('label'=>'Valider'));
+        /*$formModifier = function(FormInterface $form, Edition $edition) {
             $races = $edition->getAvailableRaces();
 
             $form->add('race', 'entity', array('choices' => $races));
@@ -50,7 +61,7 @@ class CoachType extends AbstractType
                 // le parent aux fonctions de callback!
                 $formModifier($event->getForm()->getParent(), $edition);
             }
-        );
+        );*/
     }
 
     public function configureOptions(OptionsResolver $resolver)
