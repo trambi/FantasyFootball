@@ -30,7 +30,7 @@ class GameController extends Controller
             $data->deleteCoach($coach);
             return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
 	}
-	return $this->render('FantasyFootballTournamentAdminBundle:Coach:Delete.html.twig', array(
+	return $this->render('FantasyFootballTournamentAdminBundle:Game:delete.html.twig', array(
             'coach'=>$coach,
             'form' => $form->createView()
 	));
@@ -42,13 +42,17 @@ class GameController extends Controller
         $em = $this->getDoctrine()->getManager();
         $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->findOneById($edition);
         $currentRound = $editionObj->getCurrentRound();
-        $roundChoice = array($currentRound);
+        if( 0 === $currentRound)
+        {
+            $currentRound = 1;
+        }
+        $roundChoice = array($currentRound => $currentRound);
         
         $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
         $coachNumber = count($coachs) ;
         $tableMaxNumber = ( $coachNumber - ( $coachNumber %2 ) )/ 2;
-        $tableChoice = range(1,$tableMaxNumber);
-        
+        $tableChoice = range(0,$tableMaxNumber);
+        unset($tableChoice[0]);
         $form = $this->createFormBuilder($game)
                     ->add('round', 'choice',
                         array('label'=>'Tour :',
@@ -62,15 +66,15 @@ class GameController extends Controller
                         array('label'=>'Coach 1 :',
                             'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
                             'property'  => 'name',
-                            'query_builder' => function(CoachRepository $cr){
-                                return $cr->qbForFreeCoachsCurrentEditionAndCurrentRound();
+                            'query_builder' => function(CoachRepository $cr) use ($edition,$currentRound){
+                                return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$currentRound);
                             }))
                     ->add('coach2', 'entity',
                         array('label'=>'Coach 2 :',
                             'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
                             'property'  => 'name',
-                            'query_builder' => function(CoachRepository $cr){
-                                return $cr->qbForFreeCoachsCurrentEditionAndCurrentRound();
+                            'query_builder' => function(CoachRepository $cr) use ($edition,$currentRound) {
+                                return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$currentRound);
                             }))
                     ->add('save','submit',array('label'=>'Valider'))
                     ->getForm();
@@ -84,7 +88,8 @@ class GameController extends Controller
         }
 
         return $this->render('FantasyFootballTournamentAdminBundle:Game:schedule.html.twig', array(
-                                'form' => $form->createView() ) );
+                                'form' => $form->createView(),
+                                'edition' => $edition) );
         
     }
 
@@ -126,7 +131,8 @@ class GameController extends Controller
 	}
 	return $this->render('FantasyFootballTournamentAdminBundle:Game:resume.html.twig', array(
 				'form' => $form->createView(),
-                                'game' => $game) );    
+                                'game' => $game,
+                                'edition'=> $game->getEdition()) );    
     }
 
     public function modifyAction()
