@@ -10,7 +10,7 @@
         <tr>
             <th>Nom</th>
             <th>Numero NAF</th>
-            <th>Pr&ecirc;t ?</th>
+            <th>Statut</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -20,14 +20,16 @@
             <td><a href="{{ path('_view_coach',{'coachId':coach.getId()} )  }}" class="btn btn-info" role="button" >{{coach.getName()}}</a></td>
             <td>{{coach.getNafNumber()}}</td>
             <td>
-                {% if coach.getReady() %}
-                    <a class="btn btn-success" href="{{ path('_unready_coach',{'coachId':coach.getId()} )  }}" >Oui</a>
-                {% else %}
-                    <a class="btn btn-danger" href="{{ path('_ready_coach',{'coachId':coach.getId()} )  }}" >Non</a>
-                {% endif %} </td>
+                <span class="label label-{{ coach.getStatus() }}">{{ coach.getStatusString() }}</span>
+            </td>
             <td>
                 <a href="{{ path('_delete_coach',{'coachId':coach.getId()} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
                 <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" class="btn btn-primary" role="button" >Modifier</a>
+                {% if coach.getReady() %}
+                    <a class="btn btn-primary" href="{{ path('_unready_coach',{'coachId':coach.getId()} )  }}" >D&eacute;clarer pas pr&ecirc;t</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ path('_ready_coach',{'coachId':coach.getId()} )  }}" >D&eacute;clarer pr&ecirc;t</a>
+                {% endif %}
             </td>
         </tr>
 {% endfor %}

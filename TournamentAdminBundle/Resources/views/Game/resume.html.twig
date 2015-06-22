@@ -6,4 +6,5 @@
 <h1>match {{ game.coach1.name}} vs {{ game.coach2.name}} <span class="badge">{{game.id}}</span></h1>
 <h2>Tour {{game.round}} - table {{game.tableNumber}}</h2>
 {{ form(form) }}
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}

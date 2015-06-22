@@ -9,12 +9,12 @@
 {%if coach.getTeamName() %}<li class="list-group-item"><label>Nom d'&eacute;quipe :</label> {{ coach.getTeamName() }}</li>{% endif %}
 {%if race %}<li class="list-group-item"><label>Race :</label>
     {{ race.getNomFr() }}<span class="badge">{{ race.getId() }}</span></li>{% endif %}
-<li class="list-group-item"><label>Courriel :</label> {{ coach.getEmail() }}</li>
-<li class="list-group-item"><label>Pr&ecirc;t :</label> {{ coach.getReady() }}</li>
-<li class="list-group-item"><label>Triplette :{%if coachTeam %}
+<li class="list-group-item"><label>Courriel : </label> {{ coach.getEmail() }}</li>
+<li class="list-group-item"><label>Pr&ecirc;t : </label> {{ coach.getReady() }}</li>
+<li class="list-group-item"><label>Triplette :</label> {%if coach.hasCoachTeam() %}
     <a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.getId()} ) }}" class="btn btn-info" role="button" >
     {{ coachTeam.getName()}}</a>
-    <span class="badge">{{ coachTeam.getId() }}</span>{% endif %}</li>
+    <span class="badge">{{ coachTeam.getId() }}</span>{% else %}Non d&eacute;fini{% endif %}</li>
 {%if matchs %}
 <li class="list-group-item"><label>Matchs </label>
 <table class="table table-striped">
