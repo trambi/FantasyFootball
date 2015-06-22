@@ -31,15 +31,31 @@ class RankingStrategyThirhteenth implements IRankingStrategy {
         }
     }
 
+    protected function checkCoach($coach){
+        $valid = true;
+        $pointsExists = property_exists($coach, 'points');
+        $oppPointsExists = property_exists($coach, 'opponentsPoints');
+        $tdForExists = property_exists($coach, 'tdFor');
+        $casExists = property_exists($coach, 'casualties');
+        if( !$pointsExists || !$oppPointsExists || !$tdForExists || !$casExists ){
+            
+            echo 'coach : <pre>',print_r($coach),'</pre><br/>';
+            throw new \Exception("Erreur dans le format de la StdClass !");
+        }
+        return $valid;
+    }
+    
     public function compareCoachs($coach1, $coach2) {
         $retour = 1;
-
+        $this->checkCoach($coach1);
+        $this->checkCoach($coach2);
+        
         $points1 = $coach1->points;
         $points2 = $coach2->points;
         $opponentPoints1 = $coach1->opponentsPoints;
         $opponentPoints2 = $coach2->opponentsPoints;
-        $mixed1 = $coach1->td + $coach1->casualties;
-        $mixed2 = $coach2->td + $coach2->casualties;
+        $mixed1 = $coach1->tdFor + $coach1->casualties;
+        $mixed2 = $coach2->tdFor + $coach2->casualties;
         
         if ( ($points1 == $points2) 
                 && ($opponentPoints1 == $opponentPoints2) 
