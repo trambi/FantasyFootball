@@ -13,31 +13,7 @@ use FantasyFootball\TournamentCoreBundle\Entity\CoachTeam;
 use FantasyFootball\TournamentAdminBundle\Form\CoachTeamType;
 
 class CoachTeamController extends Controller
-{
-    /*
-    protected function createCustomForm(Coach $coach,array $races)
-    {
-        $coachChoice = array();
-        foreach($races as $key=>$obj){
-            $raceChoice[$key]=$obj->nom_fr;
-        }
-        $form = $this->createFormBuilder($coach)
-                    ->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'))
-                    ->add('name', 'text',array('label'=>'Nom :'))
-                    ->add('race', 'choice',
-                        array('label'=>'Race :',
-                            'choices'   => $raceChoice,
-                            'required'  => true))
-                    ->add('emailAddress', 'email',array('label'=>'Courriel :'))
-                    ->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'))
-                    ->add('ready', 'checkbox',array(
-                        'label' => 'Coach prêt ?',
-                        'required' => false))
-                    ->add('save','submit',array('label'=>'Valider'))
-                    ->getForm();
-        return $form;
-    }*/
-    
+{   
     public function AddAction(Request $request,$edition)
     {
         $coachTeam = new CoachTeam();
