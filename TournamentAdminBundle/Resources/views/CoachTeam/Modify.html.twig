@@ -1,7 +1,8 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}FantasyFootballTournamentAdminBundle:CoachTeam:Modify{% endblock %}
+{% block title %}Modification de la triplette {{coachTeam.name}}{% endblock %}
 
 {% block body %}
-<h1>Welcome to the CoachTeam:Modify page</h1>
+<h2>Modification de la triplette {{coachTeam.name}}</h2>
+{{ form(form) }}
 {% endblock %}

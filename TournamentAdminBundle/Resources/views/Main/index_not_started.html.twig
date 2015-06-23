@@ -10,6 +10,7 @@
         <tr>
             <th>Nom</th>
             <th>Numero NAF</th>
+            <th>Race</th>
             <th>Statut</th>
             <th>Actions</th>
         </tr>
@@ -19,6 +20,7 @@
 	<tr>
             <td><a href="{{ path('_view_coach',{'coachId':coach.getId()} )  }}" class="btn btn-info" role="button" >{{coach.getName()}}</a></td>
             <td>{{coach.getNafNumber()}}</td>
+            <td>{{coach.race.frenchName}}</td>
             <td>
                 <span class="label label-{{ coach.getStatus() }}">{{ coach.getStatusString() }}</span>
             </td>
@@ -26,9 +28,9 @@
                 <a href="{{ path('_delete_coach',{'coachId':coach.getId()} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
                 <a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" class="btn btn-primary" role="button" >Modifier</a>
                 {% if coach.getReady() %}
-                    <a class="btn btn-primary" href="{{ path('_unready_coach',{'coachId':coach.getId()} )  }}" >D&eacute;clarer pas pr&ecirc;t</a>
+                    <a class="btn btn-primary" href="{{ path('_unready_coach',{'coachId':coach.getId()} )  }}" >D&eacute;clarer absent</a>
                 {% else %}
-                    <a class="btn btn-primary" href="{{ path('_ready_coach',{'coachId':coach.getId()} )  }}" >D&eacute;clarer pr&ecirc;t</a>
+                    <a class="btn btn-primary" href="{{ path('_ready_coach',{'coachId':coach.getId()} )  }}" >D&eacute;clarer pr&eacute;sent</a>
                 {% endif %}
             </td>
         </tr>
@@ -56,7 +58,7 @@
         </td>
         <td>
             <a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.getId()} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
-            <a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.getId()} )  }}" class="btn btn-primary" role="button"  >Modifier</a>
+            <a href="{{ path('_modify_coach_team',{'edition':edition,'coachTeamId':coachTeam.getId()} )  }}" class="btn btn-primary" role="button"  >Modifier</a>
         </td>
     </tr>
 {% endfor %}

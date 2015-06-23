@@ -10,6 +10,7 @@
 {% for coach in coachTeam.getCoachs() %}
     <li class="list-group-item">
         <a href="{{ path('_view_coach',{'coachId':coach.getId()} ) }}" class="btn btn-info" role="button"  >{{coach.getName()}}</a>
+        {{coach.race.frenchName}}
         <a href="{{ path('_delete_coach',{'coachId':coach.getId()} ) }}" class="btn btn-default" role="button" >Supprimer</a>
         <a href="{{ path('_modify_coach',{'coachId':coach.getId()} ) }}" class="btn btn-default" role="button" >Modifier</a></li>
 {% endfor %}
@@ -64,7 +65,7 @@
 </li>
 {% endif %}
 </ul>
-<a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.getId()} )  }}" class="btn btn-primary" role="button" >Modifier</a>
+<a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.getId(),'edition':edition} )  }}" class="btn btn-primary" role="button" >Modifier</a>
 <a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.getId()} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
 <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}

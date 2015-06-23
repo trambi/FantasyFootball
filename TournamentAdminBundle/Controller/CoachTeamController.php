@@ -39,11 +39,22 @@ class CoachTeamController extends Controller
             ));
     }
 
-    public function ModifyAction()
+    public function ModifyAction(Request $request,$edition,$coachTeamId)
     {
+        $em = $this->getDoctrine()->getManager();
+        $coachTeam = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')
+                ->findOneById($coachTeamId);
+        $form = $this->createForm(new CoachTeamType($edition,$coachTeamId),$coachTeam);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $em->flush();
+            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+        }
         return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Modify.html.twig', array(
-                // ...
-            ));    }
+            'form' => $form->createView(),
+            'coachTeam' => $coachTeam
+            ));
+    }
   
     public function DeleteAction(Request $request,$coachTeamId)
     {      
@@ -169,4 +180,3 @@ class CoachTeamController extends Controller
       	'coachTeams' => $coachTeams, 'edition'=>$edition));
     }
 }
-?>

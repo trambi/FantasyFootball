@@ -6,10 +6,11 @@ _add_coach_team:
       edition:  \d+
 
 _modify_coach_team:
-   path:    /modify/{coachTeamId}
+   path:    /modify/{edition}/{coachTeamId}
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Modify }
    requirements:
       coachTeamId:  \d+
+      edition:  \d+
 
 _delete_coach_team:
    path:    /delete/{coachTeamId}
