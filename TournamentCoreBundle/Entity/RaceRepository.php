@@ -16,6 +16,7 @@ class RaceRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('r');
         $qb->where($qb->expr()->lt('r.edition', $editionId));
+        $qb->orderBy('r.frenchName');
         return $qb;
     }
 }
