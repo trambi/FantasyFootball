@@ -34,8 +34,9 @@ class RankedCoachTeamPairingContext extends CoachTeamPairingContext {
 
         $strategy = RankingStrategyFabric::getByName($this->edition->getRankingStrategy());
         $coachTeamRanking = $data->getCoachTeamRanking($this->edition->getId(), $strategy);
-        foreach ($coachTeamRanking as $id => $coachTeam)
+        foreach ($coachTeamRanking as $coachTeam)
         {
+            $id = $coachTeam->id;
             $toPair[] = $id;
             $tempSortedCoach = array();
             foreach ($coachTeam->teams as $coach)

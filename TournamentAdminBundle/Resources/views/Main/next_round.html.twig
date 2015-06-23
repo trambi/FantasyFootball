@@ -1,9 +1,9 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}Administration &Eacute;dition {{edition}} - Appariement du tour : {{round}}{% endblock %}
+{% block title %}Administration &Eacute;dition {{edition}} - Appariement du tour : {{round+1}}{% endblock %}
 
 {% block body %}
-<h1>Administration &Eacute;dition {{edition}} - tour {{round}}</h1>
+<h1>Administration &Eacute;dition {{edition}} - tour {{round+1}}</h1>
 <h2>Matchs <span class="badge">{{ games|length }}</span></h2>
 
 <table class="table table-striped table-condensed">
