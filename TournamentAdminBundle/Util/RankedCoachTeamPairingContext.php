@@ -31,7 +31,7 @@ class RankedCoachTeamPairingContext extends CoachTeamPairingContext {
     public function customInit()
     {
         $data = new DataProvider($this->conf);
-
+        $toPair = array();
         $strategy = RankingStrategyFabric::getByName($this->edition->getRankingStrategy());
         $coachTeamRanking = $data->getCoachTeamRanking($this->edition->getId(), $strategy);
         foreach ($coachTeamRanking as $coachTeam)

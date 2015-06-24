@@ -12,4 +12,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class GameRepository extends EntityRepository
 {
+    
+    public function countScheduledGamesByEditionAndRound($editionId,$round){
+        $count = $this->getQueryBuilderCountForScheduledGamesByEditionAndRound($editionId,$round)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $count;
+    }
+                
+                
+    public function getQueryBuilderCountForScheduledGamesByEditionAndRound($editionId,$round)
+    {
+        $qb = $this->createQueryBuilder('g');
+        $qb->select('COUNT(g)')
+            ->where($qb->expr()->andX(
+                $qb->expr()->eq('g.edition', $editionId),
+                $qb->expr()->eq('g.round',$round),
+                $qb->expr()->eq('g.status','\''.Game::SCHEDULED.'\'')));
+        return $qb;
+    }
 }

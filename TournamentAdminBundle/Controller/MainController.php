@@ -56,6 +56,11 @@ class MainController extends Controller
         $em = $this->getDoctrine()->getManager();
         $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
         $round = $editionObj->getCurrentRound();
+        $count = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')
+                ->countScheduledGamesByEditionAndRound($edition,$round);
+        if( 0 != $count ){
+            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+        }
         $pairingContext = PairingContextFabric::create($editionObj,$em,$this->get('fantasy_football_core_db_conf'));
         list($toPair,$constraints) = $pairingContext->init();
         $pairing = new SwissRoundStrategy();
