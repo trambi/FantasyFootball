@@ -11,8 +11,8 @@
     <li class="list-group-item">
         <a href="{{ path('_view_coach',{'coachId':coach.getId()} ) }}" class="btn btn-info" role="button"  >{{coach.getName()}}</a>
         {{coach.race.frenchName}}
-        <a href="{{ path('_delete_coach',{'coachId':coach.getId()} ) }}" class="btn btn-default" role="button" >Supprimer</a>
-        <a href="{{ path('_modify_coach',{'coachId':coach.getId()} ) }}" class="btn btn-default" role="button" >Modifier</a></li>
+        <a href="{{ path('_delete_coach',{'coachId':coach.getId()} ) }}" class="btn btn-primary" role="button" >Supprimer</a>
+        <a href="{{ path('_modify_coach',{'coachId':coach.getId()} ) }}" class="btn btn-primary" role="button" >Modifier</a></li>
 {% endfor %}
 </ul></li>
 {% if matchs %}
@@ -40,7 +40,6 @@
     <td><a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" class="btn btn-info" role="button"  >{{match.coach1}}</a></td>
     <td><a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" class="btn btn-info" role="button"  >{{match.coach2}}</a></td>
     {% if match.status == 'programme' %}
-        <td>-</td>
         <td>-</td>
         <td>-</td>
         <td>-</td>
