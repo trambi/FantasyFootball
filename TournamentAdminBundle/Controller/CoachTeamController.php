@@ -76,7 +76,7 @@ class CoachTeamController extends Controller
 	if ($form->isValid()) {
             $em->remove($coachTeam);
             $em->flush();
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
 	}
 	return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Delete.html.twig', array(
             'coachTeam'=>$coachTeam,
@@ -150,7 +150,7 @@ class CoachTeamController extends Controller
                 $data->insertCoachs($coachs);
             }
             
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
         }
 
         return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Load.html.twig', array(
