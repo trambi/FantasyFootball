@@ -91,19 +91,18 @@ class CoachController extends Controller
 
     public function DeleteAction(Request $request,$coachId)
     {
-        $conf = $this->get('fantasy_football_core_db_conf');
-        $data = new DataUpdater($conf);
-        $coach = new Coach($data->getCoachById($coachId));
-		
+	$em = $this->getDoctrine()->getManager();
+        $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);	
         $form = $this->createFormBuilder($coach)
                 	->add('delete','submit')
 			->getForm();
 
         $form->handleRequest($request);
-	$coach->id = $coachId;
 	if ($form->isValid()) {
-            $data->deleteCoach($coach);
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+            $em->remove($coach);
+            $em->flush();
+            //$data->deleteCoach($coach);
+            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
 	}
 	return $this->render('FantasyFootballTournamentAdminBundle:Coach:Delete.html.twig', array(
             'coach'=>$coach,
@@ -118,7 +117,7 @@ class CoachController extends Controller
             $em = $this->getDoctrine()->getManager();
             $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findOneByIdJoined($coachId);
             if(! $coach){
-                return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+                return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
             }
             $matchs = $data->getMatchsByCoach($coachId);
             return $this->render('FantasyFootballTournamentAdminBundle:Coach:View.html.twig', array(
