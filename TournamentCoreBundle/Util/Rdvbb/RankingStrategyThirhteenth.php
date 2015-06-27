@@ -105,7 +105,15 @@ class RankingStrategyThirhteenth implements IRankingStrategy {
         $points2 = 0;
         $sum1 = 0;
         $sum2 = 0;
-        for ($i = 0; $i < 3; $i++) {
+        $td1Number = count($td1Array);
+        $td2Number = count($td2Array);
+        $cas1Number = count($cas1Array);
+        $cas2Number = count($cas1Array);
+        if( ($td1Number != $td2Number) || ($td1Number != $cas1Number) || ($td1Number != $cas2Number) )
+        {
+            throw new \Exception("les élements des tableaux transmis a computeCoachTeampPoints ne sont pas coherents");
+        }
+        for ($i = 0; $i < $td1Number ; $i++) {
             $tempPoints1 = 0;
             $tempPoints2 = 0;
             $this->computePoints($tempPoints1, $tempPoints2, $td1Array[$i], $td2Array[$i], $cas1Array[$i], $cas2Array[$i]);
