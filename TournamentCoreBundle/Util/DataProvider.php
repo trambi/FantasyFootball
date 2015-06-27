@@ -742,7 +742,6 @@ class DataProvider {
         $query .= " WHERE m.edition=" . intval($edition) . " AND m.status <> 'programme' )";
         $query .= " ORDER BY coachTeam,round";
 
-
         $result = $this->query($query);
 
         $coachTeams = array(); // List of coachTeams
@@ -838,6 +837,12 @@ class DataProvider {
             $coachTeamMatchElt = $this->resultFetchObject($result);
         }
         if (0 !== $currentCoachTeamId) {
+            $tempCoachTeamPoints1 = 0;
+            $tempCoachTeamPoints2 = 0;
+            $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
+
+            $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
+            $coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
             $coachTeams[] = $coachTeam;
         }
 
