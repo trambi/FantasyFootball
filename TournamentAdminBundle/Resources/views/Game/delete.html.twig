@@ -1,7 +1,16 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}FantasyFootballTournamentAdminBundle:Game:delete{% endblock %}
+{% block title %}Confirmation d'effacement du match {{ coach1.name}} - {{ coach2.name}} {% endblock %}
 
 {% block body %}
-<h1>Welcome to the Game:delete page</h1>
+{% if form.delete is defined %}
+      &Ecirc;tes-vous s&ucirc;r de vouloir effacer le match : {{ coach1.name}} - {{ coach2.name}} ?
+{% endif %}
+{{ form(form) }}
+
+D&eacute;tails du match : <ul class="list-group">
+    <li class="list-group-item">Edition : {{game.edition}}</li>
+    <li class="list-group-item">Round : {{game.round}}</li>
+    <li class="list-group-item">Table : {{game.tableNumber}}</li>   
+</ul>
 {% endblock %}

@@ -12,26 +12,25 @@ use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 
 class GameController extends Controller
 {
-    public function DeleteAction(Request $request,$coachId)
+    public function DeleteAction(Request $request,$gameId)
     {
         $em = $this->getDoctrine()->getManager();
-        $game = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findById($gameIdeditionId);
-        $conf = $this->get('fantasy_football_core_db_conf');
-        $data = new DataUpdater($conf);
-        $coach = new Coach($data->getCoachById($coachId));
-		
-        $form = $this->createFormBuilder($coach)
+        $game = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findOneById($gameId);
+        $coach1 = $game->getCoach1();
+        $coach2 = $game->getCoach2();
+        $form = $this->createFormBuilder($game)
                 	->add('delete','submit')
 			->getForm();
-
         $form->handleRequest($request);
-	$coach->id = $coachId;
 	if ($form->isValid()) {
-            $data->deleteCoach($coach);
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_homepage'));
+            $em->remove($game);
+            $em->flush();
+            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
 	}
 	return $this->render('FantasyFootballTournamentAdminBundle:Game:delete.html.twig', array(
-            'coach'=>$coach,
+            'game'=>$game,
+            'coach1'=>$coach1,
+            'coach2'=>$coach2,
             'form' => $form->createView()
 	));
     }
