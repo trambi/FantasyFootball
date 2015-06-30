@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nafReport>
+    <organiser>Trambi</organiser>
+    <coaches>{% for coach in coachs %}
+        {% if ( 0 != coach.nafNumber ) %}
+        <coach>
+            <number>{{coach.nafNumber}}</number>
+            <team>{{coach.race.englishName}}</team>
+        </coach>
+        {% endif %}
+    {% endfor %}
+    </coaches>
+    {% for game in games %}
+    {% if ( 0 != game.coach1.nafNumber ) and ( 0 != game.coach2.nafNumber ) %}
+    <game>
+        <timeStamp>{{dates[game.round-1]}}</timeStamp>
+        <playerRecord>
+            <number>{{game.coach1.nafNumber}}</number>
+            <teamRating>110</teamRating>
+            <touchDowns>{{game.td1}}</touchDowns>
+        </playerRecord>
+        <playerRecord>
+            <number>{{game.coach2.nafNumber}}</number>
+            <teamRating>110</teamRating>
+            <touchDowns>{{game.td2}}</touchDowns>
+        </playerRecord>
+    </game>
+    {% endif %}
+    {% endfor %}
+</nafReport>

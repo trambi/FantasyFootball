@@ -10,6 +10,8 @@ use FantasyFootball\TournamentCoreBundle\Entity\Game;
 
 use FantasyFootball\TournamentAdminBundle\Util\SwissRoundStrategy;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class MainController extends Controller
 {
         
@@ -80,5 +82,39 @@ class MainController extends Controller
                     'round'=>$round,
                     'games' => $pairedGames
                 ));
+    }
+    
+    protected function createDates($edition)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
+        $dates = array();
+        $firstDayRound = $editionObj->getFirstDayRound();
+        for( $i = 0 ; $i < $firstDayRound ; $i++ ){
+            $date = new \DateTime($editionObj->getDay1()->format('Y-m-d'));
+            $date->setTime( 10 + ( $i * 3 ) , 0);
+            $dates[] = $date->format('Y-m-d H:i');
+        }
+        $roundNumber = $editionObj->getRoundNumber();
+        for(  ; $i < $roundNumber ; $i++ ){
+            $date = new \DateTime($editionObj->getDay2()->format('Y-m-d'));
+            $date->setTime(10 + ( ($i-$firstDayRound) * 3 ), 0);
+            $dates[] = $date->format('Y-m-d H:i');
+        }
+        return $dates;
+    }
+    
+    public function nafAction($edition)
+    {
+        $dates = $this->createDates($edition);
+        $em = $this->getDoctrine()->getManager();
+        $games =  $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findByEdition($edition);
+        $coachs =  $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
+        $content = $this->renderView('FantasyFootballTournamentAdminBundle:Main:naf.xml.twig',
+            ['coachs' => $coachs,'games' => $games,'dates'=>$dates]);
+        
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'xml');
+        return $response;    
     }
 }
