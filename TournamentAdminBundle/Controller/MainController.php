@@ -4,10 +4,7 @@ namespace FantasyFootball\TournamentAdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
-use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 use FantasyFootball\TournamentAdminBundle\Util\PairingContextFabric;
-use FantasyFootball\TournamentCoreBundle\Entity\Game;
-
 use FantasyFootball\TournamentAdminBundle\Util\SwissRoundStrategy;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -104,17 +101,23 @@ class MainController extends Controller
         return $dates;
     }
     
-    public function nafAction($edition)
+    public function nafAction($edition,$format)
     {
         $dates = $this->createDates($edition);
         $em = $this->getDoctrine()->getManager();
         $games =  $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findByEdition($edition);
         $coachs =  $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
-        $content = $this->renderView('FantasyFootballTournamentAdminBundle:Main:naf.xml.twig',
+        if ( 'xml' === $format)
+        {
+            $content = $this->renderView('FantasyFootballTournamentAdminBundle:Main:naf.xml.twig',
             ['coachs' => $coachs,'games' => $games,'dates'=>$dates]);
         
-        $response = new Response($content);
-        $response->headers->set('Content-Type', 'xml');
-        return $response;    
+            $response = new Response($content);
+            $response->headers->set('Content-Type', 'xml');
+            return $response;
+        }else{
+            return $this->render('FantasyFootballTournamentAdminBundle:Main:naf.html.twig',
+                ['edition'=>$edition,'coachs' => $coachs,'games' => $games,'dates'=>$dates]);
+        }
     }
 }

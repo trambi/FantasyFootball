@@ -1,0 +1,28 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Résulats NAF &Eacute;dition {{edition}}{% endblock %}
+
+{% block body %}
+<h1>R&eacute;sultats NAF &Eacute;dition {{edition}}</h1>
+<h2>Coachs <span class="badge">{{ coachs|length }}</span></h2>
+<ul class="list-group">
+{% for coach in coachs %}
+{% if ( 0 != coach.nafNumber ) %}
+    <li class="list-group-item">{{coach.name}} ({{coach.nafNumber}}) - {{coach.race.englishName}}</li>
+{% endif %}
+{% endfor %}
+</ul>
+
+{% if games %}
+<h2>Matchs jou&eacute;s <span class="badge">{{ games|length }}</span></h2>
+<ul class="list-group">
+{% for game in games %}
+    <li class="list-group-item">
+        {{dates[game.round-1]}} : {{game.coach1.name}} ({{game.coach1.nafNumber}})
+        {{game.td1}} vs {{game.td2}}
+        {{game.coach2.name}} ({{game.coach2.nafNumber}})
+    </li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

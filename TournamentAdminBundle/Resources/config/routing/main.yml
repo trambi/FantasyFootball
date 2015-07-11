@@ -10,7 +10,8 @@ fantasy_football_tournament_admin_next:
    requirements:
       edition:  \d+
 fantasy_football_tournament_admin_naf:
-    path:   /naf/{edition}
-    defaults: { _controller: FantasyFootballTournamentAdminBundle:Main:naf,edition :13 }
+    path:   /naf/{edition}/{format}
+    defaults: { _controller: FantasyFootballTournamentAdminBundle:Main:naf,edition :13,format :xml }
     requirements:
         edition:  \d+
+        format:  xml|html
