@@ -34,8 +34,14 @@ _ws_get_played_matchs:
     requirements:
         edition:  \d+
         round:  \d+
-_ws_get_to_play_matchs:
+_ws_get_to_play_match_list:
     path:     /ToPlayMatchList/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getToPlayMatchList, round: 1 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_to_play_matchs:
+    path:     /ToPlayMatchs/{edition}/{round}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getToPlayMatchList, round: 1 }
     requirements:
         edition:  \d+
