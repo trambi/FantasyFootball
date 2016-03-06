@@ -99,8 +99,8 @@ class DataProvider {
     protected function convertRowInCoach($row) {
         $coach = (object) array();
         $coach->id = intval($row[0]);
-        $coach->name = mb_convert_encoding($row[1], 'UTF-8');
-        $coach->coach = mb_convert_encoding($row[2], 'UTF-8');
+        $coach->teamName = mb_convert_encoding($row[1], 'UTF-8');
+        $coach->name = mb_convert_encoding($row[2], 'UTF-8');
         $coach->raceId = intval($row[3]);
         $coach->email = $row[4];
         $coach->ff = intval($row[5]);

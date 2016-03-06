@@ -1,8 +1,13 @@
 _ws_index:
     path:     /index
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:index }
-_ws_get_coaches:
+_ws_get_coach_list:
     path:     /CoachList/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Coach:getCoachList }
+    requirements:
+        edition:  \d+
+_ws_get_coaches:
+    path:     /Coachs/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Coach:getCoachList }
     requirements:
         edition:  \d+
