@@ -16,8 +16,14 @@ _ws_get_coach:
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Coach:getCoach }
     requirements:
         coachId:  \d+
-_ws_get_matchs:
+_ws_get_match_list:
     path:     /MatchList/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchList, round: 0 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_matchs:
+    path:     /Matchs/{edition}/{round}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchList, round: 0 }
     requirements:
         edition:  \d+
