@@ -320,13 +320,13 @@ class DataProvider {
         $match = (object) array();
         $match->coach1 = mb_convert_encoding($row[0], "UTF-8");
         $match->teamName1 = mb_convert_encoding($row[1], "UTF-8");
-        $match->teamId1 = intval($row[2]);
+        $match->coachId1 = intval($row[2]);
         $match->td1 = intval($row[3]);
         $match->casualties1 = intval($row[4]);
         $match->points1 = intval($row[5]);
         $match->coach2 = mb_convert_encoding($row[6], "UTF-8");
         $match->teamName2 = mb_convert_encoding($row[7], "UTF-8");
-        $match->teamId2 = intval($row[8]);
+        $match->coachId2 = intval($row[8]);
         $match->td2 = intval($row[9]);
         $match->casualties2 = intval($row[10]);
         $match->points2 = intval($row[11]);
