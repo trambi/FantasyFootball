@@ -29,6 +29,12 @@ _ws_get_matchs:
         edition:  \d+
         round:  \d+
 _ws_get_played_matchs:
+    path:     /PlayedMatchs/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getPlayedMatchList, round: 1 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_played_match_list:
     path:     /PlayedMatchList/{edition}/{round}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getPlayedMatchList, round: 1 }
     requirements:
