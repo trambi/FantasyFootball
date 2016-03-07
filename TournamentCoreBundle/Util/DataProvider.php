@@ -346,7 +346,7 @@ class DataProvider {
 
     protected function convertRowInInvertedMatch($row) {
         $match = $this->convertRowInMatch($row);
-        $toSwap = array('coach', 'teamName', 'teamId', 'td', 'casualties', 'points');
+        $toSwap = array('coach', 'teamName', 'coachId', 'td', 'casualties', 'points');
         foreach ($toSwap as $var) {
             $toSwap1 = $var . '1';
             $toSwap2 = $var . '2';

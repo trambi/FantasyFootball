@@ -52,8 +52,13 @@ _ws_get_to_play_matchs:
     requirements:
         edition:  \d+
         round:  \d+
-_ws_get_matchs_by_coach:
+_ws_get_match_list_by_coach:
     path:     /MatchListByCoach/{coachId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoach }
+    requirements:
+        coachId:  \d+
+_ws_get_matchs_by_coach:
+    path:     /MatchsByCoach/{coachId}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoach }
     requirements:
         coachId:  \d+
