@@ -73,6 +73,11 @@ _ws_get_match_list_by_coach_team:
     requirements:
         coachTeamId:  \d+
 _ws_get_coach_teams:
+    path:     /CoachTeams/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeamList }
+    requirements:
+        edition:  \d+
+_ws_get_coach_team_list:
     path:     /CoachTeamList/{edition}
     defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeamList }
     requirements:
