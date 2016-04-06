@@ -878,6 +878,16 @@ class DataProvider {
         }
         return $edition;
     }
+    
+    public function getCurrentEdition() {
+        $clause = 'id = (SELECT max(id) FROM tournament_edition)';
+        $editions = $this->getEditions($clause);
+        $edition = NULL;
+        if (0 < count($editions)) {
+            $edition = reset($editions);
+        }
+        return $edition;
+    }
 
     public function getEditions($clause) {
         $query = self::editionQuery;

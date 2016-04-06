@@ -168,8 +168,8 @@ class RankingStrategyThirhteenthTest extends \PHPUnit_Framework_TestCase {
         $coach2->points = 0;
         $coach1->opponentsPoints = 0;
         $coach2->opponentsPoints = 0;
-        $coach1->td = 0;
-        $coach2->td = 0;
+        $coach1->tdFor = 0;
+        $coach2->tdFor = 0;
         $coach1->casualties = 0;
         $coach2->casualties = 0;
 
@@ -187,27 +187,27 @@ class RankingStrategyThirhteenthTest extends \PHPUnit_Framework_TestCase {
         $coach1->points = 2;
         $coach1->opponentsPoints = 1;
         $coach2->opponentsPoints = 0;
-        $coach2->td = 1;
+        $coach2->tdFor = 1;
         $result = $strategy->compareCoachs($coach1, $coach2);
         $this->assertLessThan(0, $result);
 
         $coach2->opponentsPoints = 2;
-        $coach1->td = 1;
+        $coach1->tdFor = 1;
         $result = $strategy->compareCoachs($coach1, $coach2);
         $this->assertgreaterThan(0, $result);
 
         $coach2->opponentsPoints = 1;
-        $coach1->td = 2;
-        $coach2->td = 1;
+        $coach1->tdFor = 2;
+        $coach2->tdFor = 1;
         $result = $strategy->compareCoachs($coach1, $coach2);
         $this->assertLessThan(0, $result);
 
-        $coach1->td = 1;
-        $coach2->td = 2;
+        $coach1->tdFor = 1;
+        $coach2->tdFor = 2;
         $result = $strategy->compareCoachs($coach1, $coach2);
         $this->assertGreaterThan(0, $result);
 
-        $coach2->td = 1;
+        $coach2->tdFor = 1;
         $coach1->casualties = 2;
         $coach2->casualties = 1;
         $result = $strategy->compareCoachs($coach1, $coach2);

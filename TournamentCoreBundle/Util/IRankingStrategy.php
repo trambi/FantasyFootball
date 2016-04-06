@@ -9,8 +9,7 @@ interface IRankingStrategy{
   public function compareCoachTeams($coachTeam1,$coachTeam2);
   public function useCoachTeamPoints();
   public function useOpponentPointsOfYourOwnMatch();
-  
-
+  //public function rankingOptions();
 }
 
 

@@ -3,7 +3,8 @@
 namespace FantasyFootball\TournamentCoreBundle\Util;
 
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyFirst;
-use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategySecondToFifth;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategySecondToThird;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyFourthToFifth;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategySixthToEighth;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyNinthToTenth;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyEleventh;
@@ -15,8 +16,10 @@ class RankingStrategyFabric {
         $strategy = null;
         if ( 'RdvbbFirst' === $name ) {
             $strategy = new RankingStrategyFirst();
-        } else if ( 'RdvbbSecondToFifth' === $name ) {
-            $strategy = new RankingStrategySecondToFifth();
+        } else if ( 'RdvbbSecondToThird' === $name ) {
+            $strategy = new RankingStrategySecondToThird();
+        } else if ( 'RdvbbFourthToFifth' === $name ) {
+            $strategy = new RankingStrategyFourthToFifth();
         } else if ( 'RdvbbSixthToEighth' === $name ) {
             $strategy = new RankingStrategySixthToEighth();
         } else if ( 'RdvbbNinthToTenth' === $name ) {
