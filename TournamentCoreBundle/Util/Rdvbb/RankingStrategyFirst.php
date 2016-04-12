@@ -2,8 +2,6 @@
 namespace FantasyFootball\TournamentCoreBundle\Util\Rdvbb;
 
 use FantasyFootball\TournamentCoreBundle\Util\IRankingStrategy;
-use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\PointsComputor;
-use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\TeamComparator;
 
 class RankingStrategyFirst implements IRankingStrategy{
     
@@ -12,7 +10,9 @@ class RankingStrategyFirst implements IRankingStrategy{
   }
 
   public function computePoints(&$points1,&$points2,$td1,$td2,$cas1,$cas2){
-    PointsComputor::win5Draw2SmallLoss1Loss0($points1,$points2,$td1,$td2,$cas1,$cas2);
+    $points = PointsComputor::win5Draw2SmallLoss1Loss0($td1,$td2,$cas1,$cas2);
+    $points1 = $points['points1'];
+    $points2 = $points['points2'];
   }
   
   public function compareCoachs($team1,$team2){
@@ -35,7 +35,7 @@ class RankingStrategyFirst implements IRankingStrategy{
   public function rankingOptions(){
     return array(
       'coach' => array(
-        'main' => array('points','opponentPoints','netTd','casualties'),
+        'main' => array('points','netTd','casualties'),
         'td' => array('td'),
         'casualties' => array('casualties'),
         'comeback' => array('diffRanking','firstDayRanking','finalRanking')

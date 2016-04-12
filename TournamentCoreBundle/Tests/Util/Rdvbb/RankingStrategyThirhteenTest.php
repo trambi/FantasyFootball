@@ -4,16 +4,6 @@ namespace FantasyFootball\TournamentCoreBundle\Tests\Util\Rdvbb;
 
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyThirhteenth;
 
-/*
-
-  public function computePoints(&$points1,&$points,$td1,$td2,$cas1,$cas2);
-  public function computeTriplettePoints(&$points1,&$points,$td1Array,$td2Array,$cas1Array,$cas2Array);
-  public function compareTeams($team1,$team2);
-  public function compareTriplettes($triplette1,$triplette2);
-  public function useTriplettePoints();
-  public function useOpponentPointsOfYourOwnMatch();
- */
-
 class RankingStrategyThirhteenthTest extends \PHPUnit_Framework_TestCase {
 
     public function testComputePoints() {
