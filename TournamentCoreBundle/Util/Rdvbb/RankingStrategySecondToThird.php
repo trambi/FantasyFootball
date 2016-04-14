@@ -16,7 +16,7 @@ class RankingStrategySecondToThird implements IRankingStrategy{
   }
   
   public function compareCoachs($team1,$team2){
-    return TeamComparator::pointsOpponentPointsNetTdCasFor($team1,$team2);
+    return TeamComparator::pointsOpponentsPointsNetTdCasFor($team1,$team2);
   }
     
   public function compareCoachTeams($coachTeam1,$coachTeam2){
@@ -35,7 +35,7 @@ class RankingStrategySecondToThird implements IRankingStrategy{
   public function rankingOptions(){
     return array(
       'coach' => array(
-        'main' => array('points','opponentPoints','netTd','casualties'),
+        'main' => array('points','opponentsPoints','netTd','casualties'),
         'td' => array('td'),
         'casualties' => array('casualties'),
         'comeback' => array('diffRanking','firstDayRanking','finalRanking')

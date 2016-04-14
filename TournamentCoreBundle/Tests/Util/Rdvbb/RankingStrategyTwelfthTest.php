@@ -204,5 +204,80 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
     $result = $strategy->compareCoachs($coach1,$coach2);
     $this->assertGreaterThan(0,$result);
   }
+  
+  public function testCompareCoachTeams(){
+    $strategy = new RankingStrategyTwelfth();
+    $coachTeam1 = new \stdClass;
+    $coachTeam2 = new \stdClass;
+    $coachTeam1->coachTeamPoints = 0;
+    $coachTeam2->coachTeamPoints = 0;
+    $coachTeam1->points = 0;
+    $coachTeam2->points = 0;
+    $coachTeam1->opponentsPoints = 0;
+    $coachTeam2->opponentsPoints = 0;
+    $coachTeam1->netTd = 0;
+    $coachTeam2->netTd = 0;
+    $coachTeam1->casualties = 0;
+    $coachTeam2->casualties = 0;
+    
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertEquals(0,$result);
+    
+    $coachTeam1->coachTeamPoints = 1;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertLessThan(0,$result);
+    
+    $coachTeam2->coachTeamPoints = 2;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertGreaterThan(0,$result);
+    
+    $coachTeam1->coachTeamPoints = 2;
+    $coachTeam1->points = 1;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertLessThan(0,$result);
+
+    $coachTeam2->points = 2;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertGreaterThan(0,$result);
+
+    $coachTeam1->points = 2;
+    $coachTeam1->opponentsPoints = 1;
+    $coachTeam2->opponentsPoints = 0;
+    $coachTeam2->netTd = 1;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertLessThan(0,$result);
+
+    $coachTeam2->opponentsPoints = 2;
+    $coachTeam1->netTd = 1;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertgreaterThan(0,$result);
+
+    $coachTeam2->opponentsPoints = 1;
+    $coachTeam1->netTd = 2;
+    $coachTeam2->netTd = 1;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertLessThan(0,$result);
+
+    $coachTeam1->netTd = 1;
+    $coachTeam2->netTd = 2;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertGreaterThan(0,$result);
+
+    $coachTeam2->netTd = 1;
+    $coachTeam1->casualties = 2;
+    $coachTeam2->casualties = 1;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertLessThan(0,$result);
+
+    $coachTeam2->casualties = 3;
+    $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
+    $this->assertGreaterThan(0,$result);
+  }
+  
+    public function testRankingOptions(){
+    $strategy = new RankingStrategyTwelfth();
+    $rankings = $strategy->rankingOptions();
+    $this->assertGreaterThan(0,count($rankings));
+  }
 }
 ?>

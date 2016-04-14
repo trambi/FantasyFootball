@@ -2,18 +2,19 @@
 namespace FantasyFootball\TournamentCoreBundle\Util\Rdvbb;
 
 class PointsComputor{
-    
   static protected function custom($td1,$td2,$cas1,$cas2,$bigWin,$smallWin,$draw,$smallLoss,$bigLoss,$concedeLoss){
+    $points1 = -1000;
+    $points2 = -1000;
     if( $td1 === $td2 ){
       $points1 = $draw;
       $points2 = $draw;
-    }else if( $td1 === $td2+1 ){
+    }else if( $td1 == $td2+1 ){
       $points1 = $smallWin;
       $points2 = $smallLoss;
     }else if( $td1 > $td2+1 ){
       $points1 = $bigWin;
       $points2 = $bigLoss;
-    }else if( $td2 === $td1+1){
+    }else if( $td2 == $td1+1){
       $points1 = $smallLoss;
       $points2 = $smallWin;
     }else if( $td2 > $td1+1 ){
@@ -26,9 +27,18 @@ class PointsComputor{
       $points2 = $concedeLoss;
       $points1 = $bigWin;
     }
+    if( -1000 === $points1 ){
+      throw new \Exception("points1 n'a pas ete affecte ! td1:"+$td1+" td2:"+$td2 + " cas1:" + $cas1 + " cas2:" +$cas2);
+    }
+    if( -1000 === $points2 ){
+      throw new \Exception("points2 n'a pas ete affecte ! td1:"+$td1+" td2:"+$td2 + " cas1:" + $cas1 + " cas2:" +$cas2);
+    }
     return array('points1' => $points1,'points2' => $points2);    
   }
   
+  static public function win2Draw1Loss0($td1,$td2,$cas1,$cas2){
+    return self::custom($td1,$td2,$cas1,$cas2,2,2,1,0,0,0);
+  }
   static public function win300Draw100Loss0($td1,$td2,$cas1,$cas2){
     return self::custom($td1,$td2,$cas1,$cas2,300,300,100,0,0,0);
   }
@@ -96,6 +106,25 @@ class PointsComputor{
     } else {
       $points1 = $sum1 + 150;
       $points2 = $sum2;
+    }
+    return array('points1'=>$points1,'points2'=>$points2);
+  }
+  
+  static public function teamWin2TeamDraw1TeamLoss0($td1Array,$td2Array,$cas1Array,$cas2Array){
+    $points1 = 0;
+    $points2 = 0;
+    $sum = self::teamCustom($td1Array,$td2Array,$cas1Array,$cas2Array,2,2,1,1,0,0);
+    $sum1 = $sum['points1'];
+    $sum2 = $sum['points2'];
+    if ($sum1 < $sum2) {
+      $points1 = 0;
+      $points2 = 2;
+    } elseif ($sum1 === $sum2) {
+      $points1 = 1;
+      $points2 = 1;
+    } else {
+      $points1 = 2;
+      $points2 = 0;
     }
     return array('points1'=>$points1,'points2'=>$points2);
   }

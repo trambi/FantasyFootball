@@ -16,7 +16,7 @@ class RankingStrategyNinthToTenth implements IRankingStrategy{
   }
     
   public function compareCoachs($team1,$team2){
-    return TeamComparator::finalPointsOpponentPointsNetTdCasFor($team1,$team2);
+    return TeamComparator::finalPointsOpponentsPointsNetTdCasFor($team1,$team2);
   }
 
   
@@ -30,9 +30,23 @@ class RankingStrategyNinthToTenth implements IRankingStrategy{
     $points2 = $points['points2'];
     }
             
-    public function useOpponentPointsOfYourOwnMatch(){
-        return false;   
-    }
+  public function useOpponentPointsOfYourOwnMatch(){
+    return false;   
+  }
+
+  public function rankingOptions(){
+    return array(
+    'coach' => array(
+      'main' => array('points','opponentsPoints','netTd','casualties'),
+      'td' => array('td'),
+      'casualties' => array('casualties'),
+      'comeback' => array('diffRanking','firstDayRanking','finalRanking')
+    ),
+    'coachTeam' => array(
+      'main' => array('points','opponentsPoints','netTd','casualties'),
+      )
+    );
+  }
 }
 
 ?>

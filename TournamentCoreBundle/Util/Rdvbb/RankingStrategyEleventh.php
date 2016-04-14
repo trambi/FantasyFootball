@@ -20,12 +20,12 @@ class RankingStrategyEleventh implements IRankingStrategy{
   }
 
   public function compareCoachs($team1,$team2){
-    return TeamComparator::finalPointsOpponentPointsNetTdCasFor($team1,$team2);
+    return TeamComparator::finalPointsOpponentsPointsNetTdCasFor($team1,$team2);
   }
 
 
   public function compareCoachTeams($coachTeam1,$coachTeam2){
-    return TeamComparator::pointsOpponentPointsNetTdCasFor($coachTeam1,$coachTeam2);
+    return TeamComparator::pointsOpponentsPointsNetTdCasFor($coachTeam1,$coachTeam2);
   }
 
   public function computeCoachTeamPoints(&$points1,&$points2,$td1Array,$td2Array,$cas1Array,$cas2Array){
@@ -37,6 +37,21 @@ class RankingStrategyEleventh implements IRankingStrategy{
   public function useOpponentPointsOfYourOwnMatch(){
     return false;
   }
+  
+    public function rankingOptions(){
+    return array(
+    'coach' => array(
+      'main' => array('points','opponentsPoints','netTd','casualties'),
+      'td' => array('td'),
+      'casualties' => array('casualties'),
+      'comeback' => array('diffRanking','firstDayRanking','finalRanking')
+    ),
+    'coachTeam' => array(
+      'main' => array('points','opponentsPoints','netTd','casualties'),
+      )
+    );
+  }
+  
 
 }
 
