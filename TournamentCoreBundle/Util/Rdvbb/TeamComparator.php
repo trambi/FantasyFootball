@@ -152,7 +152,7 @@ class TeamComparator{
     $special1 = 0;
     $special2 = 0;
     if(isset($item1->special)){
-      $special1 = $item->special;
+      $special1 = $item1->special;
     }
     if(isset($item2->special)){
       $special2 = $item2->special;

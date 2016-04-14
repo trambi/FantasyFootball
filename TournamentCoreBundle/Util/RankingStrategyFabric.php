@@ -10,6 +10,7 @@ use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyNinthToTenth;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyEleventh;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyTwelfth;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyThirhteenth;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy14;
 
 class RankingStrategyFabric {
     static function getByName($name) {
@@ -30,8 +31,9 @@ class RankingStrategyFabric {
             $strategy = new RankingStrategyTwelfth();
         } else if ( 'RdvbbThirhteenth' === $name ){
             $strategy = new RankingStrategyThirhteenth();
+        } else if ( 'RdvbbThirhteenth' === $name ){
+            $strategy = new RankingStrategy14();
         }
-        
         return $strategy;
     }
 
