@@ -1,0 +1,25 @@
+_ws_get_coach_team_ranking:
+    path:     /CoachTeam/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRanking }
+    requirements:
+        edition:  \d+
+_ws_get_coach_ranking:
+    path:     /Coach/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRanking }
+    requirements:
+        edition:  \d+
+_ws_get_coach_ranking_by_touchdown:
+    path:     /Touchdown/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByTouchdown }
+    requirements:
+        edition:  \d+
+_ws_get_coach_ranking_by_casualties:
+    path:     /Casualties/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByCasualties }
+    requirements:
+        edition:  \d+
+_ws_get_coach_ranking_by_comeback:
+    path:     /Comeback/{edition}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByComeback }
+    requirements:
+        edition:  \d+

@@ -1,0 +1,9 @@
+_ws_index:
+  path:     /index
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:index }
+_ws_get_editions:
+  path: /Editions
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:getEditionList }
+_ws_get_edition_list:
+  path: /EditionList
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:getEditionList }

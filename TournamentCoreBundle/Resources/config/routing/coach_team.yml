@@ -1,0 +1,15 @@
+_ws_get_coach_teams:
+  path:     /CoachTeams/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeamList }
+  requirements:
+    edition:  \d+
+_ws_get_coach_team_list:
+  path:     /CoachTeamList/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeamList }
+  requirements:
+    edition:  \d+
+_ws_get_coach_team:
+  path:     /CoachTeam/{coachTeamId}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:CoachTeam:getCoachTeam }
+  requirements:
+    coachTeamId:  \d+

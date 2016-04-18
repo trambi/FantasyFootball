@@ -1,0 +1,56 @@
+_ws_get_match_list:
+    path:     /MatchList/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchList, round: 0 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_matchs:
+    path:     /Matchs/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchList, round: 0 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_played_matchs:
+    path:     /PlayedMatchs/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getPlayedMatchList, round: 1 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_played_match_list:
+    path:     /PlayedMatchList/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getPlayedMatchList, round: 1 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_to_play_match_list:
+    path:     /ToPlayMatchList/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getToPlayMatchList, round: 1 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_to_play_matchs:
+    path:     /ToPlayMatchs/{edition}/{round}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getToPlayMatchList, round: 1 }
+    requirements:
+        edition:  \d+
+        round:  \d+
+_ws_get_match_list_by_coach:
+    path:     /MatchListByCoach/{coachId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoach }
+    requirements:
+        coachId:  \d+
+_ws_get_matchs_by_coach:
+    path:     /MatchsByCoach/{coachId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoach }
+    requirements:
+        coachId:  \d+
+_ws_get_matchs_by_coach_team:
+    path:     /MatchsByCoachTeam/{coachTeamId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoachTeam }
+    requirements:
+        coachTeamId:  \d+
+_ws_get_match_list_by_coach_team:
+    path:     /MatchListByCoachTeam/{coachTeamId}
+    defaults: { _controller: FantasyFootballTournamentCoreBundle:Match:getMatchListByCoachTeam }
+    requirements:
+        coachTeamId:  \d+
