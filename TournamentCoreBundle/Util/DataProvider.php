@@ -65,7 +65,9 @@ class DataProvider {
   const preCoachQuery = 'SELECT p.id as id, p.name as coach, p.team_name as name,p.id_race as raceId,p.email as email,p.edition as edition,p.naf_number,p.id_coach_team,r.nom_fr,ct.name FROM tournament_precoach p INNER JOIN tournament_race r ON p.id_race=r.id_race LEFT JOIN tournament_coach_team tc ON p.id_coach_team=tc.id';
   const coachTeamQuery = 'SELECT c.name,c.id_coach_team,ct.name,c.id,c.team_name,c.points,c.opponents_points,c.net_td,c.casualties FROM tournament_coach c INNER JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
   const coachTeamPreCoachQuery = 'SELECT p.name,p.id_coach_team,ct.name,p.id,\'\',0,0,0,0 FROM tournament_precoach p INNER JOIN tournament_coach_team ct ON p.id_coach_team=ct.id';
-  const matchQuery = 'SELECT c1.name,c1.team_name,c1.id,m.td_1,m.casualties_1,m.points_1, c2.name,c2.team_name,c2.id,m.td_2,m.casualties_2,m.points_2,m.id,m.table_number,m.status,m.edition,m.round,m.finale FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
+  const matchQuery = 'SELECT c1.name,c1.team_name,c1.id,m.td_1,m.casualties_1,m.completions_1,m.fouls_1,m.special_1,
+  m.points_1,c2.name,c2.team_name,c2.id,m.td_2,m.casualties_2,m.completions_2,m.fouls_2,m.special_2,m.points_2,
+  m.id,m.table_number,m.status,m.edition,m.round,m.finale FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
   const insertMatchQuery = 'INSERT INTO tournament_match (id_coach_1,id_coach_2,round,edition,table_number) VALUES(?,?,?,?,?)';
   const resumeMatchQuery = 'UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
   const deleteMatchQuery = 'DELETE FROM tournament_match';
@@ -321,20 +323,26 @@ class DataProvider {
     $match->teamId1 = intval($row[2]);
     $match->td1 = intval($row[3]);
     $match->casualties1 = intval($row[4]);
-    $match->points1 = intval($row[5]);
-    $match->coach2 = mb_convert_encoding($row[6], "UTF-8");
-    $match->teamName2 = mb_convert_encoding($row[7], "UTF-8");
-    $match->teamId2 = intval($row[8]);
-    $match->td2 = intval($row[9]);
-    $match->casualties2 = intval($row[10]);
-    $match->points2 = intval($row[11]);
-    $match->id = intval($row[12]);
-    $match->table = intval($row[13]);
-    $match->status = $row[14];
-    $match->edition = intval($row[15]);
-    $match->round = intval($row[16]);
+    $match->completions1 = intval($row[5]);
+    $match->fouls1 = intval($row[6]);
+    $match->special1 = mb_convert_encoding($row[7], "UTF-8");
+    $match->points1 = intval($row[8]);
+    $match->coach2 = mb_convert_encoding($row[9], "UTF-8");
+    $match->teamName2 = mb_convert_encoding($row[10], "UTF-8");
+    $match->teamId2 = intval($row[11]);
+    $match->td2 = intval($row[12]);
+    $match->casualties2 = intval($row[13]);
+    $match->completions2 = intval($row[14]);
+    $match->fouls2 = intval($row[15]);
+    $match->special2 = mb_convert_encoding($row[16], "UTF-8");
+    $match->points2 = intval($row[17]);
+    $match->id = intval($row[18]);
+    $match->table = intval($row[19]);
+    $match->status = $row[20];
+    $match->edition = intval($row[21]);
+    $match->round = intval($row[22]);
 
-    if ("true" === $row[17]) {
+    if ("true" === $row[23]) {
       $match->finale = true;
     } else {
       $match->finale = false;
@@ -344,7 +352,7 @@ class DataProvider {
 
   protected function convertRowInInvertedMatch($row) {
     $match = $this->convertRowInMatch($row);
-    $toSwap = array('coach', 'teamName', 'coachId', 'td', 'casualties', 'points');
+    $toSwap = array('coach', 'teamName', 'coachId', 'td', 'casualties', 'points','completions','fouls','special');
     foreach ($toSwap as $var) {
       $toSwap1 = $var . '1';
       $toSwap2 = $var . '2';

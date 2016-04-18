@@ -85,7 +85,49 @@ class Game
      * @ORM\Column(name="casualties_2", type="smallint")
      */
     private $casualties2;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="completions_1", type="smallint")
+     */
+    private $completions1;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="completions_2", type="smallint")
+     */
+    private $completions2;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fouls_1", type="smallint")
+     */
+    private $fouls1;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fouls_2", type="smallint")
+     */
+    private $fouls2;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="special_1", type="string", length=33)
+     */
+    private $special1;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="special_2", type="string", length=33)
+     */
+    private $special2;
+    
     /**
      * @var boolean
      *
@@ -124,6 +166,12 @@ class Game
         $this->td2 = 0;
         $this->casualties1 = 0;
         $this->casualties2 = 0;
+        $this->completion1 = 0;
+        $this->completion2 = 0;
+        $this->fouls1 = 0;
+        $this->fouls2 = 0;
+        $this->specials1 = "";
+        $this->specials2 = "";
     }
 
     /**
@@ -226,6 +274,144 @@ class Game
         return $this->td2;
     }
 
+     /**
+     * Set completions1
+     *
+     * @param integer $completions
+     * @return Game
+     */
+    public function setCompletions1($completions)
+    {
+        $this->completions1 = $completions;
+
+        return $this;
+    }
+
+    /**
+     * Get completions1
+     *
+     * @return integer 
+     */
+    public function getCompletions1()
+    {
+        return $this->completions1;
+    }
+
+    /**
+     * Set completions2
+     *
+     * @param integer $completions2
+     * @return Game
+     */
+    public function setCompletions2($completions)
+    {
+        $this->completions2 = $completions;
+
+        return $this;
+    }
+
+    /**
+     * Get completions2
+     *
+     * @return integer 
+     */
+    public function getCompletions2()
+    {
+        return $this->completions2;
+    }
+   
+    /**
+     * Set fouls1
+     *
+     * @param integer $fouls
+     * @return Game
+     */
+    public function setFouls1($fouls)
+    {
+        $this->fouls1 = $fouls;
+
+        return $this;
+    }
+
+    /**
+     * Get fouls1
+     *
+     * @return integer 
+     */
+    public function getFouls1()
+    {
+        return $this->fouls1;
+    }
+
+    /**
+     * Set fouls2
+     *
+     * @param integer $fouls
+     * @return Game
+     */
+    public function setFouls2($fouls)
+    {
+        $this->fouls2 = $fouls;
+
+        return $this;
+    }
+
+    /**
+     * Get fouls2
+     *
+     * @return integer 
+     */
+    public function getFouls2()
+    {
+        return $this->fouls2;
+    }
+    
+    /**
+     * Set special1
+     *
+     * @param integer $special
+     * @return Game
+     */
+    public function setSpecial1($special)
+    {
+        $this->special1 = $special;
+
+        return $this;
+    }
+
+    /**
+     * Get special1
+     *
+     * @return integer 
+     */
+    public function getSpecial1()
+    {
+        return $this->special1;
+    }
+
+    /**
+     * Set special2
+     *
+     * @param integer $special
+     * @return Game
+     */
+    public function setSpecial2($special)
+    {
+        $this->special2 = $special;
+
+        return $this;
+    }
+
+    /**
+     * Get special2
+     *
+     * @return integer 
+     */
+    public function getSpecial2()
+    {
+        return $this->special2;
+    }
+    
     /**
      * Set round
      *
