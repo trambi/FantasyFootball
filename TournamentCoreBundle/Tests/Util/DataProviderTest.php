@@ -21,8 +21,8 @@ class DataProviderTest extends \PHPUnit_Framework_TestCase {
         for ($i = 1; $i < 13; $i++) {
             $coach = $coaches[$i];
             $this->assertEquals($i, $coach->id);
-            $this->assertEquals('Team ' . chr(64 + $i), $coach->name);
-            $this->assertEquals('Coach ' . chr(64 + $i), $coach->coach);
+            $this->assertEquals('Team ' . chr(64 + $i), $coach->teamName);
+            $this->assertEquals('Coach ' . chr(64 + $i), $coach->name);
             $this->assertEquals('coach' . chr(96 + $i) . '@test.org', $coach->email);
             $this->assertEquals($i, $coach->raceId);
             $this->assertEquals(100 + $i, $coach->nafNumber);
@@ -40,8 +40,8 @@ class DataProviderTest extends \PHPUnit_Framework_TestCase {
         $coach = $data->getCoachById(1);
 
         $this->assertEquals(1, $coach->id);
-        $this->assertEquals('Team A', $coach->name);
-        $this->assertEquals('Coach A', $coach->coach);
+        $this->assertEquals('Team A', $coach->teamName);
+        $this->assertEquals('Coach A', $coach->name);
         $this->assertEquals('coacha@test.org', $coach->email);
         $this->assertEquals(1, $coach->raceId);
         $this->assertEquals(101, $coach->nafNumber);
