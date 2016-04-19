@@ -758,265 +758,264 @@ class DataProvider {
     return $coachTeam;
   }
 
-    public function getCoachTeamRanking($edition, $rankingStrategy) {
-        // Attention requete de la mort pour recuperer tous les matchs du point de vue d'une coach_team
-        $query = "(SELECT c.id_coach_team AS coachTeam, m.id_coach_1 AS team,";
-        $query .= " m.round AS round, ct.name AS coachTeamName,";
-        $query .= " m.points_1 AS points, m.points_2 AS opponentPoints,";
-        $query .= " m.td_1 AS td,m.td_2 AS opponentTd, m.casualties_1 AS casualties,";
-        $query .= " m.casualties_2 AS opponentCasualties, m.id_coach_2 AS opponentTeam,";
-        $query .= " oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
-        $query .= " FROM tournament_match m";
-        $query .= " INNER JOIN tournament_coach c ON c.id = m.id_coach_1";
-        $query .= " INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ";
-        $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_2 ";
-        $query .= " WHERE m.edition=" . intval($edition) . " AND m.status <> 'programme' )";
-        $query .= " UNION ";
-        $query .= "(SELECT c.id_coach_team AS coachTeam, m.id_coach_2 AS team,";
-        $query .= " m.round AS round, ct.name AS coachTeamName,";
-        $query .= " m.points_2 AS points, m.points_1 AS opponentPoints,";
-        $query .= " m.td_2 AS td,m.td_1 AS opponentTd, m.casualties_2 AS casualties,";
-        $query .= " m.casualties_1 AS opponentCasualties, m.id_coach_1 AS opponentTeam,";
-        $query .= " oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
-        $query .= " FROM tournament_match m";
-        $query .= " INNER JOIN tournament_coach c ON c.id = m.id_coach_2";
-        $query .= " INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ";
-        $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_1 ";
-        $query .= " WHERE m.edition=" . intval($edition) . " AND m.status <> 'programme' )";
-        $query .= " ORDER BY coachTeam,round";
+  public function getCoachTeamRanking($edition, $rankingStrategy) {
+    // Attention requete de la mort pour recuperer tous les matchs du point de vue d'une coach_team
+    $query = "(SELECT c.id_coach_team AS coachTeam, m.id_coach_1 AS team,";
+    $query .= " m.round AS round, ct.name AS coachTeamName,";
+    $query .= " m.points_1 AS points, m.points_2 AS opponentPoints,";
+    $query .= " m.td_1 AS td,m.td_2 AS opponentTd, m.casualties_1 AS casualties,";
+    $query .= " m.casualties_2 AS opponentCasualties, m.id_coach_2 AS opponentTeam,";
+    $query .= " oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
+    $query .= " FROM tournament_match m";
+    $query .= " INNER JOIN tournament_coach c ON c.id = m.id_coach_1";
+    $query .= " INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ";
+    $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_2 ";
+    $query .= " WHERE m.edition=" . intval($edition) . " AND m.status <> 'programme' )";
+    $query .= " UNION ";
+    $query .= "(SELECT c.id_coach_team AS coachTeam, m.id_coach_2 AS team,";
+    $query .= " m.round AS round, ct.name AS coachTeamName,";
+    $query .= " m.points_2 AS points, m.points_1 AS opponentPoints,";
+    $query .= " m.td_2 AS td,m.td_1 AS opponentTd, m.casualties_2 AS casualties,";
+    $query .= " m.casualties_1 AS opponentCasualties, m.id_coach_1 AS opponentTeam,";
+    $query .= " oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
+    $query .= " FROM tournament_match m";
+    $query .= " INNER JOIN tournament_coach c ON c.id = m.id_coach_2";
+    $query .= " INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ";
+    $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_1 ";
+    $query .= " WHERE m.edition=" . intval($edition) . " AND m.status <> 'programme' )";
+    $query .= " ORDER BY coachTeam,round";
 
-        $result = $this->query($query);
+    $result = $this->query($query);
 
-        $coachTeams = array(); // List of coachTeams
-        $pointsByTeamId = array();
+    $coachTeams = array(); // List of coachTeams
+    $pointsByTeamId = array();
 
-        $currentCoachTeamId = 0;
-        $currentRound = 0;
+    $currentCoachTeamId = 0;
+    $currentRound = 0;
+    $td1Array = array();
+    $td2Array = array();
+    $cas1Array = array();
+    $cas2Array = array();
+    $tempCoachTeamPoints1 = 0;
+    $tempCoachTeamPoints2 = 0;
+
+    $coachTeam = $this->initCoachTeamForRanking();
+    $coachTeamMatchElt = $this->resultFetchObject($result);
+
+    while (null !== $coachTeamMatchElt) {
+      $coachTeamMatchElt->coachTeam = mb_convert_encoding($coachTeamMatchElt->coachTeam, "UTF-8");
+      $coachTeamMatchElt->coachTeamName = mb_convert_encoding($coachTeamMatchElt->coachTeamName, "UTF-8");
+      $coachTeamMatchElt->coach = mb_convert_encoding($coachTeamMatchElt->coach, "UTF-8");
+      if (( ( 0 !== $currentCoachTeamId ) && ( $currentCoachTeamId !== $coachTeamMatchElt->coachTeam ) ) || ( $currentRound !== $coachTeamMatchElt->round )) {
+        if (0 !== $currentRound) {
+          $tempCoachTeamPoints1 = 0;
+          $tempCoachTeamPoints2 = 0;
+          $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
+
+          $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
+          $coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
+        }
         $td1Array = array();
         $td2Array = array();
         $cas1Array = array();
         $cas2Array = array();
-        $tempCoachTeamPoints1 = 0;
-        $tempCoachTeamPoints2 = 0;
-
-        $coachTeam = $this->initCoachTeamForRanking();
-        $coachTeamMatchElt = $this->resultFetchObject($result);
-
-        while (null !== $coachTeamMatchElt) {
-            $coachTeamMatchElt->coachTeam = mb_convert_encoding($coachTeamMatchElt->coachTeam, "UTF-8");
-            $coachTeamMatchElt->coachTeamName = mb_convert_encoding($coachTeamMatchElt->coachTeamName, "UTF-8");
-            $coachTeamMatchElt->coach = mb_convert_encoding($coachTeamMatchElt->coach, "UTF-8");
-            if (( ( 0 !== $currentCoachTeamId ) && ( $currentCoachTeamId !== $coachTeamMatchElt->coachTeam ) ) || ( $currentRound !== $coachTeamMatchElt->round )) {
-                if (0 !== $currentRound) {
-                    $tempCoachTeamPoints1 = 0;
-                    $tempCoachTeamPoints2 = 0;
-                    $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
-
-                    $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
-                    $coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
-                }
-                $td1Array = array();
-                $td2Array = array();
-                $cas1Array = array();
-                $cas2Array = array();
-                $currentRound = $coachTeamMatchElt->round;
-            }
-            if ($currentCoachTeamId !== $coachTeamMatchElt->coachTeam) {
-                if (0 !== $currentCoachTeamId) {
-                    $coachTeams[] = $coachTeam;
-                }
-                $coachTeam = $this->initCoachTeamForRanking();
-                $currentCoachTeamId = $coachTeamMatchElt->coachTeam;
-                $coachTeam->id = $currentCoachTeamId;
-                $coachTeam->name = $coachTeamMatchElt->coachTeamName;
-
-                $currentRound = $coachTeamMatchElt->round;
-            }
-            if (false === in_array($coachTeamMatchElt->opponentCoachTeam, $coachTeam->opponentCoachTeamIdArray)) {
-                $coachTeam->opponentCoachTeamIdArray[] = $coachTeamMatchElt->opponentCoachTeam;
-            }
-            $coachTeam->tdFor += $coachTeamMatchElt->td;
-            $coachTeam->tdAgainst += $coachTeamMatchElt->opponentTd;
-            $coachTeam->diffTd += $coachTeamMatchElt->td - $coachTeamMatchElt->opponentTd;
-            $coachTeam->netTd = $coachTeam->diffTd;
-            $coachTeam->casFor += $coachTeamMatchElt->casualties;
-            $coachTeam->casualties = $coachTeam->casFor;
-            $coachTeam->casAgainst += $coachTeamMatchElt->opponentCasualties;
-            $coachTeam->netCas += $coachTeamMatchElt->casualties - $coachTeamMatchElt->opponentCasualties;
-
-            $tempPoints1 = 0;
-            $tempPoints2 = 0;
-            $rankingStrategy->computePoints($tempPoints1, $tempPoints2, $coachTeamMatchElt->td, $coachTeamMatchElt->opponentTd, $coachTeamMatchElt->casualties, $coachTeamMatchElt->opponentCasualties);
-            $coachTeam->points += $tempPoints1;
-            if (false === array_key_exists($coachTeamMatchElt->team, $pointsByTeamId)) {
-                $pointsByTeamId[$coachTeamMatchElt->team] = $tempPoints1;
-            } else {
-                $pointsByTeamId[$coachTeamMatchElt->team] += $tempPoints1;
-            }
-            if (false === $rankingStrategy->useOpponentPointsOfYourOwnMatch()) {
-                $coachTeam->opponentsPoints -= $tempPoints2;
-            }
-            $td1Array[] = $coachTeamMatchElt->td;
-            $td2Array[] = $coachTeamMatchElt->opponentTd;
-            $cas1Array[] = $coachTeamMatchElt->casualties;
-            $cas2Array[] = $coachTeamMatchElt->opponentCasualties;
-            if (false === array_key_exists($coachTeamMatchElt->team, $coachTeam->teams)) {
-                $coach = $this->initCoachForRanking();
-                $coach->coach = $coachTeamMatchElt->coach;
-                $coach->id = $coachTeamMatchElt->team;
-                $coachTeam->teams[$coachTeamMatchElt->team] = $coach;
-            }
-            $coach = $coachTeam->teams[$coachTeamMatchElt->team];
-            $coach->points += $tempPoints1;
-            if (false === $rankingStrategy->useOpponentPointsOfYourOwnMatch()) {
-                $coach->opponentsPoints -= $tempPoints2;
-            }
-            $coach->opponentIdArray[] = $coachTeamMatchElt->opponentTeam;
-            $coach->netTd += $coachTeamMatchElt->td - $coachTeamMatchElt->opponentTd;
-            $coach->tdFor += $coachTeamMatchElt->td;
-            $coach->tdAgainst += $coachTeamMatchElt->opponentTd;
-            $coach->casualties += $coachTeamMatchElt->casualties;
-            $coachTeam->teams[$coachTeamMatchElt->team] = $coach;
-            $coachTeamMatchElt = $this->resultFetchObject($result);
-        }
-        if (0 !== $currentCoachTeamId) {
-            $tempCoachTeamPoints1 = 0;
-            $tempCoachTeamPoints2 = 0;
-            $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
-
-            $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
-            $coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
-            $coachTeams[] = $coachTeam;
-        }
-
-        //Calcul des points adversaires			
-        foreach ($coachTeams as $coachTeam) {
-            foreach ($coachTeam->teams as $coach) {
-                foreach ($coach->opponentIdArray as $opponentId) {
-                    if (true === array_key_exists($opponentId, $pointsByTeamId)) {
-                        $coach->opponentsPoints += $pointsByTeamId[$opponentId];
-                        $coachTeam->opponentsPoints += $pointsByTeamId[$opponentId];
-                    }
-                }
-            }
-        }
-
-        // Tri des participants de la coach_team dans l'ordre du classement
-        foreach (array_keys($coachTeams) as $id) {
-            $coachTeam = $coachTeams[$id];
-            usort($coachTeam->teams, array($rankingStrategy, 'compareCoachs'));
-            $coachTeams[$id] = $coachTeam;
-        }
-
-        usort($coachTeams, array($rankingStrategy, 'compareCoachTeams'));
-        return $coachTeams;
-    }
-
-    public function getEditionById($id) {
-        $clause = 'id = ' . intval($id);
-        $editions = $this->getEditions($clause);
-        $edition = NULL;
-        if (0 < count($editions)) {
-            $edition = reset($editions);
-        }
-        return $edition;
-    }
-    
-    public function getCurrentEdition() {
-        $clause = 'id = (SELECT max(id) FROM tournament_edition)';
-        $editions = $this->getEditions($clause);
-        $edition = NULL;
-        if (0 < count($editions)) {
-            $edition = reset($editions);
-        }
-        return $edition;
-    }
-
-    public function getEditions($clause='1=1') {
-        $query = self::editionQuery;
-        $query .= ' WHERE ' . $clause;
-        //echo 'request : [',$query,']<br />';
-        $result = $this->query($query);
-        $editions = array();
-        $edition = $this->convertResultIntoEdition($result);
-        while (null != $edition) {
-            $editions[] = $edition;
-            $edition = $this->convertResultIntoEdition($result);
-        }
-        $this->resultClose($result);
-        return $editions;
-    }
-    
-    public function convertResultIntoEdition($result){
-      $edition = $this->resultFetchObject($result);
-      if(null != $edition){
-        $strategy = RankingStrategyFabric::getByName($edition->rankingStrategy);
-        $edition->rankings = $strategy->rankingOptions();
+        $currentRound = $coachTeamMatchElt->round;
       }
-      return $edition;
+      if ($currentCoachTeamId !== $coachTeamMatchElt->coachTeam) {
+        if (0 !== $currentCoachTeamId) {
+          $coachTeams[] = $coachTeam;
+        }
+        $coachTeam = $this->initCoachTeamForRanking();
+        $currentCoachTeamId = $coachTeamMatchElt->coachTeam;
+        $coachTeam->id = $currentCoachTeamId;
+        $coachTeam->name = $coachTeamMatchElt->coachTeamName;
+
+        $currentRound = $coachTeamMatchElt->round;
+      }
+      if (false === in_array($coachTeamMatchElt->opponentCoachTeam, $coachTeam->opponentCoachTeamIdArray)) {
+        $coachTeam->opponentCoachTeamIdArray[] = $coachTeamMatchElt->opponentCoachTeam;
+      }
+      $coachTeam->tdFor += $coachTeamMatchElt->td;
+      $coachTeam->tdAgainst += $coachTeamMatchElt->opponentTd;
+      $coachTeam->diffTd += $coachTeamMatchElt->td - $coachTeamMatchElt->opponentTd;
+      $coachTeam->netTd = $coachTeam->diffTd;
+      $coachTeam->casFor += $coachTeamMatchElt->casualties;
+      $coachTeam->casualties = $coachTeam->casFor;
+      $coachTeam->casAgainst += $coachTeamMatchElt->opponentCasualties;
+      $coachTeam->netCas += $coachTeamMatchElt->casualties - $coachTeamMatchElt->opponentCasualties;
+
+      $tempPoints1 = 0;
+      $tempPoints2 = 0;
+      $rankingStrategy->computePoints($tempPoints1, $tempPoints2, $coachTeamMatchElt->td, $coachTeamMatchElt->opponentTd, $coachTeamMatchElt->casualties, $coachTeamMatchElt->opponentCasualties);
+      $coachTeam->points += $tempPoints1;
+      if (false === array_key_exists($coachTeamMatchElt->team, $pointsByTeamId)) {
+        $pointsByTeamId[$coachTeamMatchElt->team] = $tempPoints1;
+      } else {
+        $pointsByTeamId[$coachTeamMatchElt->team] += $tempPoints1;
+      }
+      if (false === $rankingStrategy->useOpponentPointsOfYourOwnMatch()) {
+        $coachTeam->opponentsPoints -= $tempPoints2;
+      }
+      $td1Array[] = $coachTeamMatchElt->td;
+      $td2Array[] = $coachTeamMatchElt->opponentTd;
+      $cas1Array[] = $coachTeamMatchElt->casualties;
+      $cas2Array[] = $coachTeamMatchElt->opponentCasualties;
+      if (false === array_key_exists($coachTeamMatchElt->team, $coachTeam->teams)) {
+        $coach = $this->initCoachForRanking();
+        $coach->coach = $coachTeamMatchElt->coach;
+        $coach->id = $coachTeamMatchElt->team;
+        $coachTeam->teams[$coachTeamMatchElt->team] = $coach;
+      }
+      $coach = $coachTeam->teams[$coachTeamMatchElt->team];
+      $coach->points += $tempPoints1;
+      if (false === $rankingStrategy->useOpponentPointsOfYourOwnMatch()) {
+        $coach->opponentsPoints -= $tempPoints2;
+      }
+      $coach->opponentIdArray[] = $coachTeamMatchElt->opponentTeam;
+      $coach->netTd += $coachTeamMatchElt->td - $coachTeamMatchElt->opponentTd;
+      $coach->tdFor += $coachTeamMatchElt->td;
+      $coach->tdAgainst += $coachTeamMatchElt->opponentTd;
+      $coach->casualties += $coachTeamMatchElt->casualties;
+      $coachTeam->teams[$coachTeamMatchElt->team] = $coach;
+      $coachTeamMatchElt = $this->resultFetchObject($result);
+    }
+    if (0 !== $currentCoachTeamId) {
+      $tempCoachTeamPoints1 = 0;
+      $tempCoachTeamPoints2 = 0;
+      $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
+      $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
+      $coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
+      $coachTeams[] = $coachTeam;
     }
 
-    private static function hydrateGames(Array $games, $id1, $id2)
-    {
-        if ( array_key_exists($id1, $games) )
-        {
-            $tmpArray = $games[$id1];
-            $tmpArray[] = $id2;
-            $games[$id1] = $tmpArray;
+    //Calcul des points adversaires			
+    foreach ($coachTeams as $coachTeam) {
+      foreach ($coachTeam->teams as $coach) {
+        foreach ($coach->opponentIdArray as $opponentId) {
+          if (true === array_key_exists($opponentId, $pointsByTeamId)) {
+            $coach->opponentsPoints += $pointsByTeamId[$opponentId];
+            $coachTeam->opponentsPoints += $pointsByTeamId[$opponentId];
+          }
         }
-        else
-        {
-            $games[$id1] = array($id2);
-        }
-        if ( array_key_exists($id2, $games) )
-        {
-            $tmpArray = $games[$id2];
-            $tmpArray[] = $id1;
-            $games[$id2] = $tmpArray;
-        }
-        else
-        {
-            $games[$id2] = array($id1);
-        }
-        return $games;
+      }
     }
 
-    protected function getCoachTeamGames($clause)
-    {
-        $query = self::coachTeamGames;
-        $query .= ' WHERE ' . $clause;
-        //echo 'request : [',$query,']<br />';
-        $result = $this->query($query);
-        $coachTeamGames = array();
-        $row = $this->resultFetchRow($result);
-        while (null != $row) {
-            $id1 = $row[0];
-            $id2 = $row[1];
-            $coachTeamGames = self::hydrateGames($coachTeamGames,$id1,$id2);
-            $row = $this->resultFetchRow($result);
-        }
-        $this->resultClose($result);
-        return $coachTeamGames;
+    // Tri des participants de la coach_team dans l'ordre du classement
+    foreach (array_keys($coachTeams) as $id) {
+      $coachTeam = $coachTeams[$id];
+      usort($coachTeam->teams, array($rankingStrategy, 'compareCoachs'));
+      $coachTeams[$id] = $coachTeam;
     }
 
-    public function getCoachTeamGamesByEdition($edition)
-    {
-        $clause = 'm.edition = '.intval($edition);
-        return $this->getCoachTeamGames($clause);
+    usort($coachTeams, array($rankingStrategy, 'compareCoachTeams'));
+    return $coachTeams;
+  }
+
+  public function getEditionById($id) {
+    $clause = 'id = ' . intval($id);
+    $editions = $this->getEditions($clause);
+    $edition = NULL;
+    if (0 < count($editions)) {
+      $edition = reset($editions);
     }
-    
-    public function getCoachGamesByEdition($edition)
-    {
-        $matchs = $this->getMatchsByEditionAndRound($edition,0);
-        $games = array();
-        foreach($matchs as $match)
-        {
-            $id1 = $match->teamId1;
-            $id2 = $match->teamId2;
-            $games = self::hydrateGames($games,$id1,$id2);
-        }
-        return $games;
+    return $edition;
+  }
+  
+  public function getCurrentEdition() {
+    $clause = 'id = (SELECT max(id) FROM tournament_edition)';
+    $editions = $this->getEditions($clause);
+    $edition = NULL;
+    if (0 < count($editions)) {
+      $edition = reset($editions);
     }
+    return $edition;
+  }
+
+  public function getEditions($clause='1=1') {
+    $query = self::editionQuery;
+    $query .= ' WHERE ' . $clause;
+    //echo 'request : [',$query,']<br />';
+    $result = $this->query($query);
+    $editions = array();
+    $edition = $this->convertResultIntoEdition($result);
+    while (null != $edition) {
+      $editions[] = $edition;
+      $edition = $this->convertResultIntoEdition($result);
+    }
+    $this->resultClose($result);
+    return $editions;
+  }
+  
+  public function convertResultIntoEdition($result){
+    $edition = $this->resultFetchObject($result);
+    if(null != $edition){
+      $strategy = RankingStrategyFabric::getByName($edition->rankingStrategy);
+      $edition->rankings = $strategy->rankingOptions();
+    }
+    return $edition;
+  }
+
+  private static function hydrateGames(Array $games, $id1, $id2)
+  {
+    if ( array_key_exists($id1, $games) )
+    {
+      $tmpArray = $games[$id1];
+      $tmpArray[] = $id2;
+      $games[$id1] = $tmpArray;
+    }
+    else
+    {
+      $games[$id1] = array($id2);
+    }
+    if ( array_key_exists($id2, $games) )
+    {
+      $tmpArray = $games[$id2];
+      $tmpArray[] = $id1;
+      $games[$id2] = $tmpArray;
+    }
+    else
+    {
+      $games[$id2] = array($id1);
+    }
+    return $games;
+  }
+
+  protected function getCoachTeamGames($clause)
+  {
+    $query = self::coachTeamGames;
+    $query .= ' WHERE ' . $clause;
+    //echo 'request : [',$query,']<br />';
+    $result = $this->query($query);
+    $coachTeamGames = array();
+    $row = $this->resultFetchRow($result);
+    while (null != $row) {
+      $id1 = $row[0];
+      $id2 = $row[1];
+      $coachTeamGames = self::hydrateGames($coachTeamGames,$id1,$id2);
+      $row = $this->resultFetchRow($result);
+    }
+    $this->resultClose($result);
+    return $coachTeamGames;
+  }
+
+  public function getCoachTeamGamesByEdition($edition)
+  {
+    $clause = 'm.edition = '.intval($edition);
+    return $this->getCoachTeamGames($clause);
+  }
+  
+  public function getCoachGamesByEdition($edition)
+  {
+    $matchs = $this->getMatchsByEditionAndRound($edition,0);
+    $games = array();
+    foreach($matchs as $match)
+    {
+      $id1 = $match->teamId1;
+      $id2 = $match->teamId2;
+      $games = self::hydrateGames($games,$id1,$id2);
+    }
+    return $games;
+  }
 
 }
 

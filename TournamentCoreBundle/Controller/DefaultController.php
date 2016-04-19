@@ -41,4 +41,14 @@ class DefaultController extends Controller
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
+  
+  public function getCurrentEditionAction(){
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
+    $edition = $data->getCurrentEdition();
+		$response = new JsonResponse($edition);
+		$response->headers->set('Access-Control-Allow-Origin','*');
+		return $response;
+  }
+  
 }

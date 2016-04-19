@@ -7,3 +7,6 @@ _ws_get_editions:
 _ws_get_edition_list:
   path: /EditionList
   defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:getEditionList }
+_ws_get_current_edition:
+  path: /Edition/current
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:getCurrentEdition }
