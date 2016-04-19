@@ -932,19 +932,28 @@ class DataProvider {
         return $edition;
     }
 
-    public function getEditions($clause) {
+    public function getEditions($clause='1=1') {
         $query = self::editionQuery;
         $query .= ' WHERE ' . $clause;
         //echo 'request : [',$query,']<br />';
         $result = $this->query($query);
         $editions = array();
-        $edition = $this->resultFetchObject($result);
+        $edition = $this->convertResultIntoEdition($result);
         while (null != $edition) {
             $editions[] = $edition;
-            $edition = $this->resultFetchObject($result);
+            $edition = $this->convertResultIntoEdition($result);
         }
         $this->resultClose($result);
         return $editions;
+    }
+    
+    public function convertResultIntoEdition($result){
+      $edition = $this->resultFetchObject($result);
+      if(null != $edition){
+        $strategy = RankingStrategyFabric::getByName($edition->rankingStrategy);
+        $edition->rankings = $strategy->rankingOptions();
+      }
+      return $edition;
     }
 
     private static function hydrateGames(Array $games, $id1, $id2)

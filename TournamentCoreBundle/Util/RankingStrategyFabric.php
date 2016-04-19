@@ -31,7 +31,7 @@ class RankingStrategyFabric {
             $strategy = new RankingStrategyTwelfth();
         } else if ( 'RdvbbThirhteenth' === $name ){
             $strategy = new RankingStrategyThirhteenth();
-        } else if ( 'RdvbbThirhteenth' === $name ){
+        } else if ( 'Rdvbb14' === $name ){
             $strategy = new RankingStrategy14();
         }
         return $strategy;
