@@ -60,10 +60,10 @@ class DataProvider {
   }
 
   const raceQuery = 'SELECT r.edition,r.id_race as id,r.nom_fr,r.nom_en,r.nom_en_2,r.nom_fr_2,r.reroll FROM tournament_race r';
-  const coachQuery = 'SELECT c.id, c.team_name, c.name, c.id_race,c.email,c.fan_factor,c.reroll,c.apothecary,c.assistant_coach,c.cheerleader,c.points,c.opponents_points, c.net_td, c.casualties,c.edition,c.naf_number, c.id_coach_team,r.nom_fr,ct.name,c.ready FROM tournament_coach c INNER JOIN tournament_race r ON c.id_race=r.id_race LEFT JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
+  const coachQuery = 'SELECT c.id, c.team_name, c.name, c.id_race,c.email,c.fan_factor,c.reroll,c.apothecary,c.assistant_coach,c.cheerleader,c.edition,c.naf_number, c.id_coach_team,r.nom_fr,ct.name,c.ready FROM tournament_coach c INNER JOIN tournament_race r ON c.id_race=r.id_race LEFT JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
   const setReadyCoachQuery = 'UPDATE tournament_coach SET ready = 1';
   const preCoachQuery = 'SELECT p.id as id, p.name as coach, p.team_name as name,p.id_race as raceId,p.email as email,p.edition as edition,p.naf_number,p.id_coach_team,r.nom_fr,ct.name FROM tournament_precoach p INNER JOIN tournament_race r ON p.id_race=r.id_race LEFT JOIN tournament_coach_team tc ON p.id_coach_team=tc.id';
-  const coachTeamQuery = 'SELECT c.name,c.id_coach_team,ct.name,c.id,c.team_name,c.points,c.opponents_points,c.net_td,c.casualties FROM tournament_coach c INNER JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
+  const coachTeamQuery = 'SELECT c.name,c.id_coach_team,ct.name,c.id,c.team_name FROM tournament_coach c INNER JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
   const coachTeamPreCoachQuery = 'SELECT p.name,p.id_coach_team,ct.name,p.id,\'\',0,0,0,0 FROM tournament_precoach p INNER JOIN tournament_coach_team ct ON p.id_coach_team=ct.id';
   const matchQuery = 'SELECT c1.name,c1.team_name,c1.id,m.td_1,m.casualties_1,m.completions_1,m.fouls_1,m.special_1,
   m.points_1,c2.name,c2.team_name,c2.id,m.td_2,m.casualties_2,m.completions_2,m.fouls_2,m.special_2,m.points_2,
@@ -108,16 +108,12 @@ class DataProvider {
     $coach->apothecary = intval($row[7]);
     $coach->assistants = intval($row[8]);
     $coach->cheerleaders = intval($row[9]);
-    $coach->points = intval($row[10]);
-    $coach->opponentsPoints = intval($row[11]);
-    $coach->netTd = intval($row[12]);
-    $coach->casualties = intval($row[13]);
-    $coach->edition = intval($row[14]);
-    $coach->nafNumber = intval($row[15]);
-    $coach->coachTeamId = intval($row[16]);
-    $coach->raceName = mb_convert_encoding($row[17], 'UTF-8');
-    $coach->coachTeamName = mb_convert_encoding($row[18], 'UTF-8');
-    $coach->ready = intval($row[19]);
+    $coach->edition = intval($row[10]);
+    $coach->nafNumber = intval($row[11]);
+    $coach->coachTeamId = intval($row[12]);
+    $coach->raceName = mb_convert_encoding($row[13], 'UTF-8');
+    $coach->coachTeamName = mb_convert_encoding($row[14], 'UTF-8');
+    $coach->ready = intval($row[15]);
     return $coach;
   }
 
@@ -159,14 +155,24 @@ class DataProvider {
         if (true == $resetRankingStuff) {
           $coach->points = 0;
           $coach->opponentsPoints = 0;
-          $coach->netTd = 0;
-          $coach->casualties = 0;
-          $coach->special = 0;
-          $coach->td = 0;
           $coach->tdFor = 0;
           $coach->tdAgainst = 0;
+          $coach->netTd = 0;
+          $coach->casualtiesFor = 0;
+          $coach->casualtiesAgainst = 0;
+          $coach->netCasualties = 0;
+          $coach->completionsFor = 0;
+          $coach->completionsAgainst = 0;
+          $coach->netCompletions = 0;
+          $coach->foulsFor = 0;
+          $coach->foulsAgainst = 0;
+          $coach->netFouls = 0;
+
+          $coach->special = 0;
           $coach->opponentDirectPoints = 0;
           $coach->opponents = array();
+          $coach->completions = 0;
+          $coach->fouls = 0;
         }
         $coachs[$coach->id] = $coach;
         $row = $this->resultFetchRow($result);
@@ -212,10 +218,6 @@ class DataProvider {
     $coachTeamElt->coachTeamName = mb_convert_encoding($row[2], 'UTF-8');
     $coachTeamElt->teamId = intval($row[3]);
     $coachTeamElt->teamName = mb_convert_encoding($row[4], 'UTF-8');
-    $coachTeamElt->points = intval($row[5]);
-    $coachTeamElt->opponentsPoints = intval($row[6]);
-    $coachTeamElt->netTd = intval($row[7]);
-    $coachTeamElt->casualties = intval($row[8]);
     $coachTeamElt->isPrebooking = 0;
     return $coachTeamElt;
   }
@@ -243,41 +245,32 @@ class DataProvider {
     $currentCoachTeam = (object) array();
     $currentCoachTeam->id = 0;
     if ($result) {
-        $row = $this->resultFetchRow($result);
-        $id = 0;
-        while (null != $row) {
-            $coachTeamElt = $this->convertRowInCoachTeamElement($row);
-            if ($currentCoachTeam->id != $coachTeamElt->coachTeamId) {
-                if (0 != $currentCoachTeam->id) {
-                    $coachTeams[$currentCoachTeam->id] = $currentCoachTeam;
-                }
-                $id = $coachTeamElt->coachTeamId;
-
-                $currentCoachTeam = (object) array();
-                $currentCoachTeam->name = $coachTeamElt->coachTeamName;
-                $currentCoachTeam->id = $id;
-                $currentCoachTeam->coachTeamMates = array();
-                $currentCoachTeam->points = 0;
-                $currentCoachTeam->opponentsPoints = 0;
-                $currentCoachTeam->netTd = 0;
-                $currentCoachTeam->casualties = 0;
-            }
-            $currentCoachTeam->coachTeamMates[] = $coachTeamElt;
-            $currentCoachTeam->points += $coachTeamElt->points;
-            $currentCoachTeam->opponentsPoints += $coachTeamElt->opponentsPoints;
-            $currentCoachTeam->netTd += $coachTeamElt->netTd;
-            $currentCoachTeam->casualties += $coachTeamElt->casualties;
-            $row = $this->resultFetchRow($result);
-        }
-        $this->resultClose($result);
-        if (0 != $currentCoachTeam->id) {
+      $row = $this->resultFetchRow($result);
+      $id = 0;
+      while (null != $row) {
+        $coachTeamElt = $this->convertRowInCoachTeamElement($row);
+        if ($currentCoachTeam->id != $coachTeamElt->coachTeamId) {
+          if (0 != $currentCoachTeam->id) {
             $coachTeams[$currentCoachTeam->id] = $currentCoachTeam;
+          }
+          $id = $coachTeamElt->coachTeamId;
+
+          $currentCoachTeam = (object) array();
+          $currentCoachTeam->name = $coachTeamElt->coachTeamName;
+          $currentCoachTeam->id = $id;
+          $currentCoachTeam->coachTeamMates = array();
         }
+        $currentCoachTeam->coachTeamMates[] = $coachTeamElt;
+        $row = $this->resultFetchRow($result);
+      }
+      $this->resultClose($result);
+      if (0 != $currentCoachTeam->id) {
+        $coachTeams[$currentCoachTeam->id] = $currentCoachTeam;
+      }
     }
     $query = self::coachTeamPreCoachQuery;
     $query .= ' WHERE ' . $clause;
     $query .= ' ORDER BY p.id_coach_team ASC';
-    //echo 'request : [',$query,']<br />';
     $result = $this->query($query);
     if ($result) {
       $row = $this->resultFetchRow($result);
@@ -292,17 +285,13 @@ class DataProvider {
             $coachTeams[$id] = $currentCoachTeam;
           }
           $id = $coachTeamElt->coachTeamId;
-        if (true == isset($coachTeams[$id])) {
-          $currentCoachTeam = $coachTeams[$id];
-        } else {
-          $currentCoachTeam = (object) array();
-          $currentCoachTeam->name = $coachTeamElt->coachTeamName;
-          $currentCoachTeam->id = $id;
-          $currentCoachTeam->coachTeamMates = array();
-          $currentCoachTeam->points = 0;
-          $currentCoachTeam->opponentsPoints = 0;
-          $currentCoachTeam->netTd = 0;
-          $currentCoachTeam->casualties = 0;
+          if (true == isset($coachTeams[$id])) {
+            $currentCoachTeam = $coachTeams[$id];
+          } else {
+            $currentCoachTeam = (object) array();
+            $currentCoachTeam->name = $coachTeamElt->coachTeamName;
+            $currentCoachTeam->id = $id;
+            $currentCoachTeam->coachTeamMates = array();
           }
         }
         $currentCoachTeam->coachTeamMates[] = $coachTeamElt;
@@ -493,106 +482,53 @@ class DataProvider {
     return $matches;
   }
 
-  public function getTeamRanking($edition) {
-    $query = self::teamQuery;
-    $query .= ' WHERE c.edition = ' . intval($edition);
-    $query .= ' ORDER BY c.points DESC, c.opponents_points DESC, c.net_td DESC, c.casualties DESC';
-    //echo 'request : [',$query,']<br />';
-    $result = $this->query($query);
-    $coachs = array();
-    $row = $this->resultFetchRow($result);
-    while (null != $row) {
-      $coach = $this->convertRowInCoach($row);
-      $coachs[] = $coach;
-      $row = $this->resultFetchRow($result);
-    }
-    $this->resultClose($result);
-    return $coachs;
-  }
-
-  public function getMainCoachRanking($edition, $rankingStrategy) {
+  public function getMainCoachRanking($edition) {
     $mainRanking = $this->getCoachRankingBetweenRounds($edition->id, 0, $edition->currentRound);
-    usort($mainRanking, array($rankingStrategy, 'compareCoachs'));
+    usort($mainRanking, array($edition->rankingStrategy, 'compareCoachs'));
     return $mainRanking;
   }
 
   public function compareCoachsByTouchdown($coach1, $coach2) {
-    $td1 = $coach1->td;
-    $td2 = $coach2->td;
-    if ($td1 === $td2) {
-        $return = 0;
-    } elseif ($td1 > $td2) {
-        $return = -1;
-    } else {
-        $return = 1;
-    }
-    return $return;
+    return ( $coach2->tdFor - $coach1->tdFor );
   }
 
-  public function getCoachRankingByTouchdown($edition, $rankingStrategy) {
+  public function getCoachRankingByTouchdown($edition) {
     $tdRanking = $this->getCoachRankingBetweenRounds($edition->id, 0, $edition->currentRound);
     usort($tdRanking, array($this, 'compareCoachsByTouchdown'));
     return $tdRanking;
   }
 
   public function compareCoachsByCasualties($coach1, $coach2) {
-    $casualties1 = $coach1->casualties;
-    $casualties2 = $coach2->casualties;
-    if ($casualties1 === $casualties2) {
-      $return = 0;
-    } elseif ($casualties1 > $casualties2) {
-      $return = -1;
-    } else {
-      $return = 1;
-    }
-    return $return;
+    return ( $coach2->casualtiesFor - $coach1->casualtiesFor );
   }
 
-  public function getCoachRankingByCasualties($edition, $rankingStrategy) {
+  public function getCoachRankingByCasualties($edition) {
     $casualtiesRanking = $this->getCoachRankingBetweenRounds($edition->id, 0, $edition->currentRound);
     usort($casualtiesRanking, array($this, 'compareCoachsByCasualties'));
     return $casualtiesRanking;
   }
 
   public function compareCoachsByFouls($coach1, $coach2) {
-    $fouls1 = $coach1->fouls;
-    $fouls2 = $coach2->fouls;
-    if ($fouls2 === $fouls2) {
-      $return = 0;
-    } elseif ($fouls1 > $fouls2) {
-      $return = -1;
-    } else {
-      $return = 1;
-    }
-    return $return;
+    return ( $coach2->foulsFor - $coach1->foulsFor ) ;
   }
 
-  public function getCoachRankingByFouls($edition, $rankingStrategy) {
+  public function getCoachRankingByFouls($edition) {
     $casualtiesRanking = $this->getCoachRankingBetweenRounds($edition->id, 0, $edition->currentRound);
     usort($casualtiesRanking, array($this, 'compareCoachsByFouls'));
     return $casualtiesRanking;
   }
   
   public function compareCoachsByCompletions($coach1, $coach2) {
-    $pass1 = $coach1->completions;
-    $pass2 = $coach2->completions;
-    if ($pass1 === $pass2) {
-      $return = 0;
-    } elseif ($pass1 > $pass2) {
-      $return = -1;
-    } else {
-      $return = 1;
-    }
-    return $return;
+    return ( $coach2->completionsFor - $coach1->completionsFor ) ;
   }
   
-  public function getCoachRankingByCompletions($edition, $rankingStrategy) {
+  public function getCoachRankingByCompletions($edition) {
     $casualtiesRanking = $this->getCoachRankingBetweenRounds($edition->id, 0, $edition->currentRound);
     usort($casualtiesRanking, array($this, 'compareCoachsByCompletions'));
     return $casualtiesRanking;
   }
     
-  public function getAllRanking($edition,$rankingStrategy){
+  public function getAllRanking($edition){
     $ranking = $this->getCoachRankingBetweenRounds($edition->id, 0, $edition->currentRound);
     
     $casualtiesRanking = $ranking;
@@ -601,11 +537,11 @@ class DataProvider {
     $tdRanking = $ranking;
     usort($tdRanking, array($this, 'compareCoachsByTouchdown'));
     
-    $comebackRanking = $this->getCoachRankingByComeback($edition,$rankingStrategy);
+    $comebackRanking = $this->getCoachRankingByComeback($edition);
     
-    $coachTeamRaning = $this->getCoachTeamRanking($edition->id, $rankingStrategy);
+    $coachTeamRaning = $this->getCoachTeamRanking($edition);
 
-    usort($ranking,array($rankingStrategy, 'compareCoachs'));
+    usort($ranking,array($edition->rankingStrategy, 'compareCoachs'));
 
     return ([
       'ranking' => $ranking,
@@ -672,15 +608,33 @@ class DataProvider {
     $first = 1;
     while (null != $row) {
       $match = $this->convertRowInMatch($row);
+
       $coach1 = $coachs[$match->teamId1];
       $coach1->points += $match->points1;
-      $coach1->td += $match->td1;
       $coach1->tdFor += $match->td1;
-      $coach1->netTd += $match->td1 - $match->td2;
-      $coach1->casualties += $match->casualties1;
+      $coach1->tdAgainst += $match->td2;
+      $coach1->casualtiesFor += $match->casualties1;
+      $coach1->casualtiesAgainst += $match->casualties2;
+      $coach1->completionsFor += $match->completions1;
+      $coach1->completionsAgainst += $match->completions2;
+      $coach1->foulsFor += $match->fouls1;
+      $coach1->foulsAgainst += $match->fouls2;
       $coach1->opponentDirectPoints = $match->points2;
       $coach1->opponents[] = $match->teamId2;
+
       $coach2 = $coachs[$match->teamId2];
+      $coach2->points += $match->points2;
+      $coach2->tdFor += $match->td2;
+      $coach2->tdAgainst += $match->td1;
+      $coach2->casualtiesFor += $match->casualties2;
+      $coach2->casualtiesAgainst += $match->casualties1;
+      $coach2->completionsFor += $match->completions2;
+      $coach2->completionsAgainst += $match->completions1;
+      $coach2->foulsFor += $match->fouls2;
+      $coach2->foulsAgainst += $match->fouls1;
+      $coach2->opponentDirectPoints = $match->points1;
+      $coach2->opponents[] = $match->teamId1;
+ 
       if (true === $match->finale) {
         if ($match->td1 > $match->td2) {
           $coach1->special = 2;
@@ -691,13 +645,6 @@ class DataProvider {
         }
       }
 
-      $coach2->points += $match->points2;
-      $coach2->td += $match->td2;
-      $coach2->tdFor += $match->td2;
-      $coach2->netTd += $match->td2 - $match->td1;
-      $coach2->casualties += $match->casualties2;
-      $coach2->opponentDirectPoints = $match->points1;
-      $coach2->opponents[] = $match->teamId1;
       $coachs[$match->teamId1] = $coach1;
       $coachs[$match->teamId2] = $coach2;
       $row = $this->resultFetchRow($result);
@@ -716,6 +663,10 @@ class DataProvider {
         $OpponentsPoints -= $coach->opponentDirectPoints;
       }
       $coach->opponentsPoints = $OpponentsPoints;
+      $coach->netTd = $coach->tdFor - $coach->tdAgainst;
+      $coach->netCasualties = $coach->casualtiesFor - $coach->casualtiesAgainst;
+      $coach->netCompletions = $coach->completionsFor - $coach->completionsAgainst;
+      $coach->netFouls = $coach->foulsFor - $coach->foulsAgainst;
     }
     return $coachs;
   }
@@ -730,7 +681,15 @@ class DataProvider {
     $coach->tdFor = 0;
     $coach->tdAgainst = 0;
     $coach->netTd = 0;
-    $coach->casualties = 0;
+    $coach->casualtiesFor = 0;
+    $coach->casualtiesAgainst = 0;
+    $coach->netCasualties = 0;
+    $coach->completionsFor = 0;
+    $coach->completionsAgainst = 0;
+    $coach->netCompletions = 0;
+    $coach->foulsFor = 0;
+    $coach->foulsAgainst = 0;
+    $coach->netFouls = 0;
     return $coach;
   }
 
@@ -743,12 +702,16 @@ class DataProvider {
     $coachTeam->points = 0;
     $coachTeam->tdFor = 0;
     $coachTeam->tdAgainst = 0;
-    $coachTeam->diffTd = 0;
     $coachTeam->netTd = 0;
-    $coachTeam->casFor = 0;
-    $coachTeam->sortie = 0;
-    $coachTeam->casAgainst = 0;
-    $coachTeam->netCas = 0;
+    $coachTeam->casualtiesFor = 0;
+    $coachTeam->casualtiesAgainst = 0;
+    $coachTeam->netCasualties = 0;
+    $coachTeam->completionsFor = 0;
+    $coachTeam->completionsAgainst = 0;
+    $coachTeam->netCompletions = 0;
+    $coachTeam->foulsFor = 0;
+    $coachTeam->foulsAgainst = 0;
+    $coachTeam->netFouls = 0;
     $coachTeam->opponentIdArray = array();
     $coachTeam->opponentCoachTeamIdArray = array();
     $coachTeam->teams = array();
@@ -758,31 +721,35 @@ class DataProvider {
     return $coachTeam;
   }
 
-  public function getCoachTeamRanking($edition, $rankingStrategy) {
+  public function getCoachTeamRanking($edition) {
+    $editionId = $edition->id;
+    $rankingStrategy = $edition->rankingStrategy;
     // Attention requete de la mort pour recuperer tous les matchs du point de vue d'une coach_team
     $query = "(SELECT c.id_coach_team AS coachTeam, m.id_coach_1 AS team,";
     $query .= " m.round AS round, ct.name AS coachTeamName,";
     $query .= " m.points_1 AS points, m.points_2 AS opponentPoints,";
-    $query .= " m.td_1 AS td,m.td_2 AS opponentTd, m.casualties_1 AS casualties,";
-    $query .= " m.casualties_2 AS opponentCasualties, m.id_coach_2 AS opponentTeam,";
-    $query .= " oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
+    $query .= " m.td_1 AS tdFor,m.td_2 AS tdAgainst, m.casualties_1 AS casualtiesFor, m.casualties_2 AS casualtiesAgainst,";
+    $query .= " m.completion_1 AS completionFor,m.completion_2 AS completionAgainst,";
+    $query .= " m.fouls_1 AS foulsFor, m.fouls_2 AS foulsAgainst,";
+    $query .= " m.id_coach_2 AS opponentTeam,oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
     $query .= " FROM tournament_match m";
     $query .= " INNER JOIN tournament_coach c ON c.id = m.id_coach_1";
     $query .= " INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ";
     $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_2 ";
-    $query .= " WHERE m.edition=" . intval($edition) . " AND m.status <> 'programme' )";
+    $query .= " WHERE m.edition=" . intval($editionId) . " AND m.status <> 'programme' )";
     $query .= " UNION ";
     $query .= "(SELECT c.id_coach_team AS coachTeam, m.id_coach_2 AS team,";
     $query .= " m.round AS round, ct.name AS coachTeamName,";
     $query .= " m.points_2 AS points, m.points_1 AS opponentPoints,";
-    $query .= " m.td_2 AS td,m.td_1 AS opponentTd, m.casualties_2 AS casualties,";
-    $query .= " m.casualties_1 AS opponentCasualties, m.id_coach_1 AS opponentTeam,";
-    $query .= " oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
+    $query .= " m.td_2 AS tdFor,m.td_1 AS tdAgainst, m.casualties_2 AS casualtiesFor, m.casualties_1 AS casualtiesAgainst,";
+    $query .= " m.completion_2 AS completionFor,m.completion_1 AS completionAgainst,";
+    $query .= " m.fouls_2 AS foulsFor, m.fouls_1 AS foulsAgainst,";
+    $query .= " m.id_coach_1 AS opponentTeam, oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
     $query .= " FROM tournament_match m";
     $query .= " INNER JOIN tournament_coach c ON c.id = m.id_coach_2";
     $query .= " INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ";
     $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_1 ";
-    $query .= " WHERE m.edition=" . intval($edition) . " AND m.status <> 'programme' )";
+    $query .= " WHERE m.edition=" . intval($editionId) . " AND m.status <> 'programme' )";
     $query .= " ORDER BY coachTeam,round";
 
     $result = $this->query($query);
@@ -835,18 +802,18 @@ class DataProvider {
       if (false === in_array($coachTeamMatchElt->opponentCoachTeam, $coachTeam->opponentCoachTeamIdArray)) {
         $coachTeam->opponentCoachTeamIdArray[] = $coachTeamMatchElt->opponentCoachTeam;
       }
-      $coachTeam->tdFor += $coachTeamMatchElt->td;
-      $coachTeam->tdAgainst += $coachTeamMatchElt->opponentTd;
-      $coachTeam->diffTd += $coachTeamMatchElt->td - $coachTeamMatchElt->opponentTd;
-      $coachTeam->netTd = $coachTeam->diffTd;
-      $coachTeam->casFor += $coachTeamMatchElt->casualties;
-      $coachTeam->casualties = $coachTeam->casFor;
-      $coachTeam->casAgainst += $coachTeamMatchElt->opponentCasualties;
-      $coachTeam->netCas += $coachTeamMatchElt->casualties - $coachTeamMatchElt->opponentCasualties;
+      $coachTeam->tdFor += $coachTeamMatchElt->tdFor;
+      $coachTeam->tdAgainst += $coachTeamMatchElt->tdAgainst;
+      $coachTeam->casualtiesFor += $coachTeamMatchElt->casualtiesFor;
+      $coachTeam->casualtiesAgainst += $coachTeamMatchElt->casualtiesAgainst;
+      $coachTeam->completionsFor += $coachTeamMatchElt->completionsFor;
+      $coachTeam->completionsAgainst += $coachTeamMatchElt->completionsAgainst;
+      $coachTeam->foulsFor += $coachTeamMatchElt->foulsFor;
+      $coachTeam->foulsAgainst += $coachTeamMatchElt->foulsAgainst;
 
       $tempPoints1 = 0;
       $tempPoints2 = 0;
-      $rankingStrategy->computePoints($tempPoints1, $tempPoints2, $coachTeamMatchElt->td, $coachTeamMatchElt->opponentTd, $coachTeamMatchElt->casualties, $coachTeamMatchElt->opponentCasualties);
+      $rankingStrategy->computePoints($tempPoints1, $tempPoints2, $coachTeamMatchElt->tdFor, $coachTeamMatchElt->tdAgainst, $coachTeamMatchElt->casualtiesFor, $coachTeamMatchElt->casualtiesAgainst);
       $coachTeam->points += $tempPoints1;
       if (false === array_key_exists($coachTeamMatchElt->team, $pointsByTeamId)) {
         $pointsByTeamId[$coachTeamMatchElt->team] = $tempPoints1;
@@ -856,10 +823,10 @@ class DataProvider {
       if (false === $rankingStrategy->useOpponentPointsOfYourOwnMatch()) {
         $coachTeam->opponentsPoints -= $tempPoints2;
       }
-      $td1Array[] = $coachTeamMatchElt->td;
-      $td2Array[] = $coachTeamMatchElt->opponentTd;
-      $cas1Array[] = $coachTeamMatchElt->casualties;
-      $cas2Array[] = $coachTeamMatchElt->opponentCasualties;
+      $td1Array[] = $coachTeamMatchElt->tdFor;
+      $td2Array[] = $coachTeamMatchElt->tdAgainst;
+      $cas1Array[] = $coachTeamMatchElt->casualtiesFor;
+      $cas2Array[] = $coachTeamMatchElt->casualtiesAgainst;
       if (false === array_key_exists($coachTeamMatchElt->team, $coachTeam->teams)) {
         $coach = $this->initCoachForRanking();
         $coach->coach = $coachTeamMatchElt->coach;
@@ -872,10 +839,14 @@ class DataProvider {
         $coach->opponentsPoints -= $tempPoints2;
       }
       $coach->opponentIdArray[] = $coachTeamMatchElt->opponentTeam;
-      $coach->netTd += $coachTeamMatchElt->td - $coachTeamMatchElt->opponentTd;
-      $coach->tdFor += $coachTeamMatchElt->td;
-      $coach->tdAgainst += $coachTeamMatchElt->opponentTd;
-      $coach->casualties += $coachTeamMatchElt->casualties;
+      $coach->tdFor += $coachTeamMatchElt->tdFor;
+      $coach->tdAgainst += $coachTeamMatchElt->tdAgainst;
+      $coach->casualtiesFor += $coachTeamMatchElt->casualtiesFor;
+      $coach->casualtiesAgainst += $coachTeamMatchElt->casualtiesAgainst;
+      $coach->completionsFor += $coachTeamMatchElt->completionsFor;
+      $coach->completionsAgainst += $coachTeamMatchElt->completionsAgainst;
+      $coach->foulsFor += $coachTeamMatchElt->foulsFor;
+      $coach->foulsAgainst += $coachTeamMatchElt->foulsAgainst;
       $coachTeam->teams[$coachTeamMatchElt->team] = $coach;
       $coachTeamMatchElt = $this->resultFetchObject($result);
     }
@@ -890,7 +861,15 @@ class DataProvider {
 
     //Calcul des points adversaires			
     foreach ($coachTeams as $coachTeam) {
+      $coachTeam->netTd = $coachTeam->tdFor - $coachTeam->tdAgainst;
+      $coachTeam->netCasualties = $coachTeam->casualtiesFor - $coachTeam->casualtiesAgainst;
+      $coachTeam->netCompletions = $coachTeam->completionsFor - $coachTeam->completionsAgainst;
+      $coachTeam->netFouls = $coachTeam->foulsFor - $coachTeam->foulsAgainst;
       foreach ($coachTeam->teams as $coach) {
+        $coach->netTd = $coach->tdFor - $coach->tdAgainst;
+        $coach->netCasualties = $coach->casualtiesFor - $coach->casualtiesAgainst;
+        $coach->netCompletions = $coach->completionsFor - $coach->completionsAgainst;
+        $coach->netFouls = $coach->foulsFor - $coach->foulsAgainst;
         foreach ($coach->opponentIdArray as $opponentId) {
           if (true === array_key_exists($opponentId, $pointsByTeamId)) {
             $coach->opponentsPoints += $pointsByTeamId[$opponentId];
@@ -949,8 +928,9 @@ class DataProvider {
   public function convertResultIntoEdition($result){
     $edition = $this->resultFetchObject($result);
     if(null != $edition){
-      $strategy = RankingStrategyFabric::getByName($edition->rankingStrategy);
-      $edition->rankings = $strategy->rankingOptions();
+      $edition->rankingStrategyName = $edition->rankingStrategy;
+      $edition->rankingStrategy = RankingStrategyFabric::getByName($edition->rankingStrategy);
+      $edition->rankings = $edition->rankingStrategy->rankingOptions();
     }
     return $edition;
   }

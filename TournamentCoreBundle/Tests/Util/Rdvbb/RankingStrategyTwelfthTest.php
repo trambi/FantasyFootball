@@ -157,8 +157,8 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
     $coach2->opponentsPoints = 0;
     $coach1->netTd = 0;
     $coach2->netTd = 0;
-    $coach1->casualties = 0;
-    $coach2->casualties = 0;
+    $coach1->casualtiesFor = 0;
+    $coach2->casualtiesFor = 0;
 
     $result = $strategy->compareCoachs($coach1,$coach2);
     $this->assertEquals(0,$result);
@@ -195,12 +195,12 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
     $this->assertGreaterThan(0,$result);
 
     $coach2->netTd = 1;
-    $coach1->casualties = 2;
-    $coach2->casualties = 1;
+    $coach1->casualtiesFor = 2;
+    $coach2->casualtiesFor = 1;
     $result = $strategy->compareCoachs($coach1,$coach2);
     $this->assertLessThan(0,$result);
 
-    $coach2->casualties = 3;
+    $coach2->casualtiesFor = 3;
     $result = $strategy->compareCoachs($coach1,$coach2);
     $this->assertGreaterThan(0,$result);
   }
@@ -217,8 +217,8 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
     $coachTeam2->opponentsPoints = 0;
     $coachTeam1->netTd = 0;
     $coachTeam2->netTd = 0;
-    $coachTeam1->casualties = 0;
-    $coachTeam2->casualties = 0;
+    $coachTeam1->casualtiesFor = 0;
+    $coachTeam2->casualtiesFor = 0;
     
     $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
     $this->assertEquals(0,$result);
@@ -264,12 +264,12 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
     $this->assertGreaterThan(0,$result);
 
     $coachTeam2->netTd = 1;
-    $coachTeam1->casualties = 2;
-    $coachTeam2->casualties = 1;
+    $coachTeam1->casualtiesFor = 2;
+    $coachTeam2->casualtiesFor = 1;
     $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
     $this->assertLessThan(0,$result);
 
-    $coachTeam2->casualties = 3;
+    $coachTeam2->casualtiesFor = 3;
     $result = $strategy->compareCoachTeams($coachTeam1,$coachTeam2);
     $this->assertGreaterThan(0,$result);
   }

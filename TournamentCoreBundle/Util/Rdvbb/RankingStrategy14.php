@@ -40,18 +40,18 @@ class RankingStrategy14 implements IRankingStrategy {
     'coach' => array(
       'main' => array('points','win','draw','opponentPoints','value'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking'),
-      'td' => array('td'),
-      'foul' => array('foul'),
-      'pass' => array('pass'),
-      'casualties' => array('casualties'),
+      'td' => array('tdFor'),
+      'foul' => array('foulsFor'),
+      'pass' => array('completionsFor'),
+      'casualties' => array('casualtiesFor'),
     ),
     'coachTeam' => array(
       'main' => array('points','win','draw','opponentPoints','value'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking'),
       'td' => array('td'),
-      'foul' => array('foul'),
-      'pass' => array('pass'),
-      'casualties' => array('casualties')
+      'foul' => array('foulsFor'),
+      'pass' => array('completionsFor'),
+      'casualties' => array('casualtiesFor')
       ),
     'special' => array(
       'guest' => 'usage'

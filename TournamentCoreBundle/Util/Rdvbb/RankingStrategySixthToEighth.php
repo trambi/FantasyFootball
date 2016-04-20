@@ -42,13 +42,13 @@ class RankingStrategySixthToEighth implements IRankingStrategy{
   public function rankingOptions(){
     return array(
     'coach' => array(
-      'main' => array('points','opponentPoints','netTd','casualties'),
-      'td' => array('td'),
-      'casualties' => array('casualties'),
+      'main' => array('points','opponentPoints','netTd','casualtiesFor'),
+      'td' => array('tdFor'),
+      'casualties' => array('casualtiesFor'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking')
     ),
     'coachTeam' => array(
-      'main' => array('points','opponentPoints','netTd','casualties'),
+      'main' => array('points','opponentPoints','netTd','casualtiesFor'),
       )
     );
   }

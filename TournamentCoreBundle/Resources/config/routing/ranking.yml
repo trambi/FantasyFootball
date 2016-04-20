@@ -1,25 +1,60 @@
-_ws_get_coach_team_ranking:
-    path:     /CoachTeam/{edition}
-    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRanking }
-    requirements:
-        edition:  \d+
-_ws_get_coach_ranking:
-    path:     /Coach/{edition}
-    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRanking }
-    requirements:
-        edition:  \d+
+_ws_get_main_coach_ranking:
+  path:     /coach/main/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRanking }
+  requirements:
+    edition:  \d+
 _ws_get_coach_ranking_by_touchdown:
-    path:     /Touchdown/{edition}
-    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByTouchdown }
-    requirements:
-        edition:  \d+
+  path:     /coach/td/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByTouchdown }
+  requirements:
+    edition:  \d+
 _ws_get_coach_ranking_by_casualties:
-    path:     /Casualties/{edition}
-    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByCasualties }
-    requirements:
-        edition:  \d+
+  path:     /coach/casualties/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByCasualties }
+  requirements:
+    edition:  \d+
+_ws_get_coach_ranking_by_completions:
+  path:     /coach/completions/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByCompletions }
+  requirements:
+    edition:  \d+
+_ws_get_coach_ranking_by_fouls:
+  path:     /coach/fouls/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByFouls }
+  requirements:
+    edition:  \d+
 _ws_get_coach_ranking_by_comeback:
-    path:     /Comeback/{edition}
-    defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByComeback }
-    requirements:
-        edition:  \d+
+  path:     /coach/comeback/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByComeback }
+  requirements:
+    edition:  \d+
+_ws_get_main_coach_team_ranking:
+  path:     /coachTeam/main/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRanking }
+  requirements:
+    edition:  \d+
+_ws_get_coach_team_ranking_by_touchdown:
+  path:     /coachTeam/td/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRankingByTouchdown }
+  requirements:
+    edition:  \d+
+_ws_get_coach_team_ranking_by_casualties:
+  path:     /coachTeam/casualties/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRankingByCasualties }
+  requirements:
+    edition:  \d+
+_ws_get_coach_ranking_by_completions:
+  path:     /coachTeam/completions/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRankingByCompletions }
+  requirements:
+    edition:  \d+
+_ws_get_coach_ranking_by_fouls:
+  path:     /coachTeam/fouls/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRankingByFouls }
+  requirements:
+    edition:  \d+
+_ws_get_coach_ranking_by_comeback:
+  path:     /coachTeam/comeback/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRankingByComeback }
+  requirements:
+    edition:  \d+

@@ -37,13 +37,13 @@ class RankingStrategyNinthToTenth implements IRankingStrategy{
   public function rankingOptions(){
     return array(
     'coach' => array(
-      'main' => array('points','opponentsPoints','netTd','casualties'),
-      'td' => array('td'),
-      'casualties' => array('casualties'),
+      'main' => array('points','opponentsPoints','netTd','casualtiesFor'),
+      'td' => array('tdFor'),
+      'casualties' => array('casualtiesFor'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking')
     ),
     'coachTeam' => array(
-      'main' => array('points','opponentsPoints','netTd','casualties'),
+      'main' => array('points','opponentsPoints','netTd','casualtiesFor'),
       )
     );
   }

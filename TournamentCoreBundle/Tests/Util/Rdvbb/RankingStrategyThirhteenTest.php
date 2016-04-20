@@ -160,8 +160,8 @@ class RankingStrategyThirhteenthTest extends \PHPUnit_Framework_TestCase {
     $coach2->opponentsPoints = 0;
     $coach1->tdFor = 0;
     $coach2->tdFor = 0;
-    $coach1->casualties = 0;
-    $coach2->casualties = 0;
+    $coach1->casualtiesFor = 0;
+    $coach2->casualtiesFor = 0;
 
     $result = $strategy->compareCoachs($coach1, $coach2);
     $this->assertEquals(0, $result);
@@ -198,12 +198,12 @@ class RankingStrategyThirhteenthTest extends \PHPUnit_Framework_TestCase {
     $this->assertGreaterThan(0, $result);
 
     $coach2->tdFor = 1;
-    $coach1->casualties = 2;
-    $coach2->casualties = 1;
+    $coach1->casualtiesFor = 2;
+    $coach2->casualtiesFor = 1;
     $result = $strategy->compareCoachs($coach1, $coach2);
     $this->assertLessThan(0, $result);
 
-    $coach2->casualties = 3;
+    $coach2->casualtiesFor = 3;
     $result = $strategy->compareCoachs($coach1, $coach2);
     $this->assertGreaterThan(0, $result);
   }

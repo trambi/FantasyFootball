@@ -13,8 +13,8 @@ class TeamComparator{
     $points2 = $item2->points;
     $netTd1 = $item1->netTd;
     $netTd2 = $item2->netTd;
-    $cas1 = $item1->casualties;
-    $cas2 = $item2->casualties;
+    $cas1 = $item1->casualtiesFor;
+    $cas2 = $item2->casualtiesFor;
 
     if(( $points1 === $points2 )  
         && ($netTd1 === $netTd2) 
@@ -45,8 +45,8 @@ class TeamComparator{
     $opponentsPoints2 = $item2->opponentsPoints;
     $netTd1 = $item1->netTd;
     $netTd2 = $item2->netTd;
-    $cas1 = $item1->casualties;
-    $cas2 = $item2->casualties;
+    $cas1 = $item1->casualtiesFor;
+    $cas2 = $item2->casualtiesFor;
     
     if( ($points1 === $points2) 
     && ($opponentsPoints1 === $opponentsPoints2) 
@@ -80,8 +80,8 @@ class TeamComparator{
     $points2 = $item2->points;
     $opponentsPoints1 = $item1->opponentsPoints;
     $opponentsPoints2 = $item2->opponentsPoints;
-    $mixed1 = $item1->tdFor + $item1->casualties;
-    $mixed2 = $item2->tdFor + $item2->casualties;
+    $mixed1 = $item1->tdFor + $item1->casualtiesFor;
+    $mixed2 = $item2->tdFor + $item2->casualtiesFor;
         
     if ( ($points1 === $points2) && ($opponentsPoints1 === $opponentsPoints2) && ($mixed1 === $mixed2) ) {
       $returnValue = 0;
