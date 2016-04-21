@@ -1,11 +1,30 @@
+-- phpMyAdmin SQL Dump
+-- version 4.1.14
+-- http://www.phpmyadmin.net
+--
+-- Client :  127.0.0.1
+-- Généré le :  Jeu 21 Avril 2016 à 02:22
+-- Version du serveur :  5.6.17
+-- Version de PHP :  5.5.12
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
+--
+-- Base de données :  `test_tournament`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tournament_coach`
+--
 
 CREATE TABLE IF NOT EXISTS `tournament_coach` (
   `id` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
@@ -31,6 +50,10 @@ CREATE TABLE IF NOT EXISTS `tournament_coach` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci PACK_KEYS=0 AUTO_INCREMENT=13 ;
 
+--
+-- Contenu de la table `tournament_coach`
+--
+
 INSERT INTO `tournament_coach` (`id`, `team_name`, `name`, `file`, `id_race`, `email`, `fan_factor`, `reroll`, `apothecary`, `assistant_coach`, `cheerleader`, `wizard`, `points`, `opponents_points`, `net_td`, `casualties`, `edition`, `naf_number`, `id_coach_team`, `ready`) VALUES
 (1, 'Team A', 'Coach A', '0', 1, 'coacha@test.org', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 101, 1, 0),
 (2, 'Team B', 'Coach B', '0', 2, 'coachb@test.org', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 102, 1, 0),
@@ -45,17 +68,33 @@ INSERT INTO `tournament_coach` (`id`, `team_name`, `name`, `file`, `id_race`, `e
 (11, 'Team K', 'Coach K', '0', 11, 'coachk@test.org', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 111, 4, 0),
 (12, 'Team L', 'Coach L', '0', 12, 'coachl@test.org', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 112, 4, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tournament_coach_team`
+--
+
 CREATE TABLE IF NOT EXISTS `tournament_coach_team` (
   `id` tinyint(4) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci PACK_KEYS=0 AUTO_INCREMENT=5 ;
 
+--
+-- Contenu de la table `tournament_coach_team`
+--
+
 INSERT INTO `tournament_coach_team` (`id`, `name`) VALUES
 (1, 'Triplette A'),
 (2, 'Triplette B'),
 (3, 'Triplette C'),
 (4, 'Triplette D');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tournament_edition`
+--
 
 CREATE TABLE IF NOT EXISTS `tournament_edition` (
   `id` int(11) NOT NULL,
@@ -66,13 +105,22 @@ CREATE TABLE IF NOT EXISTS `tournament_edition` (
   `use_finale` tinyint(1) NOT NULL DEFAULT '1',
   `full_triplette` tinyint(4) NOT NULL DEFAULT '1',
   `ranking_strategy` varchar(65) COLLATE utf8_unicode_ci NOT NULL,
-  `pairing_strategy` varchar(65) COLLATE utf8_unicode_ci NOT NULL,
   `first_day_round` int(11) NOT NULL DEFAULT '3',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `tournament_edition` (`id`, `day_1`, `day_2`, `round_number`, `current_round`, `use_finale`, `full_triplette`, `ranking_strategy`, `pairing_strategy`, `first_day_round`) VALUES
-(1, '2015-06-14', '2015-06-15', 5, 0, 1, 1, 'Rdvbb13', '', 3);
+--
+-- Contenu de la table `tournament_edition`
+--
+
+INSERT INTO `tournament_edition` (`id`, `day_1`, `day_2`, `round_number`, `current_round`, `use_finale`, `full_triplette`, `ranking_strategy`, `first_day_round`) VALUES
+(1, '2015-06-14', '2015-06-15', 5, 0, 1, 1, 'Rdvbb13', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tournament_match`
+--
 
 CREATE TABLE IF NOT EXISTS `tournament_match` (
   `id` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
@@ -85,12 +133,24 @@ CREATE TABLE IF NOT EXISTS `tournament_match` (
   `points_2` tinyint(3) DEFAULT '0',
   `casualties_1` tinyint(3) unsigned DEFAULT '0',
   `casualties_2` tinyint(3) unsigned DEFAULT '0',
+  `completions_1` smallint(6) DEFAULT NULL,
+  `completions_2` smallint(6) DEFAULT NULL,
+  `fouls_1` smallint(6) DEFAULT NULL,
+  `fouls_2` smallint(6) DEFAULT NULL,
+  `special_1` varchar(33) COLLATE utf8_bin DEFAULT NULL,
+  `special_2` varchar(33) COLLATE utf8_bin DEFAULT NULL,
   `finale` enum('true','false') CHARACTER SET latin1 NOT NULL DEFAULT 'false',
   `edition` tinyint(4) NOT NULL DEFAULT '2',
   `status` enum('programme','resume','detail') CHARACTER SET latin1 NOT NULL DEFAULT 'programme',
   `table_number` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin PACK_KEYS=0 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tournament_precoach`
+--
 
 CREATE TABLE IF NOT EXISTS `tournament_precoach` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -106,6 +166,12 @@ CREATE TABLE IF NOT EXISTS `tournament_precoach` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tournament_race`
+--
+
 CREATE TABLE IF NOT EXISTS `tournament_race` (
   `edition` tinyint(4) NOT NULL DEFAULT '1',
   `id_race` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
@@ -116,6 +182,10 @@ CREATE TABLE IF NOT EXISTS `tournament_race` (
   `reroll` tinyint(3) unsigned DEFAULT '5',
   PRIMARY KEY (`id_race`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=25 ;
+
+--
+-- Contenu de la table `tournament_race`
+--
 
 INSERT INTO `tournament_race` (`edition`, `id_race`, `nom_fr`, `nom_en`, `nom_en_2`, `nom_fr_2`, `reroll`) VALUES
 (1, 1, 'Orc', 'Orc', 'Orc', 'd''orcs', 6),
