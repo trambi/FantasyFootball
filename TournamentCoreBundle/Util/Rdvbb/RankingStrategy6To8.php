@@ -3,7 +3,7 @@ namespace FantasyFootball\TournamentCoreBundle\Util\Rdvbb;
 
 use FantasyFootball\TournamentCoreBundle\Util\IRankingStrategy;
 
-class RankingStrategySixthToEighth implements IRankingStrategy{
+class RankingStrategy6To8 implements IRankingStrategy{
 
   public function useCoachTeamPoints(){
     return false;

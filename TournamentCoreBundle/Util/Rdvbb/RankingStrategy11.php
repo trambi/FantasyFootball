@@ -4,7 +4,7 @@ namespace FantasyFootball\TournamentCoreBundle\Util\Rdvbb;
 
 use FantasyFootball\TournamentCoreBundle\Util\IRankingStrategy;
 
-class RankingStrategyEleventh implements IRankingStrategy{
+class RankingStrategy11 implements IRankingStrategy{
   const VAINQUEUR = 2;
   const FINALISTE = 1;
   const NORMAL = 0;

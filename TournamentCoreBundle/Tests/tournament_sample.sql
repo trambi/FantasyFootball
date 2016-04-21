@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `tournament_edition` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `tournament_edition` (`id`, `day_1`, `day_2`, `round_number`, `current_round`, `use_finale`, `full_triplette`, `ranking_strategy`, `pairing_strategy`, `first_day_round`) VALUES
-(1, '2015-06-14', '2015-06-15', 5, 0, 1, 1, 'RdvbbThirteenth', '', 3);
+(1, '2015-06-14', '2015-06-15', 5, 0, 1, 1, 'Rdvbb13', '', 3);
 
 CREATE TABLE IF NOT EXISTS `tournament_match` (
   `id` smallint(6) unsigned NOT NULL AUTO_INCREMENT,

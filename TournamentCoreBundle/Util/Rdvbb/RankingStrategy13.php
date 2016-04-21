@@ -4,7 +4,7 @@ namespace FantasyFootball\TournamentCoreBundle\Util\Rdvbb;
 
 use FantasyFootball\TournamentCoreBundle\Util\IRankingStrategy;
 
-class RankingStrategyThirhteenth implements IRankingStrategy {
+class RankingStrategy13 implements IRankingStrategy {
   const TEAM_DRAW = 50;
   const TEAM_WIN = 150;
   const TEAM_LOSS = 0;

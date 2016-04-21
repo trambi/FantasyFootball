@@ -1,12 +1,12 @@
 <?php
 namespace FantasyFootball\TournamentCoreBundle\Tests\Util\Rdvbb;
 
-use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyEleventh;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy11;
 
-class RankingStrategyEleventhTest extends \PHPUnit_Framework_TestCase
+class RankingStrategy11Test extends \PHPUnit_Framework_TestCase
 {
 	public function testComputePoints(){
-    $strategy = new RankingStrategyEleventh();
+    $strategy = new RankingStrategy11();
     $points1 = -1;
     $points2 = -1;
 
@@ -44,7 +44,7 @@ class RankingStrategyEleventhTest extends \PHPUnit_Framework_TestCase
 	}
 
 	public function testComputeCoachTeamPoints(){
-    $strategy = new RankingStrategyEleventh();
+    $strategy = new RankingStrategy11();
     $points1 = -1;
     $points2 = -1;
 
@@ -144,13 +144,13 @@ class RankingStrategyEleventhTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	public function testUseTriplettePoints(){
-    $strategy = new RankingStrategyEleventh();
+    $strategy = new RankingStrategy11();
     $result = $strategy->useCoachTeamPoints();
     $this->assertFalse($result);
 	}
 	
   public function testCompareCoach(){
-    $strategy = new RankingStrategyEleventh();
+    $strategy = new RankingStrategy11();
     $coach1 = new \stdClass;
     $coach2 = new \stdClass;
     $coach1->points = 0;
@@ -208,7 +208,7 @@ class RankingStrategyEleventhTest extends \PHPUnit_Framework_TestCase
   }
   
   public function testRankingOptions(){
-    $strategy = new RankingStrategyEleventh();
+    $strategy = new RankingStrategy11();
     $rankings = $strategy->rankingOptions();
     $this->assertGreaterThan(0,count($rankings));
   }

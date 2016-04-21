@@ -72,7 +72,7 @@ class DataProvider {
   const resumeMatchQuery = 'UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
   const deleteMatchQuery = 'DELETE FROM tournament_match';
   const updateRankingQuery = 'UPDATE INTO tournament_coach SET points=?,opponents_points=?,net_td=?,casualties=? WHERE id=?';
-  const editionQuery = 'SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy,pairing_strategy as pairingStrategy, first_day_round as firstDayRound FROM tournament_edition';
+  const editionQuery = 'SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy, first_day_round as firstDayRound FROM tournament_edition';
   const deletepreCoachQuery = 'DELETE FROM tournament_precoach';
   const updateTeamQuery = 'UPDATE INTO tournament_coach SET team_name=?,name=?,id_race=?,email=?,fan_factor=?,naf_number=?,edition=?,ready=? WHERE id=?';
   const coachTeamGames = 'SELECT DISTINCT c1.id_coach_team as id1, c2.id_coach_team as id2 FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';

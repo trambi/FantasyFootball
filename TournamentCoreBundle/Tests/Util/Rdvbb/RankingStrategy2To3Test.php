@@ -1,12 +1,12 @@
 <?php
 namespace FantasyFootball\TournamentCoreBundle\Tests\Util\Rdvbb;
 
-use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategySecondToThird;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy2To3;
 
-class RankingStrategySecondToThirdTest extends \PHPUnit_Framework_TestCase
+class RankingStrategy2To3Test extends \PHPUnit_Framework_TestCase
 {
 	public function testComputePoints(){
-    $strategy = new RankingStrategySecondToThird();
+    $strategy = new RankingStrategy2To3();
     $points1 = -1;
     $points2 = -1;
 
@@ -44,7 +44,7 @@ class RankingStrategySecondToThirdTest extends \PHPUnit_Framework_TestCase
 	}
 
 	public function testComputeCoachTeamPoints(){
-    $strategy = new RankingStrategySecondToThird();
+    $strategy = new RankingStrategy2To3();
     $points1 = -1;
     $points2 = -1;
 
@@ -59,13 +59,13 @@ class RankingStrategySecondToThirdTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	public function testUseTriplettePoints(){
-    $strategy = new RankingStrategySecondToThird();
+    $strategy = new RankingStrategy2To3();
     $result = $strategy->useCoachTeamPoints();
     $this->assertFalse($result);
 	}
 	
 	public function testCompareCoach(){
-    $strategy = new RankingStrategySecondToThird();
+    $strategy = new RankingStrategy2To3();
     $coach1 = new \stdClass;
     $coach2 = new \stdClass;
     $coach1->points = 0;
@@ -123,7 +123,7 @@ class RankingStrategySecondToThirdTest extends \PHPUnit_Framework_TestCase
 	}
   
   public function testRankingOptions(){
-    $strategy = new RankingStrategySecondToThird();
+    $strategy = new RankingStrategy2To3();
     $rankings = $strategy->rankingOptions();
     $this->assertGreaterThan(0,count($rankings));
   }

@@ -1,12 +1,12 @@
 <?php
 namespace FantasyFootball\TournamentCoreBundle\Tests\Util\Rdvbb;
 
-use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategyTwelfth;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy12;
 
-class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
+class RankingStrategy12Test extends \PHPUnit_Framework_TestCase
 {
   public function testComputePoints(){
-    $strategy = new RankingStrategyTwelfth();
+    $strategy = new RankingStrategy12();
     $points1 = -1;
     $points2 = -1;
 
@@ -44,7 +44,7 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
   }
 
   public function testComputeCoachTeamPoints(){
-    $strategy = new RankingStrategyTwelfth();
+    $strategy = new RankingStrategy12();
     $points1 = -1;
     $points2 = -1;
     $cas1Array = array(0,0,0);
@@ -142,13 +142,13 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
   }
 
   public function testUseTriplettePoints(){
-    $strategy = new RankingStrategyTwelfth();
+    $strategy = new RankingStrategy12();
     $result = $strategy->useCoachTeamPoints();
     $this->assertTrue($result);
   }
 
   public function testCompareCoach(){
-    $strategy = new RankingStrategyTwelfth();
+    $strategy = new RankingStrategy12();
     $coach1 = new \stdClass;
     $coach2 = new \stdClass;
     $coach1->points = 0;
@@ -206,7 +206,7 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
   }
   
   public function testCompareCoachTeams(){
-    $strategy = new RankingStrategyTwelfth();
+    $strategy = new RankingStrategy12();
     $coachTeam1 = new \stdClass;
     $coachTeam2 = new \stdClass;
     $coachTeam1->coachTeamPoints = 0;
@@ -275,7 +275,7 @@ class RankingStrategyTwelfthTest extends \PHPUnit_Framework_TestCase
   }
   
     public function testRankingOptions(){
-    $strategy = new RankingStrategyTwelfth();
+    $strategy = new RankingStrategy12();
     $rankings = $strategy->rankingOptions();
     $this->assertGreaterThan(0,count($rankings));
   }
