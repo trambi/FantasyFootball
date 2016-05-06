@@ -171,8 +171,9 @@ class DataProvider {
           $coach->special = 0;
           $coach->opponentDirectPoints = 0;
           $coach->opponents = array();
-          $coach->completions = 0;
-          $coach->fouls = 0;
+          $coach->win = 0;
+          $coach->draw = 0;
+          $coach->loss = 0;
         }
         $coachs[$coach->id] = $coach;
         $row = $this->resultFetchRow($result);
@@ -644,7 +645,16 @@ class DataProvider {
           $coach2->special = 2;
         }
       }
-
+      if ( $match->td1 > $match->td2 ){
+        $coach1->win = $coach1->win + 1;
+        $coach2->loss = $coach2->loss + 1;
+      }elseif ( $match->td1 < $match->td2){
+        $coach1->loss = $coach1->loss + 1;
+        $coach2->win = $coach2->win + 1;
+      }else{
+        $coach1->draw = $coach1->draw + 1;
+        $coach2->draw = $coach2->draw + 1;
+      }
       $coachs[$match->teamId1] = $coach1;
       $coachs[$match->teamId2] = $coach2;
       $row = $this->resultFetchRow($result);
@@ -690,11 +700,13 @@ class DataProvider {
     $coach->foulsFor = 0;
     $coach->foulsAgainst = 0;
     $coach->netFouls = 0;
+    $coach->win = 0;
+    $coach->draw = 0;
+    $coach->loss = 0;
     return $coach;
   }
 
   protected function initCoachTeamForRanking() {
-    $coachTeam = (object) array();
     $coachTeam = (object) array();
     $coachTeam->id = 0;
     $coachTeam->name = "";
@@ -718,6 +730,9 @@ class DataProvider {
     $coachTeam->opponentsPoints = 0;
     $coachTeam->libre = 1;
     $coachTeam->opponentCoachTeamPoints  = 0;
+    $coachTeam->win = 0;
+    $coachTeam->draw = 0;
+    $coachTeam->loss = 0;
     return $coachTeam;
   }
 
@@ -729,7 +744,7 @@ class DataProvider {
     $query .= " m.round AS round, ct.name AS coachTeamName,";
     $query .= " m.points_1 AS points, m.points_2 AS opponentPoints,";
     $query .= " m.td_1 AS tdFor,m.td_2 AS tdAgainst, m.casualties_1 AS casualtiesFor, m.casualties_2 AS casualtiesAgainst,";
-    $query .= " m.completion_1 AS completionFor,m.completion_2 AS completionAgainst,";
+    $query .= " m.completions_1 AS completionsFor,m.completions_2 AS completionsAgainst,";
     $query .= " m.fouls_1 AS foulsFor, m.fouls_2 AS foulsAgainst,";
     $query .= " m.id_coach_2 AS opponentTeam,oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
     $query .= " FROM tournament_match m";
@@ -742,7 +757,7 @@ class DataProvider {
     $query .= " m.round AS round, ct.name AS coachTeamName,";
     $query .= " m.points_2 AS points, m.points_1 AS opponentPoints,";
     $query .= " m.td_2 AS tdFor,m.td_1 AS tdAgainst, m.casualties_2 AS casualtiesFor, m.casualties_1 AS casualtiesAgainst,";
-    $query .= " m.completion_2 AS completionFor,m.completion_1 AS completionAgainst,";
+    $query .= " m.completions_2 AS completionsFor,m.completions_1 AS completionsAgainst,";
     $query .= " m.fouls_2 AS foulsFor, m.fouls_1 AS foulsAgainst,";
     $query .= " m.id_coach_1 AS opponentTeam, oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
     $query .= " FROM tournament_match m";
@@ -751,7 +766,6 @@ class DataProvider {
     $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_1 ";
     $query .= " WHERE m.edition=" . intval($editionId) . " AND m.status <> 'programme' )";
     $query .= " ORDER BY coachTeam,round";
-
     $result = $this->query($query);
 
     $coachTeams = array(); // List of coachTeams
@@ -778,7 +792,13 @@ class DataProvider {
           $tempCoachTeamPoints1 = 0;
           $tempCoachTeamPoints2 = 0;
           $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
-
+          if ($tempCoachTeamPoints1 > $tempCoachTeamPoints2){
+            $coachTeam->win += 1;
+          }elseif ($tempCoachTeamPoints1 === $tempCoachTeamPoints2){
+            $coachTeam->draw += 1;
+          }else{
+            $coachTeam->loss += 1;
+          }
           $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
           $coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
         }
@@ -815,6 +835,7 @@ class DataProvider {
       $tempPoints2 = 0;
       $rankingStrategy->computePoints($tempPoints1, $tempPoints2, $coachTeamMatchElt->tdFor, $coachTeamMatchElt->tdAgainst, $coachTeamMatchElt->casualtiesFor, $coachTeamMatchElt->casualtiesAgainst);
       $coachTeam->points += $tempPoints1;
+      
       if (false === array_key_exists($coachTeamMatchElt->team, $pointsByTeamId)) {
         $pointsByTeamId[$coachTeamMatchElt->team] = $tempPoints1;
       } else {
@@ -847,6 +868,13 @@ class DataProvider {
       $coach->completionsAgainst += $coachTeamMatchElt->completionsAgainst;
       $coach->foulsFor += $coachTeamMatchElt->foulsFor;
       $coach->foulsAgainst += $coachTeamMatchElt->foulsAgainst;
+      if( $coachTeamMatchElt->tdFor > $coachTeamMatchElt->tdAgainst  ){
+        $coach->win +=1;
+      }elseif( $coachTeamMatchElt->tdFor == $coachTeamMatchElt->tdAgainst ){
+        $coach->draw +=1;
+      }else{
+        $coach->loss +=1;
+      }
       $coachTeam->teams[$coachTeamMatchElt->team] = $coach;
       $coachTeamMatchElt = $this->resultFetchObject($result);
     }
@@ -854,6 +882,13 @@ class DataProvider {
       $tempCoachTeamPoints1 = 0;
       $tempCoachTeamPoints2 = 0;
       $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
+      if ($tempCoachTeamPoints1 > $tempCoachTeamPoints2){
+        $coachTeam->win += 1;
+      }elseif ($tempCoachTeamPoints1 === $tempCoachTeamPoints2){
+        $coachTeam->draw += 1;
+      }else{
+        $coachTeam->loss += 1;
+      }
       $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
       $coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
       $coachTeams[] = $coachTeam;
