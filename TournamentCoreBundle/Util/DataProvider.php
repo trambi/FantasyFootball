@@ -563,11 +563,11 @@ class DataProvider {
     ]);
   }
     
-  public function compareCoachsByComeback($coach1, $coach2) {
-    $finalRanking1 = $coach1->finalRanking;
-    $finalRanking2 = $coach2->finalRanking;
-    $diffRanking1 = $coach1->diffRanking;
-    $diffRanking2 = $coach2->diffRanking;
+  public function compareByComeback($item1, $item2) {
+    $finalRanking1 = $item1->finalRanking;
+    $finalRanking2 = $item2->finalRanking;
+    $diffRanking1 = $item1->diffRanking;
+    $diffRanking2 = $item2->diffRanking;
     if ($diffRanking1 === $diffRanking2) {
       if ($finalRanking1 > $finalRanking2) {
         $return = -1;
@@ -582,10 +582,10 @@ class DataProvider {
     return $return;
   }
 
-  public function getCoachRankingByComeback($edition, $rankingStrategy) {
-    $finalRanking = $this->getMainCoachRanking($edition, $rankingStrategy);
+  public function getCoachRankingByComeback($edition) {
+    $finalRanking = $this->getMainCoachRanking($edition);
     $firstDayRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->firstDayRound);
-    usort($firstDayRanking, array($rankingStrategy, 'compareCoachs'));
+    usort($firstDayRanking, array($edition->rankingStrategy, 'compareCoachs'));
     $coachNumber = count($finalRanking);
     for ($i = 0; $i < $coachNumber; $i++) {
       $finalCoach = $finalRanking[$i];
@@ -604,7 +604,7 @@ class DataProvider {
       $finalCoach->diffRanking = $j - $i;
       $finalRanking[$i] = $finalCoach;
     }
-    usort($finalRanking, array($this, 'compareCoachsByComeback'));
+    usort($finalRanking, array($this, 'compareByComeback'));
     return $finalRanking;
   }
 
@@ -746,22 +746,23 @@ class DataProvider {
     return $coachTeam;
   }
 
-  public function getCoachTeamStatisticsByBeetweenRounds($edition,$beginRound,$endRound) {
+  public function getCoachTeamStatisticsBetweenRounds($edition,$beginRound,$endRound) {
     $editionId = $edition->id;
     $rankingStrategy = $edition->rankingStrategy;
     // Attention requete de la mort pour recuperer tous les matchs du point de vue d'une coach_team
-    $query = "(SELECT c.id_coach_team AS coachTeam, m.id_coach_1 AS team,";
-    $query .= " m.round AS round, ct.name AS coachTeamName,";
-    $query .= " m.points_1 AS points, m.points_2 AS opponentPoints,";
-    $query .= " m.td_1 AS tdFor,m.td_2 AS tdAgainst, m.casualties_1 AS casualtiesFor, m.casualties_2 AS casualtiesAgainst,";
-    $query .= " m.completions_1 AS completionsFor,m.completions_2 AS completionsAgainst,";
-    $query .= " m.fouls_1 AS foulsFor, m.fouls_2 AS foulsAgainst,";
-    $query .= " m.id_coach_2 AS opponentTeam,oc.id_coach_team AS opponentCoachTeam, c.name AS coach";
-    $query .= " FROM tournament_match m";
-    $query .= " INNER JOIN tournament_coach c ON c.id = m.id_coach_1";
-    $query .= " INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ";
-    $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_2 ";
-    $query .= " WHERE m.edition=" . intval($editionId) . " AND m.status <> 'programme' )";
+    $query = '(SELECT c.id_coach_team AS coachTeam, m.id_coach_1 AS team,';
+    $query .= ' m.round AS round, ct.name AS coachTeamName,';
+    $query .= ' m.points_1 AS points, m.points_2 AS opponentPoints,';
+    $query .= ' m.td_1 AS tdFor,m.td_2 AS tdAgainst, m.casualties_1 AS casualtiesFor, m.casualties_2 AS casualtiesAgainst,';
+    $query .= ' m.completions_1 AS completionsFor,m.completions_2 AS completionsAgainst,';
+    $query .= ' m.fouls_1 AS foulsFor, m.fouls_2 AS foulsAgainst,';
+    $query .= ' m.id_coach_2 AS opponentTeam,oc.id_coach_team AS opponentCoachTeam, c.name AS coach';
+    $query .= ' FROM tournament_match m';
+    $query .= ' INNER JOIN tournament_coach c ON c.id = m.id_coach_1';
+    $query .= ' INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ';
+    $query .= ' INNER JOIN tournament_coach oc ON oc.id = m.id_coach_2 ';
+    $query .= ' WHERE m.edition= ' . intval($editionId) . ' AND m.round <= ' . intval($endRound);
+    $query .= ' AND m.round >= ' . intval($beginRound) . ' AND m.status <> \'programme\' )';
     $query .= " UNION ";
     $query .= "(SELECT c.id_coach_team AS coachTeam, m.id_coach_2 AS team,";
     $query .= " m.round AS round, ct.name AS coachTeamName,";
@@ -774,7 +775,8 @@ class DataProvider {
     $query .= " INNER JOIN tournament_coach c ON c.id = m.id_coach_2";
     $query .= " INNER JOIN tournament_coach_team ct ON ct.id = c.id_coach_team ";
     $query .= " INNER JOIN tournament_coach oc ON oc.id = m.id_coach_1 ";
-    $query .= " WHERE m.edition=" . intval($editionId) . " AND m.status <> 'programme' )";
+    $query .= ' WHERE m.edition= ' . intval($editionId) . ' AND m.round <= ' . intval($endRound);
+    $query .= ' AND m.round >= ' . intval($beginRound) . ' AND m.status <> \'programme\' )';
     $query .= " ORDER BY coachTeam,round";
     $result = $this->query($query);
 
@@ -928,7 +930,7 @@ class DataProvider {
   
   public function getCoachTeamRanking($edition){
     $rankingStrategy = $edition->rankingStrategy;
-    $coachTeam = $this->getCoachTeamStatisticsByBeetweenRounds($edition,0,$edition->currentRound);
+    $coachTeams = $this->getCoachTeamStatisticsBetweenRounds($edition,0,$edition->currentRound);
     // Tri des participants de la coach_team dans l'ordre du classement
     foreach (array_keys($coachTeams) as $id) {
       $coachTeam = $coachTeams[$id];
@@ -959,9 +961,37 @@ class DataProvider {
     return array_reverse($this->getCoachTeamRankingByFunction($edition,'compareByTouchdownAgainst'));
   }
   
+  public function getCoachTeamRankingByComeback($edition) {
+    $rankingStrategy = $edition->rankingStrategy;
+    $finalRanking = $this->getCoachTeamRanking($edition);
+    $firstDayRanking = $this->getCoachTeamStatisticsBetweenRounds($edition, 0, $edition->firstDayRound);
+    usort($firstDayRanking, array($rankingStrategy,'compareCoachTeams'));
+    $coachTeamNumber = count($finalRanking);
+    for ($i = 0; $i < $coachTeamNumber; $i++) {
+      $finalCoachTeam = $finalRanking[$i];
+      $idToFind = $finalCoachTeam->id;
+      $finalCoachTeam->finalRanking = $i + 1;
+      for ($j = 0; $j < $coachTeamNumber; $j++) {
+        $firstDayCoachTeam = $firstDayRanking[$j];
+        if ($firstDayCoachTeam->id === $idToFind) {
+          break;
+        }
+      }
+      // We find it !
+      if ($j !== $coachTeamNumber) {
+        $finalCoachTeam->firstDayRanking = $j + 1;
+      }
+      $finalCoachTeam->diffRanking = $j - $i;
+      $finalRanking[$i] = $finalCoachTeam;
+    }
+    usort($finalRanking, array($this, 'compareByComeback'));
+    return $finalRanking;
+  }
+
+  
   protected function getCoachTeamRankingByFunction($edition,$functionName){
     $rankingStrategy = $edition->rankingStrategy;
-    $coachTeams = $this->getCoachTeamStatisticsByBeetweenRounds($edition,0,$edition->currentRound);
+    $coachTeams = $this->getCoachTeamStatisticsBetweenRounds($edition,0,$edition->currentRound);
     foreach (array_keys($coachTeams) as $id) {
       $coachTeam = $coachTeams[$id];
       usort($coachTeam->teams, array($this, $functionName));
