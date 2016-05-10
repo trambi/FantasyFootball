@@ -63,3 +63,8 @@ _ws_get_coach_team_ranking_by_comeback:
   defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRankingByComeback }
   requirements:
     edition:  \d+
+_ws_get_coach_team_ranking_by_defense:
+  path:     /coachTeam/defense/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRankingByDefense }
+  requirements:
+    edition:  \d+

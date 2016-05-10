@@ -494,7 +494,7 @@ class DataProvider {
   }
   
   public function compareByTouchdownAgainst($item1, $item2) {
-    return ( $item1->tdAgainst - $item2->tdAgainst );
+    return ( $item2->tdAgainst - $item1->tdAgainst );
   }
 
   public function getCoachRankingByTouchdown($edition) {
@@ -536,7 +536,7 @@ class DataProvider {
   public function getCoachRankingByDefense($edition) {
     $ranking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
     usort($ranking, array($this, 'compareByTouchdownAgainst'));
-    return $ranking;
+    return array_reverse($ranking);
   }
     
   public function getAllRanking($edition){
@@ -953,6 +953,10 @@ class DataProvider {
   
   public function getCoachTeamRankingByFouls($edition){
     return $this->getCoachTeamRankingByFunction($edition,'compareCoachsByFouls');
+  }
+
+  public function getCoachTeamRankingByDefense($edition){
+    return array_reverse($this->getCoachTeamRankingByFunction($edition,'compareByTouchdownAgainst'));
   }
   
   protected function getCoachTeamRankingByFunction($edition,$functionName){

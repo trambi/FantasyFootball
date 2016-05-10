@@ -74,6 +74,17 @@ class RankingController extends Controller
     
     return $response;
   }
+  
+  public function getCoachTeamRankingByDefenseAction($edition){
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
+    $editionObj = $data->getEditionById($edition);
+    $ranking = $data->getCoachTeamRankingByDefense($editionObj);
+    $response = new JsonResponse($ranking);
+    $response->headers->set('Access-Control-Allow-Origin', '*');
+    
+    return $response;
+  }
 
   public function getCoachRankingAction($edition) {
     $conf = $this->get('fantasy_football_core_db_conf');
