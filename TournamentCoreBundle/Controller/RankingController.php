@@ -9,8 +9,7 @@ use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 
 class RankingController extends Controller
 {
-  public function getCoachTeamRankingAction($edition)
-  {
+  public function getCoachTeamRankingAction($edition){
     $conf = $this->get('fantasy_football_core_db_conf');
     $data = new DataProvider($conf);
     $editionObj = $data->getEditionById($edition);
@@ -136,6 +135,17 @@ class RankingController extends Controller
     $editionObj = $data->getEditionById($edition);
     $completionsRanking = $data->getCoachRankingByFouls($editionObj);
     $response = new JsonResponse($completionsRanking);
+    $response->headers->set('Access-Control-Allow-Origin', '*');
+    
+    return $response;
+  }
+  
+  public function getCoachRankingByDefenseAction($edition){
+    $conf = $this->get('fantasy_football_core_db_conf');
+    $data = new DataProvider($conf);
+    $editionObj = $data->getEditionById($edition);
+    $ranking = $data->getCoachRankingByDefense($editionObj);
+    $response = new JsonResponse($ranking);
     $response->headers->set('Access-Control-Allow-Origin', '*');
     
     return $response;

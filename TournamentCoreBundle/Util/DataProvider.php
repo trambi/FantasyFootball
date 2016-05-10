@@ -492,6 +492,10 @@ class DataProvider {
   public function compareCoachsByTouchdown($coach1, $coach2) {
     return ( $coach2->tdFor - $coach1->tdFor );
   }
+  
+  public function compareByTouchdownAgainst($item1, $item2) {
+    return ( $item1->tdAgainst - $item2->tdAgainst );
+  }
 
   public function getCoachRankingByTouchdown($edition) {
     $tdRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
@@ -527,6 +531,12 @@ class DataProvider {
     $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
     usort($casualtiesRanking, array($this, 'compareCoachsByCompletions'));
     return $casualtiesRanking;
+  }
+  
+  public function getCoachRankingByDefense($edition) {
+    $ranking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
+    usort($ranking, array($this, 'compareByTouchdownAgainst'));
+    return $ranking;
   }
     
   public function getAllRanking($edition){

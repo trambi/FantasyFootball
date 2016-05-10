@@ -28,6 +28,11 @@ _ws_get_coach_ranking_by_comeback:
   defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByComeback }
   requirements:
     edition:  \d+
+_ws_get_coach_ranking_by_defense:
+  path:     /coach/defense/{edition}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachRankingByDefense }
+  requirements:
+    edition:  \d+
 _ws_get_main_coach_team_ranking:
   path:     /coachTeam/main/{edition}
   defaults: { _controller: FantasyFootballTournamentCoreBundle:Ranking:getCoachTeamRanking }
