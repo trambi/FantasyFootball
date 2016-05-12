@@ -38,20 +38,16 @@ class RankingStrategy14 implements IRankingStrategy {
   public function rankingOptions(){
     return array(
     'coach' => array(
-      'main' => array('points','win','draw','opponentPoints','value'),
-      'comeback' => array('diffRanking','firstDayRanking','finalRanking'),
-      'td' => array('tdFor'),
-      'foul' => array('foulsFor'),
-      'pass' => array('completionsFor'),
-      'casualties' => array('casualtiesFor'),
+      'main' => array('points','win','draw','opponentPoints','value')
     ),
     'coachTeam' => array(
       'main' => array('points','win','draw','opponentPoints','value'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking'),
-      'td' => array('td'),
-      'foul' => array('foulsFor'),
-      'pass' => array('completionsFor'),
-      'casualties' => array('casualtiesFor')
+      'td' => array('tdFor'),
+      'fouls' => array('foulsFor'),
+      'completions' => array('completionsFor'),
+      'casualties' => array('casualtiesFor'),
+      'defense' => array('tdAgainst')
       ),
     'special' => array(
       'guest' => 'usage'
