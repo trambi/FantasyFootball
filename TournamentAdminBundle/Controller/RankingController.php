@@ -13,8 +13,7 @@ class RankingController extends Controller
         $conf = $this->get('fantasy_football_core_db_conf');
         $data = new DataProvider($conf);
         $editionObj = $data->getEditionById($edition);
-        $strategy = RankingStrategyFabric::getByName($editionObj->rankingStrategy);
-        $ranking = $data->getCoachTeamRanking($edition, $strategy);
+        $ranking = $data->getCoachTeamRanking($editionObj);
         //print_r($ranking);
         return $this->render('FantasyFootballTournamentAdminBundle:Ranking:coach_team.html.twig', 
                 array('edition' => $edition,
