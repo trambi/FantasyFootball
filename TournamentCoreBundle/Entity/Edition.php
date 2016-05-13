@@ -71,13 +71,6 @@ class Edition
     private $rankingStrategy;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="pairing_strategy", type="string", length=255)
-     */
-    private $pairingStrategy;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="first_day_round", type="smallint")
