@@ -1,0 +1,5 @@
+coach_team_name,coach_1_name,coach_1_naf,coach_2_name,coach_2_naf,coach_3_name,coach_3_naf,email
+Triplette 1,CoachA,1,CoachB,2,CoachC,3,triplette1@gmail.com
+Triplette 2,CoachD,4,CoachE,5,CoachF,6,triplette2@gmail.com
+Triplette 3,CoachG,7,CoachH,8,CoachI,9,triplette3@gmail.com
+Triplette 4,CoachK,10,CoachL,11,CoachM,12,triplette4@gmail.com
