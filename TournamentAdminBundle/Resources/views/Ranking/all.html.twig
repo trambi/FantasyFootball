@@ -22,10 +22,10 @@
 {% for coach in ranking|slice(0,3) %}
         <tr>
             <td>{{loop.index}}</td>
-            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.name}}</a></td>
             <td>{{coach.points}}</td>
             <td>{{coach.opponentsPoints}}</td>
-            <td>{{coach.td + coach.casualties }}</td>
+            <td>{{coach.tdFor + coach.casualtiesFor }}</td>
         </tr>
 {% endfor %}
     </tbody>
@@ -45,8 +45,8 @@
 {% for coach in casRanking|slice(0,3) %}
         <tr>
             <td>{{loop.index}}</td>
-            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
-            <td>{{ coach.casualties }}</td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.name}}</a></td>
+            <td>{{ coach.casualtiesFor }}</td>
         </tr>
 {% endfor %}
     </tbody>
@@ -68,8 +68,8 @@
 {% for coach in tdRanking|slice(0,3) %}
         <tr>
             <td>{{loop.index}}</td>
-            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
-            <td>{{ coach.td }}</td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.name}}</a></td>
+            <td>{{ coach.tdFor }}</td>
         </tr>
 {% endfor %}
     </tbody>
@@ -91,7 +91,7 @@
 {% for coach in comebackRanking|slice(0,3) %}
         <tr>
             <td>{{ loop.index }}</td>
-            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.name}}</a></td>
             <td>{{ coach.diffRanking }}</td>
             <td>{{ coach.firstDayRanking }}</td>
             <td>{{ coach.finalRanking }}</td>
@@ -122,7 +122,7 @@
             <td>{{loop.index}}</td>
             <td><a href="{{ path('_view_coach_team',{'coachTeamId':coachTeam.id} )  }}" class="btn btn-info" role="button" >{{coachTeam.name}}</a></td>
             <td>
-    {% for innerCoach in coachTeam.teams %}{% if loop.last %} et {% else %}{% if loop.first == false %}, {% endif %}{% endif %}{{ innerCoach.coach }}{% endfor %}
+    {% for innerCoach in coachTeam.teams %}{% if loop.last %} et {% else %}{% if loop.first == false %}, {% endif %}{% endif %}{{ innerCoach.name }}{% endfor %}
             <td>{{coachTeam.coachTeamPoints}}</td>
             <td>{{coachTeam.points}}</td>
             <td>{{coachTeam.opponentsPoints}}</td>

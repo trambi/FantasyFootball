@@ -24,7 +24,7 @@
     {% for innerCoach in coachTeam.teams %}{% if loop.last %} et {% else %}{% if loop.first == false %}, {% endif %}{% endif %}{{ innerCoach.coach }}{% endfor %}
             <td>{{coachTeam.coachTeamPoints}}</td>
             <td>{{coachTeam.opponentsPoints}}</td>
-            <td>{{coachTeam.tdFor + coachTeam.casFor }}</td>
+            <td>{{coachTeam.tdFor + coachTeam.casualtiesFor }}</td>
         </tr>
 {% endfor %}
     </tbody>

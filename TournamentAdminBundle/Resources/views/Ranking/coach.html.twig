@@ -18,10 +18,10 @@
 {% for coach in ranking %}
         <tr>
             <td>{{loop.index}}</td>
-            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.name}}</a></td>
             <td>{{coach.points}}</td>
             <td>{{coach.opponentsPoints}}</td>
-            <td>{{coach.td + coach.casualties }}</td>
+            <td>{{coach.tdFor + coach.casualtiesFor }}</td>
         </tr>
 {% endfor %}
     </tbody>

@@ -18,7 +18,7 @@
 {% for coach in ranking %}
         <tr>
             <td>{{ loop.index }}</td>
-            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.coach}}</a></td>
+            <td><a href="{{ path('_view_coach',{'coachId':coach.id} )  }}" class="btn btn-info" role="button" >{{coach.name}}</a></td>
             <td>{{ coach.diffRanking }}</td>
             <td>{{ coach.firstDayRanking }}</td>
             <td>{{ coach.finalRanking }}</td>
