@@ -136,10 +136,10 @@ class CoachTeamController extends Controller
                     $i = 1;
                     while( array_key_exists('coach_'.$i.'_name', $row) ){
                         $coach = new Coach();
-                        $coach->setCoachTeam($coachTeam->getId());
+                        $coach->setCoachTeam($coachTeam);
                         $coach->setName($row['coach_'.$i.'_name']);
                         $coach->setNafNumber($row['coach_'.$i.'_naf']);
-                        $coach->setEmailAddress($row['email']);
+                        $coach->setEmail($row['email']);
                         $coach->setEdition($edition);
                         $i ++;
                         $coachs[] = $coach;

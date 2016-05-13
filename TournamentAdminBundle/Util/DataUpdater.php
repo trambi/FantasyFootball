@@ -32,13 +32,12 @@ class DataUpdater extends DataProvider
 					foreach ($coachs as $coach){
 						$teamName = $coach->getTeamName();
 						$coachName = $coach->getName();
-						$race = $coach->getRace();
-						$email = $coach->getEmailAddress();
-						$naf = $coach->getNafNumber() ;
+						$race = (NULL == $coach->getRace()?1:$coach->getRace());
+						$email = $coach->getEmail();
+						$naf = $coach->getNafNumber();
 						$edition = $coach->getEdition();
 						$ready = $coach->getReady();
-						$coachTeam = $coach->getCoachTeam();
-
+						$coachTeam = $coach->getCoachTeam()->getId();
 						$stmt->bind_param('ssdsdddd', $teamName,$coachName,$race,$email,$naf,$edition,$ready,$coachTeam);
 						$stmt->execute();
 					}
