@@ -172,7 +172,7 @@ class TeamComparator{
   
   static public function pointsWinDrawOpponentsPointsValue($item1,$item2){
     $returnValue = 0;
-    $params = array('points','win','draw','opponentsPoints','value');
+    $params = array('points','win','draw','opponentsPoints');
     foreach ($params as $param){
       $returnValue = $item2->$param - $item1->$param ;
       if( 0 ==! $returnValue ){
