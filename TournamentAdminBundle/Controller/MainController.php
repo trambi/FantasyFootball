@@ -37,7 +37,17 @@ class MainController extends Controller
     public function indexAction($edition,$round)
     {
         $em = $this->getDoctrine()->getManager();
-        $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
+        if( 0 == $edition ){
+          $editionObj = $em->createQueryBuilder()
+            ->select('e')
+            ->from('FantasyFootballTournamentCoreBundle:Edition', 'e')
+            ->orderBy('e.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        }else{
+          $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
+        }
         if( -1 == $round ){
             $round = $editionObj->getCurrentRound();
         }
