@@ -12,138 +12,138 @@ use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 
 class GameController extends Controller
 {
-    public function DeleteAction(Request $request,$gameId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $game = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findOneById($gameId);
-        $coach1 = $game->getCoach1();
-        $coach2 = $game->getCoach2();
-        $form = $this->createFormBuilder($game)
-                	->add('delete','submit')
-			->getForm();
-        $form->handleRequest($request);
-	if ($form->isValid()) {
-            $em->remove($game);
-            $em->flush();
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
-	}
-	return $this->render('FantasyFootballTournamentAdminBundle:Game:delete.html.twig', array(
+  public function DeleteAction(Request $request,$gameId)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $game = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findOneById($gameId);
+    $coach1 = $game->getCoach1();
+    $coach2 = $game->getCoach2();
+    $form = $this->createFormBuilder($game)
+            ->add('delete','submit')
+            ->getForm();
+    $form->handleRequest($request);
+    if ($form->isValid()) {
+      $em->remove($game);
+      $em->flush();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    }
+    return $this->render('FantasyFootballTournamentAdminBundle:Game:delete.html.twig', array(
             'game'=>$game,
             'coach1'=>$coach1,
             'coach2'=>$coach2,
             'form' => $form->createView()
-	));
+    ));
+  }
+
+  public function ScheduleAction(Request $request,$edition)
+  {
+    $game = new Game();
+    $em = $this->getDoctrine()->getManager();
+    $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->findOneById($edition);
+    $currentRound = $editionObj->getCurrentRound();
+    if( 0 === $currentRound)
+    {
+      $currentRound = 1;
+    }
+    $roundChoice = array($currentRound => $currentRound);
+        
+    $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
+    $coachNumber = count($coachs) ;
+    $tableMaxNumber = ( $coachNumber - ( $coachNumber %2 ) )/ 2;
+    $tableChoice = range(0,$tableMaxNumber);
+    unset($tableChoice[0]);
+    $form = $this->createFormBuilder($game)
+                  ->add('round', 'choice',
+                    array('label'=>'Tour :',
+                      'choices'   => $roundChoice,
+                      'required'  => true))
+                  ->add('tableNumber', 'choice',
+                    array('label'=>'Table :',
+                      'choices'   => $tableChoice,
+                      'required'  => true))
+                  ->add('coach1', 'entity',
+                      array('label'=>'Coach 1 :',
+                        'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
+                        'property'  => 'name',
+                        'query_builder' => function(CoachRepository $cr) use ($edition,$currentRound){
+                          return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$currentRound);
+                        }))
+                  ->add('coach2', 'entity',
+                    array('label'=>'Coach 2 :',
+                      'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
+                      'property'  => 'name',
+                      'query_builder' => function(CoachRepository $cr) use ($edition,$currentRound) {
+                        return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$currentRound);
+                      }))
+                  ->add('save','submit',array('label'=>'Valider'))
+                  ->getForm();
+    $form->handleRequest($request);
+    if ($form->isValid()) {
+      $game->setRound($currentRound);
+      $game->setEdition($edition);
+      $em->persist($game);
+      $em->flush();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
 
-    public function ScheduleAction(Request $request,$edition)
-    {
-        $game = new Game();
-        $em = $this->getDoctrine()->getManager();
-        $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->findOneById($edition);
-        $currentRound = $editionObj->getCurrentRound();
-        if( 0 === $currentRound)
-        {
-            $currentRound = 1;
-        }
-        $roundChoice = array($currentRound => $currentRound);
-        
-        $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
-        $coachNumber = count($coachs) ;
-        $tableMaxNumber = ( $coachNumber - ( $coachNumber %2 ) )/ 2;
-        $tableChoice = range(0,$tableMaxNumber);
-        unset($tableChoice[0]);
-        $form = $this->createFormBuilder($game)
-                    ->add('round', 'choice',
-                        array('label'=>'Tour :',
-                            'choices'   => $roundChoice,
-                            'required'  => true))
-                    ->add('tableNumber', 'choice',
-                        array('label'=>'Table :',
-                            'choices'   => $tableChoice,
-                            'required'  => true))
-                    ->add('coach1', 'entity',
-                        array('label'=>'Coach 1 :',
-                            'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
-                            'property'  => 'name',
-                            'query_builder' => function(CoachRepository $cr) use ($edition,$currentRound){
-                                return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$currentRound);
-                            }))
-                    ->add('coach2', 'entity',
-                        array('label'=>'Coach 2 :',
-                            'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
-                            'property'  => 'name',
-                            'query_builder' => function(CoachRepository $cr) use ($edition,$currentRound) {
-                                return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$currentRound);
-                            }))
-                    ->add('save','submit',array('label'=>'Valider'))
-                    ->getForm();
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $game->setRound($currentRound);
-            $game->setEdition($edition);
-            $em->persist($game);
-            $em->flush();
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
-        }
+    return $this->render('FantasyFootballTournamentAdminBundle:Game:schedule.html.twig', array(
+                        'form' => $form->createView(),
+                        'edition' => $edition) );
+  }
 
-        return $this->render('FantasyFootballTournamentAdminBundle:Game:schedule.html.twig', array(
-                                'form' => $form->createView(),
-                                'edition' => $edition) );
-        
-    }
-
-    public function ResumeAction(Request $request,$gameId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $game = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findOneById($gameId);
-	$name1 = $game->getCoach1()->getName();
-	$name2 = $game->getCoach2()->getName();
-	$form = $this->createFormBuilder($game)
+  public function ResumeAction(Request $request,$gameId)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $game = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findOneById($gameId);
+    $name1 = $game->getCoach1()->getName();
+    $name2 = $game->getCoach2()->getName();
+    $form = $this->createFormBuilder($game)
             ->add('td1', 'integer',
-                array('label'=>'Touchdown de '.$name1.' :',
-                    'required'  => true))
+              array('label'=>'Touchdown de '.$name1.' :',
+                'required'  => true))
             ->add('td2', 'integer',
-                array('label'=>'Touchdown de '.$name2.' :',
-                    'required'  => true))
+              array('label'=>'Touchdown de '.$name2.' :',
+                'required'  => true))
             ->add('casualties1', 'integer',
-                array('label'=>'Sorties de '.$name1.' :',
-                    'required'  => true))
+              array('label'=>'Sorties de '.$name1.' :',
+                'required'  => true))
             ->add('casualties2', 'integer',
-                array('label'=>'Sorties de '.$name2.' :',
-                    'required'  => true))
+              array('label'=>'Sorties de '.$name2.' :',
+                'required'  => true))
             ->add('save','submit',array('label'=>'Valider'))
             ->getForm();
-	$form->handleRequest($request);
-	if ($form->isValid()) {
-            $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
+    $form->handleRequest($request);
+    if ($form->isValid()) {
+      $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
                     ->findOneById($game->getEdition());
-            $strategy = RankingStrategyFabric::getByName($editionObj->getRankingStrategy());
-            $points1 = 0;
-            $points2 = 0;
-            $strategy->computePoints($points1, $points2, $game->getTd1(), $game->getTd2(),
-                    $game->getCasualties1(), $game->getCasualties2() );
-            $game->setPoints1($points1);
-            $game->setPoints2($points2);
-            $game->setStatus('resume');
-            $em->flush();
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
-	}
-	return $this->render('FantasyFootballTournamentAdminBundle:Game:resume.html.twig', array(
-				'form' => $form->createView(),
-                                'game' => $game,
-                                'edition'=> $game->getEdition()) );    
+      $strategy = RankingStrategyFabric::getByName($editionObj->getRankingStrategy());
+      $points1 = 0;
+      $points2 = 0;
+      $strategy->computePoints($points1, $points2, $game->getTd1(), $game->getTd2(),
+                                $game->getCasualties1(), $game->getCasualties2() );
+      $game->setPoints1($points1);
+      $game->setPoints2($points2);
+      $game->setStatus('resume');
+      $em->flush();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
+    return $this->render('FantasyFootballTournamentAdminBundle:Game:resume.html.twig', array(
+                        'form' => $form->createView(),
+                        'game' => $game,
+                        'edition'=> $game->getEdition()) );    
+  }
 
-    public function modifyAction()
-    {
-        return array(
-                // ...
-            );    }
+  public function modifyAction()
+  {
+    return array(
+      // ...
+    );
+  }
 
-    public function viewAction()
-    {
-        return array(
-                // ...
-            );    }
-
+  public function viewAction()
+  {
+    return array(
+      // ...
+    );
+  }
 }
