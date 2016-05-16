@@ -34,14 +34,14 @@ class RankingStrategy14 implements IRankingStrategy {
   public function useOpponentPointsOfYourOwnMatch() {
     return false;
   }
-  
+
   public function rankingOptions(){
     return array(
     'coach' => array(
-      'main' => array('points','win','draw','opponentPoints')
+      'main' => array('points','win','draw','opponentsPoints')
     ),
     'coachTeam' => array(
-      'main' => array('points','win','draw','opponentPoints'),
+      'main' => array('points','win','draw','opponentsPoints'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking'),
       'td' => array('tdFor'),
       'fouls' => array('foulsFor'),
