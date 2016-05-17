@@ -3,6 +3,7 @@
 namespace FantasyFootball\TournamentCoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 
 /**
  * Edition
@@ -19,64 +20,78 @@ class Edition
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    public $id;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="day_1", type="date")
      */
-    private $day1;
+    public $day1;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="day_2", type="date")
      */
-    private $day2;
+    public $day2;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="round_number", type="smallint")
      */
-    private $roundNumber;
+    public $roundNumber;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="current_round", type="smallint")
      */
-    private $currentRound;
+    public $currentRound;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="use_finale", type="smallint")
      */
-    private $useFinale;
+    public $useFinale;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="full_triplette", type="smallint")
      */
-    private $fullTriplette;
+    public $fullTriplette;
 
     /**
      * @var string
      *
      * @ORM\Column(name="ranking_strategy", type="string", length=255)
      */
-    private $rankingStrategy;
+    public $rankingStrategyName;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="first_day_round", type="smallint")
      */
-    private $firstDayRound;
+    public $firstDayRound;
+    
+    public $rankingStrategy;
+    public $rankings;
 
+    /**
+     * Set id
+     * @param integer Id
+     * @return Edition
+
+     */
+    public function setId($id)
+    {
+      $this->id = $id;
+      return $this;
+    }
 
     /**
      * Get id
@@ -229,47 +244,55 @@ class Edition
     /**
      * Set rankingStrategy
      *
-     * @param string $rankingStrategy
+     * @param string $rankingStrategyName
      * @return Edition
      */
-    public function setRankingStrategy($rankingStrategy)
+    public function setRankingStrategyName($rankingStrategyName)
     {
-        $this->rankingStrategy = $rankingStrategy;
+        $this->rankingStrategyName = $rankingStrategyName;
+        $this->rankingStrategy = RankingStrategyFabric::getByName($rankingStrategyName);
+        $this->rankings = $this->rankingStrategy->rankingOptions();
 
         return $this;
     }
 
+    /**
+     * Get rankingStrategyName
+     *
+     * @return string 
+     */
+    public function getRankingStrategyName()
+    {
+        return $this->rankingStrategyName;
+    }
+    
     /**
      * Get rankingStrategy
      *
-     * @return string 
+     * @return RankingStrategy 
      */
     public function getRankingStrategy()
     {
-        return $this->rankingStrategy;
+      if ( null == $this->rankingStrategy){
+        $this->rankingStrategy = RankingStrategyFabric::getByName($rankingStrategyName);
+      }
+      return $this->rankingStrategy;
     }
-
+    
     /**
-     * Set pairingStrategy
+     * Get rankings
      *
-     * @param string $pairingStrategy
-     * @return Edition
+     * @return Rankings 
      */
-    public function setPairingStrategy($pairingStrategy)
-    {
-        $this->pairingStrategy = $pairingStrategy;
-
-        return $this;
-    }
-
-    /**
-     * Get pairingStrategy
-     *
-     * @return string 
-     */
-    public function getPairingStrategy()
-    {
-        return $this->pairingStrategy;
+    public function getRankings()
+    { 
+      if ( null == $this->rankings){
+        if ( null == $this->rankingStrategy){
+          $this->rankingStrategy = RankingStrategyFabric::getByName($rankingStrategyName);
+        }
+        $this->rankings = $this->rankingStrategy->rankingOptions();
+      }
+      return $this->rankings;
     }
 
     /**
