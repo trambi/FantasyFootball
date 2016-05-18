@@ -1,7 +1,9 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}FantasyFootballTournamentAdminBundle:Game:modify{% endblock %}
+{% block title %}Modification du match {{ game.coach1.name}} vs {{ game.coach2.name}}{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Game:modify page</h1>
+<h1>match {{ game.coach1.name}} vs {{ game.coach2.name}} <span class="badge">{{game.id}}</span></h1>
+{{ form(form) }}
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}

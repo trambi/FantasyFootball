@@ -3,6 +3,7 @@
 namespace FantasyFootball\TournamentCoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Game
@@ -146,6 +147,7 @@ class Game
      * @var string
      *
      * @ORM\Column(name="status", type="string", length=33)
+     * @Assert\Choice(callback = "getAllowedStatus", message = "Choose a valid status.")
      */
     private $status;
 
@@ -589,7 +591,7 @@ class Game
         
         return $this;
     }
-
+    
     /**
      * Get status
      *
@@ -598,6 +600,16 @@ class Game
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Get allowed status
+     *
+     * @return array of string 
+     */
+    static public function getAllowedStatus()
+    {
+        return self::$allowedStatus;
     }
 
     /**
