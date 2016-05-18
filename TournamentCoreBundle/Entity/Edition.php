@@ -274,7 +274,7 @@ class Edition
     public function getRankingStrategy()
     {
       if ( null == $this->rankingStrategy){
-        $this->rankingStrategy = RankingStrategyFabric::getByName($rankingStrategyName);
+        $this->rankingStrategy = RankingStrategyFabric::getByName($this->rankingStrategyName);
       }
       return $this->rankingStrategy;
     }
@@ -288,7 +288,7 @@ class Edition
     { 
       if ( null == $this->rankings){
         if ( null == $this->rankingStrategy){
-          $this->rankingStrategy = RankingStrategyFabric::getByName($rankingStrategyName);
+          $this->rankingStrategy = RankingStrategyFabric::getByName($this->rankingStrategyName);
         }
         $this->rankings = $this->rankingStrategy->rankingOptions();
       }
