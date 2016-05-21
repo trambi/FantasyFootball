@@ -14,75 +14,72 @@ use FantasyFootball\TournamentAdminBundle\Form\CoachTeamType;
 
 class CoachTeamController extends Controller
 {   
-    public function AddAction(Request $request,$edition)
-    {
-        $coachTeam = new CoachTeam();
-        $em = $this->getDoctrine()->getManager();
-        $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')
-                ->getQueryBuilderForCoachsWithoutCoachTeamByEdition($edition)
-                ->setMaxResults(3)
-                ->getQuery()
-                ->getResult();
-        foreach ($coachs as $coach)
-        {
-            $coachTeam->addCoach($coach);
-        }
-        $form = $this->createForm(new CoachTeamType($edition),$coachTeam);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $em->persist($coachTeam);
-            $em->flush();
-            //return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
-        }
-        return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Add.html.twig', array(
-            'form' => $form->createView()
-            ));
+  public function AddAction(Request $request,$edition)
+  {
+    $coachTeam = new CoachTeam();
+    $em = $this->getDoctrine()->getManager();
+    $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')
+            ->getQueryBuilderForCoachsWithoutCoachTeamByEdition($edition)
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    foreach ($coachs as $coach){
+        $coachTeam->addCoach($coach);
     }
+    $form = $this->createForm(new CoachTeamType($edition),$coachTeam);
+    $form->handleRequest($request);
+    if ($form->isValid()) {
+      $em->persist($coachTeam);
+      $em->flush();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    }
+    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Add.html.twig',
+      array('form' => $form->createView()));
+  }
 
-    public function ModifyAction(Request $request,$edition,$coachTeamId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $coachTeam = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')
-                ->findOneById($coachTeamId);
-        $form = $this->createForm(new CoachTeamType($edition,$coachTeamId),$coachTeam);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            $em->flush();
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
-        }
-        return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Modify.html.twig', array(
-            'form' => $form->createView(),
-            'coachTeam' => $coachTeam
-            ));
+  public function ModifyAction(Request $request,$edition,$coachTeamId)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $coachTeam = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')
+                  ->findOneById($coachTeamId);
+    $form = $this->createForm(new CoachTeamType($edition,$coachTeamId),$coachTeam);
+    $form->handleRequest($request);
+    if ($form->isValid()) {
+      $em->flush();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    }
+    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Modify.html.twig',
+      array('form' => $form->createView(),
+        'coachTeam' => $coachTeam));
     }
   
-    public function DeleteAction(Request $request,$coachTeamId)
-    {      
-        $em = $this->getDoctrine()->getManager();
-        $coachTeam = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->find($coachTeamId);
+  public function DeleteAction(Request $request,$coachTeamId)
+  {      
+    $em = $this->getDoctrine()->getManager();
+    $coachTeam = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->find($coachTeamId);
 
-        if (!$coachTeam) {
-            throw $this->createNotFoundException(
-                'Aucun coachTeam trouvé pour cet id : '.$coachTeamId
-            );
-        }
-        
-        $form = $this->createFormBuilder($coachTeam)
-                	->add('delete','submit')
-			->getForm();
-
-        $form->handleRequest($request);
-	//$coachTeam->setId($coachTeamId);
-	if ($form->isValid()) {
-            $em->remove($coachTeam);
-            $em->flush();
-            return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
-	}
-	return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Delete.html.twig', array(
-            'coachTeam'=>$coachTeam,
-            'form' => $form->createView()
-	));
+    if (!$coachTeam) {
+      throw $this->createNotFoundException('Aucun coachTeam trouvé pour cet id : '.$coachTeamId);
     }
+
+    $form = $this->createFormBuilder($coachTeam)
+                  ->add('delete','submit')
+                  ->getForm();
+
+    $form->handleRequest($request);
+    //$coachTeam->setId($coachTeamId);
+    if ($form->isValid()) {
+      foreach($coachTeam->getCoachs() as $coach){
+        $coach->setCoachTeam(null);
+      }
+      $em->remove($coachTeam);
+      $em->flush();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    }
+    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Delete.html.twig',
+      array('coachTeam'=>$coachTeam,
+      'form' => $form->createView()));
+  }
 
     protected function convert($filename, $delimiter = ',') 
     {
