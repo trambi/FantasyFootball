@@ -50,15 +50,13 @@ class CoachRepository  extends EntityRepository {
         return $qb;
     }
     
-    public function getQueryBuilderForCoachsWithoutCoachTeamByEdition($editionId,$coachTeamId)
+    public function getQueryBuilderForCoachsWithoutCoachTeamByEdition($editionId)
     {
         $qb = $this->createQueryBuilder('c');
         $qb->where($qb->expr()->andX(
                 $qb->expr()->eq('c.edition', $editionId),
-                $qb->expr()->orX(
-                        $qb->expr()->eq('c.coachTeam',$coachTeamId),
-                        $qb->expr()->isNull('c.coachTeam')
-                )));
+                $qb->expr()->isNull('c.coachTeam')
+                ));
         $qb->orderBy('c.name', 'ASC');
         return $qb;
     }
