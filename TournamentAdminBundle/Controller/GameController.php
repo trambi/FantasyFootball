@@ -8,8 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use FantasyFootball\TournamentCoreBundle\Entity\Game;
 use FantasyFootball\TournamentCoreBundle\Entity\CoachRepository;
 
-use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
-
 class GameController extends Controller
 {
   public function DeleteAction(Request $request,$gameId)
@@ -116,7 +114,7 @@ class GameController extends Controller
     if ($form->isValid()) {
       $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
                     ->findOneById($game->getEdition());
-      $strategy = RankingStrategyFabric::getByName($editionObj->getRankingStrategy());
+      $strategy = $editionObj->getRankingStrategy();
       $points1 = 0;
       $points2 = 0;
       $strategy->computePoints($points1, $points2, $game->getTd1(), $game->getTd2(),
