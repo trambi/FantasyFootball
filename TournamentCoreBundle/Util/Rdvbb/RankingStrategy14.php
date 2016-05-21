@@ -41,7 +41,7 @@ class RankingStrategy14 implements IRankingStrategy {
       'main' => array('points','win','draw','opponentsPoints')
     ),
     'coachTeam' => array(
-      'main' => array('points','win','draw','opponentsPoints'),
+      'main' => array('coachTeamPoints','win','draw','opponentCoachTeamPoints'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking'),
       'td' => array('tdFor'),
       'fouls' => array('foulsFor'),
