@@ -5,4 +5,5 @@
 {% block body %}
 <h2>Modification de la triplette {{coachTeam.name}}</h2>
 {{ form(form) }}
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}

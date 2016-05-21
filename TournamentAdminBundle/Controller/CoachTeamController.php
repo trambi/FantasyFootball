@@ -34,7 +34,8 @@ class CoachTeamController extends Controller
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
     return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Add.html.twig',
-      array('form' => $form->createView()));
+      array('form' => $form->createView(),
+        'edition'=> $edition));
   }
 
   public function ModifyAction(Request $request,$edition,$coachTeamId)
@@ -50,7 +51,8 @@ class CoachTeamController extends Controller
     }
     return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Modify.html.twig',
       array('form' => $form->createView(),
-        'coachTeam' => $coachTeam));
+        'coachTeam' => $coachTeam,
+        'edition' => $edition));
     }
   
   public function DeleteAction(Request $request,$coachTeamId)
