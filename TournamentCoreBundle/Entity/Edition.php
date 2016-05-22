@@ -309,4 +309,13 @@ class Edition
   {
     return $this->firstDayRound;
   }
+  
+  public function toArray(){
+    $returnedArray = array();
+    $keys = array_keys(get_class_vars(__class__));
+    foreach ($keys as $attribute){
+      $returnedArray[$attribute] = $this->$attribute;
+    }
+    return $returnedArray;
+  }
 }

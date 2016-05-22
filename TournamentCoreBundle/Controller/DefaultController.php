@@ -37,6 +37,10 @@ class DefaultController extends Controller
     $conf = $this->get('fantasy_football_core_db_conf');
     $data = new DataProvider($conf);
     $editions = $data->getEditions();
+    $exposedEditions = array();
+    foreach($editions as $edition){
+      $exposedEditions[] = $edition->toArray();
+    }
 		$response = new JsonResponse($editions);
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
@@ -46,7 +50,7 @@ class DefaultController extends Controller
     $conf = $this->get('fantasy_football_core_db_conf');
     $data = new DataProvider($conf);
     $edition = $data->getCurrentEdition();
-		$response = new JsonResponse($edition);
+		$response = new JsonResponse($edition->toArray());
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
