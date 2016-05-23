@@ -4,6 +4,12 @@
 
 {% block body %}
 <h1>Administration &Eacute;dition {{edition}} - D&eacute;but</h1>
+<a href="{{ path('_add_coach',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Ajouter un coach</a>
+<a href="{{ path('_ready_coachs_by_edition',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Déclarer tous les coachs présents</a>
+<a href="{{ path('_unready_coachs_by_edition',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Déclarer tous les coachs absents</a>
+<a href="{{ path('_add_coach_team',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Ajouter une triplette</a>
+<a href="{{ path('_load_coach_team',{'edition':edition} ) }}" class="btn btn-primary" role="button" >Charger le fichier</a>
+<a href="{{ path('fantasy_football_tournament_admin_next',{'edition':edition} )  }}" class="btn btn-primary" role="button"  >Générer la prochaine ronde</a>
 <h2>Coachs <span class="badge">{{ coachs|length }}</span></h2>
 <table class="table table-striped table-condensed">
     <thead>
@@ -37,6 +43,12 @@
 {% endfor %}
     </tbody>
 </table>
+<a href="{{ path('_add_coach',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Ajouter un coach</a>
+<a href="{{ path('_ready_coachs_by_edition',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Déclarer tous les coachs présents</a>
+<a href="{{ path('_unready_coachs_by_edition',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Déclarer tous les coachs absents</a>
+<a href="{{ path('_add_coach_team',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Ajouter une triplette</a>
+<a href="{{ path('_load_coach_team',{'edition':edition} ) }}" class="btn btn-primary" role="button" >Charger le fichier</a>
+<a href="{{ path('fantasy_football_tournament_admin_next',{'edition':edition} )  }}" class="btn btn-primary" role="button"  >Générer la prochaine ronde</a>
 <h2>Triplettes <span class="badge">{{ coachTeams|length }}</span></h2>
 <table class="table table-striped table-condensed">
     <thead>
@@ -65,8 +77,11 @@
     </tbody>
 </table>
 <a href="{{ path('_add_coach',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Ajouter un coach</a>
+<a href="{{ path('_ready_coachs_by_edition',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Déclarer tous les coachs présents</a>
+<a href="{{ path('_unready_coachs_by_edition',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Déclarer tous les coachs absents</a>
 <a href="{{ path('_add_coach_team',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Ajouter une triplette</a>
 <a href="{{ path('_load_coach_team',{'edition':edition} ) }}" class="btn btn-primary" role="button" >Charger le fichier</a>
 <a href="{{ path('fantasy_football_tournament_admin_next',{'edition':edition} )  }}" class="btn btn-primary" role="button"  >Générer la prochaine ronde</a>
+
 {% endblock %}
 

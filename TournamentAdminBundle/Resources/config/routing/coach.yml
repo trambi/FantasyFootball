@@ -39,3 +39,15 @@ _view_coach:
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:View }
    requirements:
       coachId:  \d+
+      
+_ready_coachs_by_edition:
+   path:    /readyByEdition/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:ReadyByEdition }
+   requirements:
+      edition:  \d+
+
+_unready_coachs_by_edition:
+   path:    /unreadyByEdition/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Coach:UnreadyByEdition }
+   requirements:
+      edition:  \d+
