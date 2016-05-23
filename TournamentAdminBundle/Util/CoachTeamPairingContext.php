@@ -45,7 +45,7 @@ abstract class CoachTeamPairingContext extends PairingContext implements IPairin
     $coachsById = $this->coachsById;
     $sortedCoachsByTeamCoachId = $this->sortedCoachsByTeamCoachId;
     $editionId = $this->edition->getId();
-    $teamGameIndex = 1;
+    $teamGameIndex = 0;
     foreach ( $games as $teamGame ) {
       $teamCoachId1 = $teamGame[0];
       $teamCoachId2 = $teamGame[1];
