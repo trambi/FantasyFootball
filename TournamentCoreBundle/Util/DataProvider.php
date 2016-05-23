@@ -783,6 +783,7 @@ class DataProvider {
 
     $coachTeams = array(); // List of coachTeams
     $pointsByTeamId = array();
+    $pointsByCoachTeamId = array();
 
     $currentCoachTeamId = 0;
     $currentRound = 0;
@@ -903,10 +904,13 @@ class DataProvider {
         $coachTeam->loss += 1;
       }
       $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
-      $coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
       $coachTeams[] = $coachTeam;
     }
 
+    foreach ($coachTeams as $coachTeam) {
+      $pointsByCoachTeamId[$coachTeam->id] = $coachTeam->coachTeamPoints;
+    }
+    
     //Calcul des points adversaires			
     foreach ($coachTeams as $coachTeam) {
       $coachTeam->netTd = $coachTeam->tdFor - $coachTeam->tdAgainst;
@@ -923,6 +927,11 @@ class DataProvider {
             $coach->opponentsPoints += $pointsByTeamId[$opponentId];
             $coachTeam->opponentsPoints += $pointsByTeamId[$opponentId];
           }
+        }
+      }
+      foreach ($coachTeam->opponentCoachTeamIdArray as $opponentId){
+        if (true === array_key_exists($opponentId, $pointsByCoachTeamId)) {
+          $coachTeam->opponentCoachTeamPoints += $pointsByCoachTeamId[$opponentId];
         }
       }
     }
