@@ -485,8 +485,8 @@ class DataProvider {
   }
 
   public function getMainCoachRanking($edition) {
-    $mainRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
-    usort($mainRanking, array($edition->rankingStrategy, 'compareCoachs'));
+    $mainRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
+    usort($mainRanking, array($edition->getRankingStrategy(), 'compareCoachs'));
     return $mainRanking;
   }
 
@@ -499,7 +499,7 @@ class DataProvider {
   }
 
   public function getCoachRankingByTouchdown($edition) {
-    $tdRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
+    $tdRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
     usort($tdRanking, array($this, 'compareCoachsByTouchdown'));
     return $tdRanking;
   }
@@ -509,7 +509,7 @@ class DataProvider {
   }
 
   public function getCoachRankingByCasualties($edition) {
-    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
+    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
     usort($casualtiesRanking, array($this, 'compareCoachsByCasualties'));
     return $casualtiesRanking;
   }
@@ -519,7 +519,7 @@ class DataProvider {
   }
 
   public function getCoachRankingByFouls($edition) {
-    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
+    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
     usort($casualtiesRanking, array($this, 'compareCoachsByFouls'));
     return $casualtiesRanking;
   }
@@ -529,19 +529,19 @@ class DataProvider {
   }
   
   public function getCoachRankingByCompletions($edition) {
-    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
+    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
     usort($casualtiesRanking, array($this, 'compareCoachsByCompletions'));
     return $casualtiesRanking;
   }
   
   public function getCoachRankingByDefense($edition) {
-    $ranking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
+    $ranking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
     usort($ranking, array($this, 'compareByTouchdownAgainst'));
     return array_reverse($ranking);
   }
     
   public function getAllRanking($edition){
-    $ranking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->currentRound);
+    $ranking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
     
     $casualtiesRanking = $ranking;
     usort($casualtiesRanking, array($this, 'compareCoachsByCasualties'));
@@ -553,7 +553,7 @@ class DataProvider {
     
     $coachTeamRaning = $this->getCoachTeamRanking($edition);
 
-    usort($ranking,array($edition->rankingStrategy, 'compareCoachs'));
+    usort($ranking,array($edition->getRankingStrategy(), 'compareCoachs'));
 
     return ([
       'ranking' => $ranking,
@@ -586,7 +586,7 @@ class DataProvider {
   public function getCoachRankingByComeback($edition) {
     $finalRanking = $this->getMainCoachRanking($edition);
     $firstDayRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->firstDayRound);
-    usort($firstDayRanking, array($edition->rankingStrategy, 'compareCoachs'));
+    usort($firstDayRanking, array($edition->getRankingStrategy(), 'compareCoachs'));
     $coachNumber = count($finalRanking);
     for ($i = 0; $i < $coachNumber; $i++) {
       $finalCoach = $finalRanking[$i];
@@ -994,7 +994,7 @@ class DataProvider {
   }
   
   public function getCoachTeamRankingByComeback($edition) {
-    $rankingStrategy = $edition->rankingStrategy;
+    $rankingStrategy = $edition->getRankingStrategy();
     $finalRanking = $this->getCoachTeamRanking($edition);
     $firstDayRanking = $this->getCoachTeamStatisticsBetweenRounds($edition, 0, $edition->firstDayRound);
     usort($firstDayRanking, array($rankingStrategy,'compareCoachTeams'));
@@ -1022,8 +1022,8 @@ class DataProvider {
 
   
   protected function getCoachTeamRankingByFunction($edition,$functionName){
-    $rankingStrategy = $edition->rankingStrategy;
-    $coachTeams = $this->getCoachTeamStatisticsBetweenRounds($edition,0,$edition->currentRound);
+    $rankingStrategy = $edition->getRankingStrategy();
+    $coachTeams = $this->getCoachTeamStatisticsBetweenRounds($edition,0,$edition->getCurrentRound());
     foreach (array_keys($coachTeams) as $id) {
       $coachTeam = $coachTeams[$id];
       usort($coachTeam->teams, array($this, $functionName));

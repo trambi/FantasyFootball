@@ -22,7 +22,7 @@ class RankingStrategy14 implements IRankingStrategy {
   }
 
   public function compareCoachTeams($coachTeam1, $coachTeam2) {
-    return TeamComparator::finalPointsWinDrawOpponentsPointsValue($coachTeam1, $coachTeam2);
+    return TeamComparator::finalCoachTeamPointsWinDrawOpponentCoachTeamPoints($coachTeam1, $coachTeam2);
   }
 
   public function computeCoachTeamPoints(&$points1, &$points2, $td1Array, $td2Array, $cas1Array, $cas2Array) {

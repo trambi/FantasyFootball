@@ -147,6 +147,41 @@ class TeamComparator{
     }
   }
 
+  static public function finalCoachTeamPointsWinDrawOpponentCoachTeamPoints($item1,$item2){
+    $returnValue = 1;
+    $special1 = 0;
+    $special2 = 0;
+    if(isset($item1->special)){
+      $special1 = $item1->special;
+    }
+    if(isset($item2->special)){
+      $special2 = $item2->special;
+    }
+    if(self::VAINQUEUR == $special1){
+      return -1;
+    }else if(self::VAINQUEUR == $special2){
+      return 1;
+    }else if(self::FINALISTE == $special1){
+      return -1;
+    }else if(self::FINALISTE == $special2){
+      return 1;
+    }
+    return self::coachTeamPointsWinDrawOpponentCoachTeamPoints($item1,$item2);
+    
+  }
+  
+  static public function coachTeamPointsWinDrawOpponentCoachTeamPoints($item1,$item2){
+    $returnValue = 0;
+    $params = array('coachTeamPoints','win','draw','opponentCoachTeamPoints');
+    foreach ($params as $param){
+      $returnValue = $item2->$param - $item1->$param ;
+      if( 0 ==! $returnValue ){
+        break;
+      }
+    }
+    return $returnValue;
+  }
+  
   static public function finalPointsWinDrawOpponentsPointsValue($item1,$item2){
     $returnValue = 1;
     $special1 = 0;
