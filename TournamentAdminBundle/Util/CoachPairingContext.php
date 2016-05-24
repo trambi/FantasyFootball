@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace FantasyFootball\TournamentAdminBundle\Util;
 
 use FantasyFootball\TournamentCoreBundle\Entity\Edition;
@@ -13,20 +7,13 @@ use FantasyFootball\TournamentCoreBundle\Entity\Game;
 use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 use Doctrine\ORM\EntityManager;
 
-/**
- * Description of CoachPairingContext
- *
- * @author Trambi
- */
 abstract class CoachPairingContext extends PairingContext implements IPairingContext {
 
-  public function __construct(Edition $edition,EntityManager $em,DatabaseConfiguration $conf)
-  {
+  public function __construct(Edition $edition,EntityManager $em,DatabaseConfiguration $conf){
     parent::__construct($edition, $em, $conf);
   }
 
-  public function init()
-  {
+  public function init(){
     return $this->customInit();
   }
 

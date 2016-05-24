@@ -1,35 +1,43 @@
 <?php
-
 namespace FantasyFootball\TournamentAdminBundle\Util;
 
-use FantasyFootball\TournamentCoreBundle\Entity\Edition;
-use FantasyFootball\TournamentCoreBundle\Entity\Game;
-use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 use Doctrine\ORM\EntityManager;
+use FantasyFootball\TournamentCoreBundle\Entity\Edition;
+use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
+use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
+use FantasyFootball\TournamentCoreBundle\Entity\Game;
 
-abstract class CoachTeamPairingContext extends PairingContext implements IPairingContext {
-
-  protected $coachsById;
-  protected $sortedCoachsByTeamCoachId;
-
+class RankedCoachTeamWithFinalePairingContext extends CoachTeamPairingContext {
+    
   public function __construct(Edition $edition,EntityManager $em,DatabaseConfiguration $conf){
-    parent::__construct($edition, $em, $conf);
-    $this->coachsById = array();
-    $this->sortedCoachsByTeamCoachId = array();
+    parent::__construct($edition,$em,$conf);
   }
 
-  public function init(){
-    $editionId = $this->edition->getId();
-    $coachs = $this->em->getRepository('FantasyFootballTournamentCoreBundle:Coach')
-                        ->findByEdition($editionId);
-    foreach ($coachs as $coach){
-      $this->coachsById[$coach->getId()] = $coach;
+  public function customInit(){
+    $data = new DataProvider($this->conf);
+    $toPair = array();
+    $strategy = $this->edition->getRankingStrategy();
+    $coachTeamRanking = $data->getCoachTeamRanking($this->edition);
+    $alreadyPairedGames = [[$coachTeamRanking[0]->id,$coachTeamRanking[1]->id]];
+    $i = 1;
+    foreach ($coachTeamRanking as $coachTeam){
+      $id = $coachTeam->id;
+      if( 2 < $i ){
+        $toPair[] = $id;
+      }
+      
+      $tempSortedCoach = array();
+      foreach ($coachTeam->teams as $coach){
+          $tempSortedCoach[] = $coach->id;
+      }
+      $this->sortedCoachsByTeamCoachId[$id] = $tempSortedCoach;
+      $i++;
     }
-    return $this->customInit();
+    $constraints = $data->getCoachTeamGamesByEdition($this->edition->getId());
+
+    return ([$toPair, $constraints,$alreadyPairedGames]);
   }
-
-  abstract protected function customInit();
-
+  
   public function persist(Array $games,$round) {
     $coachsById = $this->coachsById;
     $sortedCoachsByTeamCoachId = $this->sortedCoachsByTeamCoachId;
@@ -46,6 +54,9 @@ abstract class CoachTeamPairingContext extends PairingContext implements IPairin
         $game->setEdition($editionId);
         $game->setRound($round);
         $game->setTableNumber( ($teamGameIndex * 10) + $gameIndex );
+        if( ( 0 === $teamGameIndex ) && ( 1 === $gameIndex ) ){
+          $game->setFinale(true);
+        }
         $game->setCoach1($coachsById[$rosterId]);
         $game->setCoach2($coachsById[$opponentRosterId]);
         $this->em->persist($game);
@@ -55,5 +66,5 @@ abstract class CoachTeamPairingContext extends PairingContext implements IPairin
       $teamGameIndex ++;
     }
   }
-
+  
 }
