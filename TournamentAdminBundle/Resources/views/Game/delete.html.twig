@@ -7,6 +7,7 @@
       &Ecirc;tes-vous s&ucirc;r de vouloir effacer le match : {{ coach1.name}} - {{ coach2.name}} ?
 {% endif %}
 {{ form(form) }}
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 
 D&eacute;tails du match : <ul class="list-group">
     <li class="list-group-item">Edition : {{game.edition}}</li>
