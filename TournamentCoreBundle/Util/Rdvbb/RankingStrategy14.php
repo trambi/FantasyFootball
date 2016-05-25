@@ -18,11 +18,39 @@ class RankingStrategy14 implements IRankingStrategy {
   }
     
   public function compareCoachs($coach1, $coach2) {
-    return TeamComparator::pointsWinDrawOpponentsPointsValue($coach1,$coach2);
+    $returnValue = 0;
+    $params = array('points','win','draw','opponentsPoints');
+    foreach ($params as $param){
+      $returnValue = $coach2->$param - $coach1->$param ;
+      if( 0 ==! $returnValue ){
+        break;
+      }
+    }
+    return $returnValue;
   }
 
-  public function compareCoachTeams($coachTeam1, $coachTeam2) {
-    return TeamComparator::finalCoachTeamPointsWinDrawOpponentCoachTeamPoints($coachTeam1, $coachTeam2);
+  public function compareCoachTeams($item1, $item2) {
+    $returnValue = 1;
+    $special1 = 0;
+    $special2 = 0;
+    if(isset($item1->special)){
+      $special1 = $item1->special;
+    }
+    if(isset($item2->special)){
+      $special2 = $item2->special;
+    }
+    $returnValue = $special2 - $special1;
+    if(0 !== $returnValue){
+      return $returnValue;
+    }
+    $params = array('coachTeamPoints','win','draw','opponentCoachTeamPoints','opponentsPoints');
+    foreach ($params as $param){
+      $returnValue = $item2->$param - $item1->$param ;
+      if( 0 ==! $returnValue ){
+        break;
+      }
+    }
+    return $returnValue;
   }
 
   public function computeCoachTeamPoints(&$points1, &$points2, $td1Array, $td2Array, $cas1Array, $cas2Array) {
@@ -41,11 +69,10 @@ class RankingStrategy14 implements IRankingStrategy {
       'main' => array('points','win','draw','opponentsPoints')
     ),
     'coachTeam' => array(
-      'main' => array('coachTeamPoints','win','draw','opponentCoachTeamPoints'),
+      'main' => array('coachTeamPoints','win','draw','opponentCoachTeamPoints','opponentPoints'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking'),
       'td' => array('tdFor'),
       'fouls' => array('foulsFor'),
-      'completions' => array('completionsFor'),
       'casualties' => array('casualtiesFor'),
       'defense' => array('tdAgainst')
       ),
