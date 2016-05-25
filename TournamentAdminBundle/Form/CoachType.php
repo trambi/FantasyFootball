@@ -18,7 +18,7 @@ class CoachType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $editionId = $this->editionId;
-        $builder->add('teamName', 'text',array('label'=>'Nom de l\'équipe :'));
+        $builder->add('teamName', 'text',array('label'=>'Nom de l\'équipe :','required' => false));
         $builder->add('name', 'text',array('label'=>'Nom :'));
         $builder->add('race', 'entity',
                 array('label'=>'Race :',
@@ -27,41 +27,13 @@ class CoachType extends AbstractType
                             'query_builder' => function(RaceRepository $rr) use ($editionId) {
                                 return $rr->getQueryBuilderForRaceByEditionOrLesser($editionId);
                             }));
-        $builder->add('email', 'email',array('label'=>'Courriel :'));
+        $builder->add('email', 'email',array('label'=>'Courriel :','required' => false));
         $builder->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'));
         $builder->add('ready', 'checkbox',array(
                 'label' => 'Coach prêt ?',
 		'required' => false))
         ;
         $builder->add('save','submit',array('label'=>'Valider'));
-        /*$formModifier = function(FormInterface $form, Edition $edition) {
-            $races = $edition->getAvailableRaces();
-
-            $form->add('race', 'entity', array('choices' => $races));
-        };
-
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function(FormEvent $event) use ($formModifier) {
-                // ce sera votre entité, c-a-d Coach
-                $data = $event->getData();
-
-                $formModifier($event->getForm(), $data->getEdition());
-            }
-        );
-
-        $builder->get('edition')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function(FormEvent $event) use ($formModifier) {
-                // Il est important de récupérer ici $event->getForm()->getData(),
-                // car $event->getData() vous renverra la données initiale (vide)
-                $edition = $event->getForm()->getData();
-
-                // puisque nous avons ajouté l'écouteur à l'enfant, il faudra passer
-                // le parent aux fonctions de callback!
-                $formModifier($event->getForm()->getParent(), $edition);
-            }
-        );*/
     }
 
     public function configureOptions(OptionsResolver $resolver)

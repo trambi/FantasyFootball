@@ -5,4 +5,5 @@
 {% block body %}
     <form action="{{ path('_load_coach_team',{'edition':edition}) }}" method="post" {{ form_enctype(form) }}>
     {{ form_rest(form) }}
+    <a href="{{ path('fantasy_football_tournament_admin_main' )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}
