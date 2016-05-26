@@ -485,7 +485,7 @@ class DataProvider {
   }
 
   public function getMainCoachRanking($edition) {
-    $mainRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
+    $mainRanking = $this->getCoachStatisticsBetweenRounds($edition->getId(), 0, $edition->getCurrentRound());
     usort($mainRanking, array($edition->getRankingStrategy(), 'compareCoachs'));
     return $mainRanking;
   }
@@ -499,7 +499,7 @@ class DataProvider {
   }
 
   public function getCoachRankingByTouchdown($edition) {
-    $tdRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
+    $tdRanking = $this->getCoachStatisticsBetweenRounds($edition->getId(), 0, $edition->getCurrentRound());
     usort($tdRanking, array($this, 'compareCoachsByTouchdown'));
     return $tdRanking;
   }
@@ -509,7 +509,7 @@ class DataProvider {
   }
 
   public function getCoachRankingByCasualties($edition) {
-    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
+    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->getId(), 0, $edition->getCurrentRound());
     usort($casualtiesRanking, array($this, 'compareCoachsByCasualties'));
     return $casualtiesRanking;
   }
@@ -519,7 +519,7 @@ class DataProvider {
   }
 
   public function getCoachRankingByFouls($edition) {
-    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
+    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->getId(), 0, $edition->getCurrentRound());
     usort($casualtiesRanking, array($this, 'compareCoachsByFouls'));
     return $casualtiesRanking;
   }
@@ -529,19 +529,19 @@ class DataProvider {
   }
   
   public function getCoachRankingByCompletions($edition) {
-    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
+    $casualtiesRanking = $this->getCoachStatisticsBetweenRounds($edition->getId(), 0, $edition->getCurrentRound());
     usort($casualtiesRanking, array($this, 'compareCoachsByCompletions'));
     return $casualtiesRanking;
   }
   
   public function getCoachRankingByDefense($edition) {
-    $ranking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
+    $ranking = $this->getCoachStatisticsBetweenRounds($edition->getId(), 0, $edition->getCurrentRound());
     usort($ranking, array($this, 'compareByTouchdownAgainst'));
     return array_reverse($ranking);
   }
     
   public function getAllRanking($edition){
-    $ranking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->getCurrentRound());
+    $ranking = $this->getCoachStatisticsBetweenRounds($edition->getId(), 0, $edition->getCurrentRound());
     
     $casualtiesRanking = $ranking;
     usort($casualtiesRanking, array($this, 'compareCoachsByCasualties'));
