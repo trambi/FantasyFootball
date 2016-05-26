@@ -162,8 +162,10 @@ class RankingStrategy14Test extends \PHPUnit_Framework_TestCase {
     $coach2->draw = 0;
     $coach1->opponentsPoints = 0;
     $coach2->opponentsPoints = 0;
-    $coach1->value = 0;
-    $coach2->value = 0;
+    $coach1->netTd = 0;
+    $coach2->netTd = 0;
+    $coach1->netCasualties = 0;
+    $coach2->netCasualties = 0;
     
     // strictly equal
     $result = $strategy->compareCoachs($coach1, $coach2);
@@ -214,14 +216,29 @@ class RankingStrategy14Test extends \PHPUnit_Framework_TestCase {
     $result = $strategy->compareCoachs($coach1, $coach2);
     $this->assertGreaterThan(0, $result);
 
-    // coach1 has more value
-    $coach1->value = 1;
+    // coach1 has more netTd
     $coach1->opponentsPoints = 2;
+    $coach1->netTd = 1;
     $result = $strategy->compareCoachs($coach1, $coach2);
     $this->assertLessThan(0, $result);
-
-    // coach2 has more opponentsPoints
-    $coach2->value = 2;
+    
+    // coach2 has more netTd
+    $coach2->netTd = 2;
+    $result = $strategy->compareCoachs($coach1, $coach2);
+    $this->assertGreaterThan(0, $result);
+    
+    // coach1 and coach2 has same netTd + netCasualties
+    $coach1->netCasualties = 1;
+    $result = $strategy->compareCoachs($coach1, $coach2);
+    $this->assertEquals(0, $result);
+    
+    // coach1 has more netTd + netCasualties
+    $coach1->netCasualties = 2;
+    $result = $strategy->compareCoachs($coach1, $coach2);
+    $this->assertLessThan(0, $result);
+    
+    // coach2 has more netTd + netCasualties
+    $coach2->netCasualties = 2;
     $result = $strategy->compareCoachs($coach1, $coach2);
     $this->assertGreaterThan(0, $result);
   }
@@ -230,32 +247,33 @@ class RankingStrategy14Test extends \PHPUnit_Framework_TestCase {
     $strategy = new RankingStrategy14();
     $coachTeam1 = new \stdClass;
     $coachTeam2 = new \stdClass;
-    $coachTeam1->points = 0;
-    $coachTeam2->points = 0;
+    $coachTeam1->coachTeamPoints = 0;
+    $coachTeam2->coachTeamPoints = 0;
     $coachTeam1->win = 0;
     $coachTeam2->win = 0;
     $coachTeam1->draw = 0;
     $coachTeam2->draw = 0;
+    $coachTeam1->opponentCoachTeamPoints = 0;
+    $coachTeam2->opponentCoachTeamPoints = 0;
     $coachTeam1->opponentsPoints = 0;
     $coachTeam2->opponentsPoints = 0;
-    $coachTeam1->value = 0;
-    $coachTeam2->value = 0;
+
     // strictly equal
     $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
     $this->assertEquals(0, $result);
-
+    
     // coachTeam1 has more points
-    $coachTeam1->points = 1;
+    $coachTeam1->coachTeamPoints = 1;
     $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
     $this->assertLessThan(0, $result);
 
     // coachTeam2 has more points
-    $coachTeam2->points = 2;
+    $coachTeam2->coachTeamPoints = 2;
     $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
     $this->assertGreaterThan(0, $result);
 
     // coachTeam1 has more wins
-    $coachTeam1->points = 2;
+    $coachTeam1->coachTeamPoints = 2;
     $coachTeam1->win = 1;
     $coachTeam2->win = 0;
     $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
@@ -278,25 +296,25 @@ class RankingStrategy14Test extends \PHPUnit_Framework_TestCase {
     $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
     $this->assertgreaterThan(0, $result);
     
-    // coachTeam1 has more opponentsPoints
+    // coachTeam1 has more opponentCoachTeamPoints
     $coachTeam1->draw = 2;
+    $coachTeam1->opponentCoachTeamPoints = 1;
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
+    $this->assertLessThan(0, $result);
+
+    // coachTeam2 has more opponentCoachTeamPoints
+    $coachTeam2->opponentCoachTeamPoints = 2;
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
+    $this->assertGreaterThan(0, $result);
+    
+    // coachTeam1 has more opponentsPoints
+    $coachTeam1->opponentCoachTeamPoints = 2;
     $coachTeam1->opponentsPoints = 1;
     $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
     $this->assertLessThan(0, $result);
 
     // coachTeam2 has more opponentsPoints
     $coachTeam2->opponentsPoints = 2;
-    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
-    $this->assertGreaterThan(0, $result);
-
-    // coachTeam1 has more value
-    $coachTeam1->value = 1;
-    $coachTeam1->opponentsPoints = 2;
-    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
-    $this->assertLessThan(0, $result);
-
-    // coachTeam2 has more opponentsPoints
-    $coachTeam2->value = 2;
     $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
     $this->assertGreaterThan(0, $result);
 

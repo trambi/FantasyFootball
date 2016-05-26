@@ -26,6 +26,9 @@ class RankingStrategy14 implements IRankingStrategy {
         break;
       }
     }
+    if ( 0 === $returnValue){
+      $returnValue = ($coach2->netTd + $coach2->netCasualties ) - ($coach1->netTd + $coach1->netCasualties) ;
+    }
     return $returnValue;
   }
 
