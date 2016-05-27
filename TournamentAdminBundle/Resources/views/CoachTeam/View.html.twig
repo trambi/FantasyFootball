@@ -3,6 +3,11 @@
 {% block title %}D&eacute;tail de la triplette {{ coachTeam.name }}{% endblock %}
 
 {% block body %}
+{% block menuButtons %}
+<a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.getId(),'edition':edition} )  }}" class="btn btn-primary" role="button" >Modifier</a>
+<a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.getId()} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
+<a href="{{ path('fantasy_football_tournament_admin_main' )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{% endblock %}
 <h1>Triplette : {{ coachTeam.name }} <span class="badge">{{ coachTeam.id }}</span></h1>
 <ul class="list-group">
 <li class="list-group-item"><label>Membres :</label>
@@ -64,7 +69,5 @@
 </li>
 {% endif %}
 </ul>
-<a href="{{ path('_modify_coach_team',{'coachTeamId':coachTeam.getId(),'edition':edition} )  }}" class="btn btn-primary" role="button" >Modifier</a>
-<a href="{{ path('_delete_coach_team',{'coachTeamId':coachTeam.getId()} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
-<a href="{{ path('fantasy_football_tournament_admin_main' )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{{ block('menuButtons') }}
 {% endblock %}
