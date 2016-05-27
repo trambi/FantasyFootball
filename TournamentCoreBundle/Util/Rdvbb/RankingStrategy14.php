@@ -69,10 +69,10 @@ class RankingStrategy14 implements IRankingStrategy {
   public function rankingOptions(){
     return array(
     'coach' => array(
-      'main' => array('points','win','draw','opponentsPoints')
+      'main' => array('points','win','draw','opponentsPoints','netTd','netCasualties')
     ),
     'coachTeam' => array(
-      'main' => array('coachTeamPoints','win','draw','opponentCoachTeamPoints','opponentPoints'),
+      'main' => array('coachTeamPoints','win','draw','opponentCoachTeamPoints','opponentsPoints'),
       'comeback' => array('diffRanking','firstDayRanking','finalRanking'),
       'td' => array('tdFor'),
       'fouls' => array('foulsFor'),

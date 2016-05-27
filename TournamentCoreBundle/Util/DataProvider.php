@@ -570,7 +570,7 @@ class DataProvider {
     $diffRanking1 = $item1->diffRanking;
     $diffRanking2 = $item2->diffRanking;
     if ($diffRanking1 === $diffRanking2) {
-      if ($finalRanking1 > $finalRanking2) {
+      if ($finalRanking1 < $finalRanking2) {
         $return = -1;
       } else {
         $return = 1;
@@ -585,7 +585,7 @@ class DataProvider {
 
   public function getCoachRankingByComeback($edition) {
     $finalRanking = $this->getMainCoachRanking($edition);
-    $firstDayRanking = $this->getCoachStatisticsBetweenRounds($edition->id, 0, $edition->firstDayRound);
+    $firstDayRanking = $this->getCoachStatisticsBetweenRounds($edition->getId(), 0, $edition->getFirstDayRound());
     usort($firstDayRanking, array($edition->getRankingStrategy(), 'compareCoachs'));
     $coachNumber = count($finalRanking);
     for ($i = 0; $i < $coachNumber; $i++) {
@@ -996,7 +996,7 @@ class DataProvider {
   public function getCoachTeamRankingByComeback($edition) {
     $rankingStrategy = $edition->getRankingStrategy();
     $finalRanking = $this->getCoachTeamRanking($edition);
-    $firstDayRanking = $this->getCoachTeamStatisticsBetweenRounds($edition, 0, $edition->firstDayRound);
+    $firstDayRanking = $this->getCoachTeamStatisticsBetweenRounds($edition, 0, $edition->getFirstDayRound());
     usort($firstDayRanking, array($rankingStrategy,'compareCoachTeams'));
     $coachTeamNumber = count($finalRanking);
     for ($i = 0; $i < $coachTeamNumber; $i++) {
