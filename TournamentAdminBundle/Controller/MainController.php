@@ -17,7 +17,7 @@ class MainController extends Controller{
     $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($editionId,array('name'=>'ASC'));
     $coachTeams = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->findByEditionJoined($editionId);
     return $this->render('FantasyFootballTournamentAdminBundle:Main:index_not_started.html.twig',
-      ['edition' => $editionId,'coachs' => $coachs,'coachTeams' => $coachTeams]);
+      ['edition' => $editionId,'currentRound' => $edition->getCurrentRound(),'coachs' => $coachs,'coachTeams' => $coachTeams]);
   }
 
   protected function _indexActionStarted(\FantasyFootball\TournamentCoreBundle\Entity\Edition $edition, $round) {
@@ -28,7 +28,8 @@ class MainController extends Controller{
     $matchesToPlay = $data->getToPlayMatchsByEditionAndRound($edition->getId(), $round);
     return $this->render('FantasyFootballTournamentAdminBundle:Main:index.html.twig',
       ['edition' => $editionId,'round' => $round,'matchesToPlay' => $matchesToPlay,
-        'playedMatches' => $playedMatches]);
+        'playedMatches' => $playedMatches,'roundNumber' => $edition->getRoundNumber(),
+        'rankings'=>$edition->getRankings()]);
   }
 
   public function indexAction($edition,$round){
@@ -61,7 +62,7 @@ class MainController extends Controller{
     $round = $editionObj->getCurrentRound();
     $count = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')
                 ->countScheduledGamesByEditionAndRound($edition,$round);
-    if( 0 != $count ){
+    if( ( 0 === $count ) || ( $editionObj->getRoundNumber() === $round  ) ){
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
     $pairingContext = PairingContextFabric::create($editionObj,$em,$this->get('fantasy_football_core_db_conf'));
@@ -76,10 +77,7 @@ class MainController extends Controller{
     $pairingContext->persist($games, $nextRound);
     $editionObj->setCurrentRound($nextRound);
     $em->flush();
-    $pairedGames =  $em->getRepository('FantasyFootballTournamentCoreBundle:Game')
-                        ->findBy(['edition'=>$edition,'round'=>$nextRound]);
-    return $this->render('FantasyFootballTournamentAdminBundle:Main:next_round.html.twig',
-      ['edition'=>$edition,'round'=>$round,'games' => $pairedGames]);
+    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
   }
 
   protected function createDates($edition)
