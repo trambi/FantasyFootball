@@ -33,51 +33,52 @@ class GameController extends Controller
     ));
   }
 
-  public function ScheduleAction(Request $request,$edition)
+  public function ScheduleAction(Request $request,$edition,$round)
   {
     $game = new Game();
     $em = $this->getDoctrine()->getManager();
     $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->findOneById($edition);
-    $currentRound = $editionObj->getCurrentRound();
-    if( 0 === $currentRound)
-    {
-      $currentRound = 1;
+    if( -1 == $round ){
+      $round = $editionObj->getCurrentRound();
     }
-    $roundChoice = array($currentRound => $currentRound);
-        
-    $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
-    $coachNumber = count($coachs) ;
-    $tableMaxNumber = ( $coachNumber - ( $coachNumber %2 ) )/ 2;
-    $tableChoice = range(0,$tableMaxNumber);
-    unset($tableChoice[0]);
+    $roundChoice = array( $round => $round );
+    $gameCount = 10 ;
+    if( 1 !== $round){
+      $gameCount = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->getMaxTableNumberByEditionAndRound($edition,$round -1);
+    } else{
+      $gameCount = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->getMaxTableNumberByEditionAndRound($edition,$round) + 1;
+    }
+    $tableChoice = range(0,$gameCount);
     $form = $this->createFormBuilder($game)
                   ->add('round', 'choice',
                     array('label'=>'Tour :',
                       'choices'   => $roundChoice,
-                      'required'  => true))
+                      'required'  => true,
+                      'choices_as_values' => true))
                   ->add('tableNumber', 'choice',
                     array('label'=>'Table :',
                       'choices'   => $tableChoice,
-                      'required'  => true))
+                      'required'  => true,
+                      'choices_as_values' => true))
                   ->add('coach1', 'entity',
                       array('label'=>'Coach 1 :',
                         'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
                         'property'  => 'name',
-                        'query_builder' => function(CoachRepository $cr) use ($edition,$currentRound){
-                          return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$currentRound);
+                        'query_builder' => function(CoachRepository $cr) use ($edition,$round){
+                          return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$round);
                         }))
                   ->add('coach2', 'entity',
                     array('label'=>'Coach 2 :',
                       'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
                       'property'  => 'name',
-                      'query_builder' => function(CoachRepository $cr) use ($edition,$currentRound) {
-                        return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$currentRound);
+                      'query_builder' => function(CoachRepository $cr) use ($edition,$round) {
+                        return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$round);
                       }))
                   ->add('save','submit',array('label'=>'Valider'))
                   ->getForm();
     $form->handleRequest($request);
     if ($form->isValid()) {
-      $game->setRound($currentRound);
+      $game->setRound($round);
       $game->setEdition($edition);
       $em->persist($game);
       $em->flush();
@@ -108,6 +109,12 @@ class GameController extends Controller
             ->add('casualties2', 'integer',
               array('label'=>'Sorties de '.$name2.' :',
                 'required'  => true))
+            ->add('fouls1', 'integer',
+                array('label'=>'Aggressions de '.$name1.' :',
+                'required'  => false))
+            ->add('fouls2', 'integer',
+                array('label'=>'Aggressions de '.$name2.' :',
+                'required'  => false))
             ->add('save','submit',array('label'=>'Valider'))
             ->getForm();
     $form->handleRequest($request);
