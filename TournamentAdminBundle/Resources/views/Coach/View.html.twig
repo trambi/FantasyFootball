@@ -3,6 +3,12 @@
 {% block title %}D&eacute;tail sur le coach {{ coach.getName() }}{% endblock %}
 
 {% block body %}
+{% block menuButtons %}
+<a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" class="btn btn-primary" role="button" >Modifier</a>
+<a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':coach.edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{% endblock %}
+
 <h1>Coach : {{ coach.getName() }} <span class="badge">{{ coach.getId() }}</span></h1>
 <ul class="list-group">
 {%if coach.getNafNumber() %}<li class="list-group-item"><label>Numéro NAF :</label> {{ coach.getNafNumber() }}</li>{% endif %}
@@ -55,12 +61,6 @@
 </table>
 </li>
 {% endif %}
-<li class="list-group-item"><label>Points : </label> {{coach.getPoints()}}</li>
-<li class="list-group-item"><label>Points adverses : </label> {{coach.getOpponentsPoints()}}</li>
-<li class="list-group-item"><label>Diff&eacute;rence de touchdown : </label> {{coach.getNetTd()}}</li>
-<li class="list-group-item"><label>Sorties : </label> {{coach.getCasualties()}}</li>
 </ul>
-<a href="{{ path('_modify_coach',{'coachId':coach.id} )  }}" class="btn btn-primary" role="button" >Modifier</a>
-<a href="{{ path('_delete_coach',{'coachId':coach.id} )  }}" class="btn btn-primary" role="button" >Supprimer</a>
-<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':coach.edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{{ block('menuButtons') }}
 {% endblock %}
