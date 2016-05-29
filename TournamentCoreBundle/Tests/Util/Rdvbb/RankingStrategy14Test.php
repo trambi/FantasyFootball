@@ -3,6 +3,7 @@
 namespace FantasyFootball\TournamentCoreBundle\Tests\Util\Rdvbb;
 
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy14;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\PointsComputor;
 
 class RankingStrategy14Test extends \PHPUnit_Framework_TestCase {
 
@@ -142,6 +143,17 @@ class RankingStrategy14Test extends \PHPUnit_Framework_TestCase {
     $strategy->computeCoachTeamPoints($points1, $points2, $tds1, $tds2, $cas1Array, $cas2Array);
     $this->assertEquals(500, $points1);
     $this->assertEquals(500, $points2);
+    
+    $tds1 = array(2, 1, 0);
+    $tds2 = array(0, 1, 1);
+    $sums = PointsComputor::teamCustom($tds1,$tds2,$cas1Array,$cas2Array,2,2,1,0,0,0);
+    $this->assertEquals(3, $sums['points1']);
+    $this->assertEquals(3, $sums['points2']);
+    $strategy->computeCoachTeamPoints($points1, $points2, $tds1, $tds2, $cas1Array, $cas2Array);
+    $this->assertEquals(500, $points1);
+    $this->assertEquals(500, $points2);
+    
+    
   }
 
   public function testUseTriplettePoints() {

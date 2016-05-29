@@ -63,7 +63,7 @@ class PointsComputor{
     return self::custom($td1,$td2,$cas1,$cas2,9,8,4,1,0,-1);
   }
   
-  static protected function teamCustom($td1Array,$td2Array,$cas1Array,$cas2Array,$bigWin,$smallWin,$draw,$smallLoss,$bigLoss,$concedeLoss){
+  static public function teamCustom($td1Array,$td2Array,$cas1Array,$cas2Array,$bigWin,$smallWin,$draw,$smallLoss,$bigLoss,$concedeLoss){
     $points1 = 0;
     $points2 = 0;
     $td1Number = count($td1Array);
@@ -113,7 +113,7 @@ class PointsComputor{
   static public function teamWin2TeamDraw1TeamLoss0($td1Array,$td2Array,$cas1Array,$cas2Array){
     $points1 = 0;
     $points2 = 0;
-    $sum = self::teamCustom($td1Array,$td2Array,$cas1Array,$cas2Array,2,2,1,1,0,0);
+    $sum = self::teamCustom($td1Array,$td2Array,$cas1Array,$cas2Array,2,2,1,0,0,0);
     $sum1 = $sum['points1'];
     $sum2 = $sum['points2'];
     if ($sum1 < $sum2) {
