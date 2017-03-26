@@ -41,7 +41,7 @@ class DefaultController extends Controller
     foreach($editions as $edition){
       $exposedEditions[] = $edition->toArray();
     }
-		$response = new JsonResponse($editions);
+		$response = new JsonResponse($exposedEditions);
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
