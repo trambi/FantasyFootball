@@ -125,23 +125,29 @@ class CoachTeamController extends Controller{
         $dataArray = $this->convert($fileName, ',');
         $em = $this->getDoctrine()->getManager();
         foreach($dataArray as $row){
+          if('' == $row['coach_team_name']){
+            break;
+          }
           $coachTeam = new CoachTeam();
           $coachTeam->setName($row['coach_team_name']);
           $em->persist($coachTeam);
-          $em->flush();
           $i = 1;
           while( array_key_exists('coach_'.$i.'_name', $row) )  {
             $coach = new Coach();
             $coach->setCoachTeam($coachTeam);
-            $coach->setName($row['coach_'.$i.'_name']);
+            if('' != $row['coach_'.$i.'_name']){
+              $coach->setName($row['coach_'.$i.'_name']);
+            }else{
+              $coach->setName($row['coach_team_name'].'_'.$i);
+            }
             $coach->setRace($em->getRepository('FantasyFootballTournamentCoreBundle:Race')->getRaceByName($row['coach_'.$i.'_race']));
             $coach->setNafNumber($row['coach_'.$i.'_naf']);
             $coach->setEmail($row['email']);
             $coach->setEdition($edition);
             $i ++;
             $em->persist($coach);
-            //$coachs[] = $coach;
           }
+          $em->flush();
         }
       }
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
