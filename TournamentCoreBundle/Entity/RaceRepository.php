@@ -19,4 +19,16 @@ class RaceRepository extends EntityRepository
         $qb->orderBy('r.frenchName');
         return $qb;
     }
+    
+    public function getRaceByName($name)
+    {
+      $qb = $this->createQueryBuilder('r');
+      $race = null;
+      if('' == $name){
+        $race = $qb->where($qb->expr()->eq('r.id',1))->getQuery()->getSingleResult();
+      }else{
+        $race = $qb->where($qb->expr()->eq('r.frenchName',"'".$name."'"))->orWhere($qb->expr()->eq('r.englishName',"'".$name."'"))->getQuery()->getSingleResult();
+      }
+      return $race; 
+    }
 }

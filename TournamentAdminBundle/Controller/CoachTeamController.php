@@ -9,8 +9,10 @@ use FantasyFootball\TournamentAdminBundle\Util\DataUpdater;
 use Symfony\Component\HttpFoundation\Request;
 use FantasyFootball\TournamentCoreBundle\Entity\Coach;
 use FantasyFootball\TournamentCoreBundle\Entity\CoachTeam;
+use FantasyFootball\TournamentCoreBundle\Entity\RaceRepository;
 
 use FantasyFootball\TournamentAdminBundle\Form\CoachTeamType;
+
 
 class CoachTeamController extends Controller{
   
@@ -121,28 +123,26 @@ class CoachTeamController extends Controller{
         // Getting the CSV from filesystem
         $fileName = './'.$filename;
         $dataArray = $this->convert($fileName, ',');
-        $coachs = array();
+        $em = $this->getDoctrine()->getManager();
         foreach($dataArray as $row){
           $coachTeam = new CoachTeam();
           $coachTeam->setName($row['coach_team_name']);
-          $em = $this->getDoctrine()->getManager();
           $em->persist($coachTeam);
           $em->flush();
           $i = 1;
-          while( array_key_exists('coach_'.$i.'_name', $row) ){
+          while( array_key_exists('coach_'.$i.'_name', $row) )  {
             $coach = new Coach();
             $coach->setCoachTeam($coachTeam);
             $coach->setName($row['coach_'.$i.'_name']);
+            $coach->setRace($em->getRepository('FantasyFootballTournamentCoreBundle:Race')->getRaceByName($row['coach_'.$i.'_race']));
             $coach->setNafNumber($row['coach_'.$i.'_naf']);
             $coach->setEmail($row['email']);
             $coach->setEdition($edition);
             $i ++;
-            $coachs[] = $coach;
+            $em->persist($coach);
+            //$coachs[] = $coach;
           }
         }
-        $conf = $this->get('fantasy_football_core_db_conf');
-        $data = new DataUpdater($conf);
-        $data->insertCoachs($coachs);
       }
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
