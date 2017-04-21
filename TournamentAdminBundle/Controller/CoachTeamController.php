@@ -182,4 +182,28 @@ class CoachTeamController extends Controller{
     return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:List.html.twig',
       ['coachTeams' => $coachTeams, 'edition'=>$edition]);
   }
+  
+  protected function setReady($coachId, $ready){
+  }
+  
+  protected function setReadyByEdition($edition, $ready){
+    $em = $this->getDoctrine()->getManager();
+    $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
+    foreach($coachs as $coach){
+      $coach->setReady($ready);
+    }
+    $em->flush();
+  }
+
+  public function ReadyAction($coachTeamId)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $coachTeam = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->find($coachTeamId);
+    foreach($coachTeam->getCoachs() as $coach){
+        $coach->setReady(true);
+    }
+    $em->flush();
+    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+  }
+  
 }

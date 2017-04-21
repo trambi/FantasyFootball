@@ -103,4 +103,34 @@ class CoachTeam
   {
     return $this->coachs;
   }
+  
+  public function getStatusString()
+    {
+        $statusStrings = array('success' => 'Ok',
+            'warning' => 'Pas tous présents',
+            'danger' => 'Tous absents'
+            );
+        return ($statusStrings[$this->getStatus()]);
+    }
+    
+    public function getStatus()
+    {
+      $countNok = 0;
+      $countOk = 0;
+      foreach($this->coachs as $coach){
+        if($coach->getReady()){
+          $countOk += 1;
+        }else{
+          $countNok += 1;
+        }
+      }
+      if(0 == $countNok){
+        return 'success';
+      }else if(0 == $countOk){
+        return 'danger';
+      }
+      else{
+        return 'warning';
+      }
+    }
 }

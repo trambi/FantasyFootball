@@ -35,3 +35,9 @@ _list_coach_team:
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:List }
    requirements:
       edition:  \d+
+      
+_ready_coach_team:
+   path:    /ready/{coachTeamId}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Ready }
+   requirements:
+      coachTeamId:  \d+
