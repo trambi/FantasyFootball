@@ -34,7 +34,7 @@ class DefaultController extends Controller
 	}
   
   public function getVersionAction(){
-		$response = new JsonResponse(array('version'=>'1.14.2'));
+		$response = new JsonResponse(array('version'=>'1.15.0alpha1'));
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
