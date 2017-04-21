@@ -3,6 +3,7 @@
 ## Index and Edition routes
 
 * _index_: Return all availables route ;
+* _version_: Return version of API ;
 * _Editions_: Return all editions of the tournament ;
 * _EditionList_: Alias of _Editions_ ;
 * _Edition/current_: Return the current - last - edition.

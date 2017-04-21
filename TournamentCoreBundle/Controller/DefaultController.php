@@ -33,6 +33,12 @@ class DefaultController extends Controller
 		return $response;
 	}
   
+  public function getVersionAction(){
+		$response = new JsonResponse(array('version'=>'1.14.2'));
+		$response->headers->set('Access-Control-Allow-Origin','*');
+		return $response;
+  }
+  
   public function getEditionListAction(){
     $conf = $this->get('fantasy_football_core_db_conf');
     $data = new DataProvider($conf);
