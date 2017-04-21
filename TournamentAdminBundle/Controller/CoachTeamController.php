@@ -124,6 +124,7 @@ class CoachTeamController extends Controller{
         $fileName = './'.$filename;
         $dataArray = $this->convert($fileName, ',');
         $em = $this->getDoctrine()->getManager();
+        $defaultRace = $em->getRepository('FantasyFootballTournamentCoreBundle:Race')->findOneById(1);
         foreach($dataArray as $row){
           if('' == $row['coach_team_name']){
             break;
@@ -140,7 +141,12 @@ class CoachTeamController extends Controller{
             }else{
               $coach->setName($row['coach_team_name'].'_'.$i);
             }
-            $coach->setRace($em->getRepository('FantasyFootballTournamentCoreBundle:Race')->getRaceByName($row['coach_'.$i.'_race']));
+            if('' != $row['coach_'.$i.'_race']){
+              $coach->setRace($em->getRepository('FantasyFootballTournamentCoreBundle:Race')->getRaceByName($row['coach_'.$i.'_race']));
+            }else{
+              $coach->setRace($defaultRace);
+            }
+            
             $coach->setNafNumber($row['coach_'.$i.'_naf']);
             $coach->setEmail($row['email']);
             $coach->setEdition($edition);
