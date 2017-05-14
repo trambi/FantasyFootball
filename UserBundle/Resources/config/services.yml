@@ -1,0 +1,4 @@
+services:
+#    fantasy_football_user.example:
+#        class: FantasyFootball\UserBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
