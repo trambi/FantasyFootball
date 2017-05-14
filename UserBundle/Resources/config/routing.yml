@@ -1,3 +1,0 @@
-login:
-   path:    /login
-   defaults: { _controller: FantasyFootballUserBundle:Security:login }
