@@ -217,9 +217,10 @@ class CoachTeamController extends Controller{
     $coachTeam = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->find($coachTeamId);
     foreach($coachTeam->getCoachs() as $coach){
         $coach->setReady(true);
+        $edition = $coach->getEdition();
     }
     $em->flush();
-    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition,'round'=>0)));
   }
   
 }

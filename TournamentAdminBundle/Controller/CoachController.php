@@ -44,7 +44,14 @@ class CoachController extends Controller{
     return $this->render('FantasyFootballTournamentAdminBundle:Coach:Add.html.twig',
       ['form' => $form->createView()]);    
   }
-
+  
+  protected function getEditionByCoachId($coachId){
+    $em = $this->getDoctrine()->getManager();
+    $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);
+    $edition = $coach->getEdition();
+    return $edition;
+  }
+  
   protected function setReady($coachId, $ready){
     $em = $this->getDoctrine()->getManager();
     $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);
@@ -64,13 +71,15 @@ class CoachController extends Controller{
   public function ReadyAction($coachId)
   {
     $this->setReady($coachId,true);
-    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    $edition = $this->getEditionByCoachId($coachId);
+    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition,'round'=>0)));
   }
 
   public function UnreadyAction($coachId)
   {
     $this->setReady($coachId,false);
-    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    $edition = $this->getEditionByCoachId($coachId);
+    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition,'round'=>0)));
   }
 
   public function ModifyAction(Request $request,$coachId)
@@ -129,11 +138,11 @@ class CoachController extends Controller{
   
   public function ReadyByEditionAction($edition){
     $this->setReadyByEdition($edition,true);
-    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition,'round'=>0)));
   }
   
   public function UnreadyByEditionAction($edition){
     $this->setReadyByEdition($edition,false);
-    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition,'round'=>0)));
   }
 }
