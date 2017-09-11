@@ -3,7 +3,10 @@
 {% block title %}Modification du coach {{coach.name}}{% endblock %}
 
 {% block body %}
+{% block menuButtons %}
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':coach.edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{% endblock %}
 <h2>Modification du coach {{coach.name}}</h2>
 {{ form(form) }}
-<a href="{{ path('fantasy_football_tournament_admin_main' )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{{ block('menuButtons') }}
 {% endblock %}

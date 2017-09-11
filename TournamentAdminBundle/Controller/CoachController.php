@@ -38,11 +38,11 @@ class CoachController extends Controller{
       $em = $this->getDoctrine()->getManager();
       $em->persist($coach);
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition,'round'=>0)));
     }
 
     return $this->render('FantasyFootballTournamentAdminBundle:Coach:Add.html.twig',
-      ['form' => $form->createView()]);    
+      ['form' => $form->createView(),'edition'=>$edition]);    
   }
   
   protected function getEditionByCoachId($coachId){
@@ -91,7 +91,7 @@ class CoachController extends Controller{
     $form->handleRequest($request);
     if ($form->isValid()) {
       $em->flush();
-    return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition)));
     }
     return $this->render('FantasyFootballTournamentAdminBundle:Coach:Modify.html.twig', 
       ['form' => $form->createView(),'coach' => $coach] );    
@@ -101,6 +101,7 @@ class CoachController extends Controller{
   {
     $em = $this->getDoctrine()->getManager();
     $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);	
+    $edition = $coach->getEdition();
     $form = $this->createFormBuilder($coach)
                   ->add('delete','submit')
                   ->getForm();
@@ -109,7 +110,7 @@ class CoachController extends Controller{
     if ($form->isValid()) {
       $em->remove($coach);
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition)));
     }
     return $this->render('FantasyFootballTournamentAdminBundle:Coach:Delete.html.twig',
       ['coach'=>$coach,'form' => $form->createView()]);
@@ -125,6 +126,7 @@ class CoachController extends Controller{
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
     $matchs = $data->getMatchsByCoach($coachId);
+    $edition = $coach->getEdition();
     return $this->render('FantasyFootballTournamentAdminBundle:Coach:View.html.twig',
       ['coach'=>$coach,'race'=>$coach->getRace(),'coachTeam'=>$coach->getCoachTeam(),'matchs'=>$matchs]);
   }

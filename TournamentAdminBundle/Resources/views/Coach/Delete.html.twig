@@ -7,5 +7,5 @@
       &Ecirc;tes-vous s&ucirc;r de vouloir effacer le coach : {{ coach.name }}  ({{coach.id}}) ?
 {% endif %}
 {{ form(form) }}
-<a href="{{ path('fantasy_football_tournament_admin_main' )  }}"class="btn btn-primary" role="button"  >Administration</a>
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':coach.edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}
