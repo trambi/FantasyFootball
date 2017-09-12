@@ -48,7 +48,7 @@ class CoachTeamController extends Controller{
     if ($form->isValid()) {
       $em->persist($coachTeam);
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition,'round'=>0]));
     }
     return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Add.html.twig',
       ['form' => $form->createView(),'edition'=> $edition]);
@@ -68,7 +68,7 @@ class CoachTeamController extends Controller{
         $coach->setCoachTeam($coachTeam);
       }
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
     return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Modify.html.twig',
       ['form' => $form->createView(),'coachTeam' => $coachTeam,'edition' => $edition]);
@@ -88,16 +88,22 @@ class CoachTeamController extends Controller{
 
     $form->handleRequest($request);
     //$coachTeam->setId($coachTeamId);
+    $edition = 0;
     if ($form->isValid()) {
       foreach($coachTeam->getCoachs() as $coach){
         $coach->setCoachTeam(null);
+        $edition = $coach->getEdition();
       }
       $em->remove($coachTeam);
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
+    }else{
+      foreach($coachTeam->getCoachs() as $coach){
+        $edition = $coach->getEdition();
+      }
     }
     return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Delete.html.twig',
-      ['coachTeam'=>$coachTeam,'form' => $form->createView()]);
+      ['coachTeam'=>$coachTeam,'form' => $form->createView(),'edition'=>$edition]);
   }
 
   protected function convert($filename, $delimiter = ','){
@@ -172,7 +178,7 @@ class CoachTeamController extends Controller{
           $em->flush();
         }
       }
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition,'round'=>0]));
     }
 
     return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Load.html.twig',
@@ -197,9 +203,6 @@ class CoachTeamController extends Controller{
     $coachTeams = $this->getDoctrine()->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->findByEditionJoined($edition);
     return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:List.html.twig',
       ['coachTeams' => $coachTeams, 'edition'=>$edition]);
-  }
-  
-  protected function setReady($coachId, $ready){
   }
   
   protected function setReadyByEdition($edition, $ready){
