@@ -7,5 +7,5 @@
       &Ecirc;tes-vous s&ucirc;r de vouloir effacer la triplette : {{ coachTeam.name }} ({{coachTeam.id}})?
 {% endif %}
 {{ form(form) }}
-<a href="{{ path('fantasy_football_tournament_admin_main')  }}"class="btn btn-primary" role="button"  >Administration</a>
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition})  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}
