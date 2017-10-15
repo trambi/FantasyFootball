@@ -127,6 +127,23 @@ class PointsComputor{
     return array('points1'=>$points1,'points2'=>$points2);
   }
   
+  static public function teamWin2Draw1Loss0FullTeamBonus($td1Array,$td2Array,$cas1Array,$cas2Array){
+    $sum = self::teamCustom($td1Array,$td2Array,$cas1Array,$cas2Array,2,2,1,0,0,0);
+    $sum1 = $sum['points1'];
+    $sum2 = $sum['points2'];
+    if ($sum1 < $sum2) {
+      $points1 = $sum1;
+      $points2 = $sum2 + 2;
+    } elseif ($sum1 === $sum2) {
+      $points1 = $sum1 + 1;
+      $points2 = $sum2 + 1;
+    } else {
+      $points1 = $sum1 + 2;
+      $points2 = $sum2;
+    }
+    return array('points1'=>$points1,'points2'=>$points2);
+  }
+
   static public function teamWin2TeamDraw1TeamLoss0($td1Array,$td2Array,$cas1Array,$cas2Array){
     $points1 = 0;
     $points2 = 0;

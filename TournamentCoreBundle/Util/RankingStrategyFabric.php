@@ -27,6 +27,7 @@ use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy11;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy12;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy13;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy14;
+use FantasyFootball\TournamentCoreBundle\Util\Eurobowl\RankingStrategy2017;
 
 class RankingStrategyFabric {
     static function getByName($name) {
@@ -49,6 +50,8 @@ class RankingStrategyFabric {
             $strategy = new RankingStrategy13();
         } else if ( 'Rdvbb14' === $name ){
             $strategy = new RankingStrategy14();
+        }else if ( 'Eurobowl2017'=== $name ){
+            $strategy = new RankingStrategy2017();
         }
         return $strategy;
     }
