@@ -22,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
+use FantasyFootball\TournamentCoreBundle\Entity\Edition;
 
 class DefaultController extends Controller
 {
@@ -50,7 +51,7 @@ class DefaultController extends Controller
 	}
   
   public function getVersionAction(){
-		$response = new JsonResponse(array('version'=>'1.15.0alpha1'));
+		$response = new JsonResponse(array('version'=>'1.16.0alpha1'));
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
@@ -64,6 +65,18 @@ class DefaultController extends Controller
       $exposedEditions[] = $edition->toArray();
     }
 		$response = new JsonResponse($exposedEditions);
+		$response->headers->set('Access-Control-Allow-Origin','*');
+		return $response;
+  }
+  
+  public function getEditionAction($editionId){
+    $em = $this->getDoctrine()->getManager();
+    $edition = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->findOneById($editionId);
+    if( null == $edition ){
+      $response = new JsonResponse(Array());
+    }else {
+      $response = new JsonResponse($edition->toArray());
+    }
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
