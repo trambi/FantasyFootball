@@ -36,8 +36,8 @@
 {% for match in matchesToPlay %}
         <tr>
             <td>{{match.table}}</td>
-            <td><a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" class="btn btn-info" role="button" >{{match.coach1}}</a></td>
-            <td><a href="{{ path('_view_coach',{'coachId':match.teamId2} ) }}" class="btn btn-info" role="button" >{{match.coach2}}</a></td>
+            <td>({{match.teamName1}}) <a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" class="btn btn-info" role="button" >{{match.coach1}}</a></td>
+            <td><a href="{{ path('_view_coach',{'coachId':match.teamId2} ) }}" class="btn btn-info" role="button" >{{match.coach2}}</a> ({{match.teamName2}})</td>
             <td>
                 <a href="{{ path('_resume_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >R&eacute;sumer</a>
                 <a href="{{ path('_delete_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >Supprimer</a></td>
@@ -63,8 +63,8 @@
     <tbody>
 {% for match in playedMatches %}
     <td>{{match.table}}</td>
-    <td><a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" class="btn btn-info" role="button"  >{{match.coach1}}</a>
-    - <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" class="btn btn-info" role="button"  >{{match.coach2}}</a></td>
+    <td>({{match.teamName1}}) <a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" class="btn btn-info" role="button"  >{{match.coach1}}</a>
+    - <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" class="btn btn-info" role="button"  >{{match.coach2}}</a> ({{match.teamName2}})</td>
     <td>{{match.td1}} - {{match.td2}}</td>
     <td>{{match.casualties1}} - {{match.casualties2}}</td>
     <td>{{match.points1}} - {{match.points2}}</td>    
@@ -77,4 +77,18 @@
 </table>
 {% endif %}
 {{ block('menuButtons') }}
+
+
+
+
+<style>
+@media print {
+table th:last-child,
+table td:last-child,
+body > a {
+    display:none;
+}
+}
+</style>
+
 {% endblock %}
