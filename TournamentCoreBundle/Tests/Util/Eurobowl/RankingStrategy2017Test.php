@@ -66,7 +66,6 @@ class RankingStrategy2017Test extends \PHPUnit_Framework_TestCase {
     $points1 = -1;
     $points2 = -1;
 
-
     $cas1Array = array(0, 0, 0);
     $cas2Array = array(0, 0, 0);
 
@@ -206,8 +205,6 @@ class RankingStrategy2017Test extends \PHPUnit_Framework_TestCase {
     $result = $strategy->compareCoachs($coach1, $coach2);
     $this->assertGreaterThan(0, $result);
 
-    
-
     // coach1 has some points and more opponentsPoints
     $coach1->points = 2;
     $coach1->opponentsPoints = 1;
@@ -305,8 +302,6 @@ class RankingStrategy2017Test extends \PHPUnit_Framework_TestCase {
     $coachTeam2->netCasualties = 1;
     $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
     $this->assertGreaterThan(0, $result);
-    
-    
   }
   
   public function testRankingOptions(){
@@ -315,4 +310,84 @@ class RankingStrategy2017Test extends \PHPUnit_Framework_TestCase {
     $this->assertGreaterThan(0,count($rankings));
   }
 
+  public function testCompareCoachTeamWithFloat() {
+    $strategy = new RankingStrategy2017();
+    $coachTeam1 = new \stdClass;
+    $coachTeam2 = new \stdClass;
+    $coachTeam3 = new \stdClass;
+    $coachTeam4 = new \stdClass;
+    $coachTeam1->coachTeamPoints = 0;
+    $coachTeam2->coachTeamPoints = 0;
+    $coachTeam3->coachTeamPoints = 0;
+    $coachTeam4->coachTeamPoints = 0;
+    $coachTeam1->netTd = 0;
+    $coachTeam2->netTd = 0;
+    $coachTeam3->netTd = 0;
+    $coachTeam4->netTd = 0;
+    $coachTeam1->netCasualties = 0;
+    $coachTeam2->netCasualties = 0;
+    $coachTeam3->netCasualties = 0;
+    $coachTeam4->netCasualties = 0;
+    $coachTeam1->opponentCoachTeamPoints = 0;
+    $coachTeam2->opponentCoachTeamPoints = 0;
+    $coachTeam3->opponentCoachTeamPoints = 0;
+    $coachTeam4->opponentCoachTeamPoints = 0;
+    $coachTeam1->opponentsPoints = 0;
+    $coachTeam2->opponentsPoints = 0;
+    $coachTeam3->opponentsPoints = 0;
+    $coachTeam4->opponentsPoints = 0;
+
+    // strictly equal
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
+    $this->assertEquals(0, $result);
+    
+    
+    $coachTeam1->coachTeamPoints = 1;
+    $coachTeam2->coachTeamPoints = 0.5;
+    $coachTeam3->coachTeamPoints = 0.5;
+    $coachTeam4->coachTeamPoints = 0;
+
+    // 1 is first
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
+    $this->assertLessThan(0, $result);
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam3);
+    $this->assertLessThan(0, $result);
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam4);
+    $this->assertLessThan(0, $result);
+
+    // equality for 2 and 3
+    $result = $strategy->compareCoachTeams($coachTeam2, $coachTeam3);
+    $this->assertEquals(0, $result);
+
+    // 4 is last
+    $result = $strategy->compareCoachTeams($coachTeam2, $coachTeam4);
+    $this->assertLessThan(0, $result);
+    $result = $strategy->compareCoachTeams($coachTeam3, $coachTeam4);
+    $this->assertLessThan(0, $result);
+
+    $coachTeam1->coachTeamPoints = 0.5;
+    $coachTeam2->coachTeamPoints = 1.5;
+    $coachTeam3->coachTeamPoints = 2.5;
+    $coachTeam4->coachTeamPoints = 3.5;
+
+    // 
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam2);
+    $this->assertGreaterThan(0, $result);
+
+    $result = $strategy->compareCoachTeams($coachTeam2, $coachTeam3);
+    $this->assertGreaterThan(0, $result);
+
+    $result = $strategy->compareCoachTeams($coachTeam3, $coachTeam4);
+    $this->assertGreaterThan(0, $result);
+
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam3);
+    $this->assertGreaterThan(0, $result);
+
+    $result = $strategy->compareCoachTeams($coachTeam1, $coachTeam4);
+    $this->assertGreaterThan(0, $result);
+
+    $result = $strategy->compareCoachTeams($coachTeam2, $coachTeam4);
+    $this->assertGreaterThan(0, $result);
+    
+  }
 }

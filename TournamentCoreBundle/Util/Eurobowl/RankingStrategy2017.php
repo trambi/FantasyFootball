@@ -34,28 +34,59 @@ class RankingStrategy2017 implements IRankingStrategy {
     $points2 = $points['points2'] * self::POINT_MULTIPLIER;
   }
     
-  public function compareCoachs($coach1, $coach2) {
-    $returnValue = 0;
+  // public function compareCoachs($coach1, $coach2) {
+  //   $returnValue = 0;
+  //   $params = array('points','opponentsPoints','netTd','netCasualties');
+  //   foreach ($params as $param){
+  //     $returnValue = $coach2->$param - $coach1->$param ;
+  //     if( 0 ==! $returnValue ){
+  //       break;
+  //     }
+  //   }
+  //   return $returnValue;
+  // }
+
+  public function compareCoachs($item1, $item2) {
+    $result = 0;
     $params = array('points','opponentsPoints','netTd','netCasualties');
     foreach ($params as $param){
-      $returnValue = $coach2->$param - $coach1->$param ;
-      if( 0 ==! $returnValue ){
+      if ($item1->$param > $item2->$param) {
+        $result = -1;
+        break;
+      } else if ($item1->$param < $item2->$param) {
+        $result = 1;
         break;
       }
     }
-    return $returnValue;
+    return $result; 
   }
 
+  // public function compareCoachTeams($item1, $item2) {
+  //   $returnValue = 0;
+  //   $params = array('coachTeamPoints','opponentCoachTeamPoints','opponentsPoints','netTd','netCasualties');
+  //   foreach ($params as $param){
+  //     $returnValue = $item2->$param - $item1->$param ;
+  //     //error_log("$returnValue\r\n", 3, "c:\\Temp\php.log");
+  //     if( 0 ==! $returnValue ){
+  //       break;
+  //     }
+  //   }
+  //   return $returnValue;
+  // }
+
   public function compareCoachTeams($item1, $item2) {
-    $returnValue = 0;
+    $result = 0;
     $params = array('coachTeamPoints','opponentCoachTeamPoints','opponentsPoints','netTd','netCasualties');
     foreach ($params as $param){
-      $returnValue = $item2->$param - $item1->$param ;
-      if( 0 ==! $returnValue ){
+      if ($item1->$param > $item2->$param) {
+        $result = -1;
+        break;
+      } else if ($item1->$param < $item2->$param) {
+        $result = 1;
         break;
       }
     }
-    return $returnValue;
+    return $result; 
   }
 
   public function computeCoachTeamPoints(&$points1, &$points2, $td1Array, $td2Array, $cas1Array, $cas2Array) {
@@ -71,7 +102,10 @@ class RankingStrategy2017 implements IRankingStrategy {
   public function rankingOptions(){
     return array(
     'coach' => array(
-      'main' => array('points','opponentsPoints','netTd','netCasualties')
+      'main' => array('points','opponentsPoints','netTd','netCasualties'),
+      'td' => array('tdFor'),
+      'casualties' => array('casualtiesFor'),
+      'defense' => array('tdAgainst')
     ),
     'coachTeam' => array(
       'main' => array('coachTeamPoints','opponentCoachTeamPoints','netTd','netCasualties'),

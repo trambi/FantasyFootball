@@ -76,16 +76,16 @@ class Game
     private $round;
 
     /**
-     * @var integer
+     * @var decimal
      *
-     * @ORM\Column(name="points_1", type="smallint")
+     * @ORM\Column(name="points_1", type="decimal")
      */
     private $points1;
 
     /**
-     * @var integer
+     * @var decimal
      *
-     * @ORM\Column(name="points_2", type="smallint")
+     * @ORM\Column(name="points_2", type="decimal")
      */
     private $points2;
 

@@ -78,13 +78,20 @@ class DataProvider {
 
   const raceQuery = 'SELECT r.edition,r.id_race as id,r.nom_fr,r.nom_en,r.nom_en_2,r.nom_fr_2,r.reroll FROM tournament_race r';
   const coachQuery = 'SELECT c.id, c.team_name, c.name, c.id_race,c.email,c.fan_factor,c.reroll,c.apothecary,c.assistant_coach,c.cheerleader,c.edition,c.naf_number, c.id_coach_team,r.nom_fr,ct.name,c.ready FROM tournament_coach c INNER JOIN tournament_race r ON c.id_race=r.id_race LEFT JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
+  const setReadyCoachQuery = 'UPDATE tournament_coach SET ready = 1';
   const preCoachQuery = 'SELECT p.id as id, p.name as coach, p.team_name as name,p.id_race as raceId,p.email as email,p.edition as edition,p.naf_number,p.id_coach_team,r.nom_fr,ct.name FROM tournament_precoach p INNER JOIN tournament_race r ON p.id_race=r.id_race LEFT JOIN tournament_coach_team tc ON p.id_coach_team=tc.id';
   const coachTeamQuery = 'SELECT c.name,c.id_coach_team,ct.name,c.id,c.team_name FROM tournament_coach c INNER JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
   const coachTeamPreCoachQuery = 'SELECT p.name,p.id_coach_team,ct.name,p.id,\'\',0,0,0,0 FROM tournament_precoach p INNER JOIN tournament_coach_team ct ON p.id_coach_team=ct.id';
   const matchQuery = 'SELECT c1.name,c1.team_name,c1.id,m.td_1,m.casualties_1,m.completions_1,m.fouls_1,m.special_1,
   m.points_1,c2.name,c2.team_name,c2.id,m.td_2,m.casualties_2,m.completions_2,m.fouls_2,m.special_2,m.points_2,
   m.id,m.table_number,m.status,m.edition,m.round,m.finale FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
+  const insertMatchQuery = 'INSERT INTO tournament_match (id_coach_1,id_coach_2,round,edition,table_number) VALUES(?,?,?,?,?)';
+  const resumeMatchQuery = 'UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
+  const deleteMatchQuery = 'DELETE FROM tournament_match';
+  const updateRankingQuery = 'UPDATE INTO tournament_coach SET points=?,opponents_points=?,net_td=?,casualties=? WHERE id=?';
   const editionQuery = 'SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy, first_day_round as firstDayRound, full_triplette as fullTriplette FROM tournament_edition';
+  const deletepreCoachQuery = 'DELETE FROM tournament_precoach';
+  const updateTeamQuery = 'UPDATE INTO tournament_coach SET team_name=?,name=?,id_race=?,email=?,fan_factor=?,naf_number=?,edition=?,ready=? WHERE id=?';
   const coachTeamGames = 'SELECT DISTINCT c1.id_coach_team as id1, c2.id_coach_team as id2 FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
 
   public function getRacesByEdition($edition) {
@@ -210,6 +217,18 @@ class DataProvider {
     return $coach;
   }
 
+  public function setReadyCoachById($id) {
+    $clause = ' WHERE c.id = ' . intval($id);
+    return $this->setReadyCoach($clause);
+  }
+
+  protected function setReadyCoach($clause) {
+    $query = self::setReadyCoachQuery;
+    $query .= $clause;
+    //echo 'request : [',$query,']<br />';
+    return $this->query($query);
+  }
+
   protected function convertRowInCoachTeamElement($row) {
     $coachTeamElt = (object) array();
     $coachTeamElt->coach = mb_convert_encoding($row[0], 'UTF-8');
@@ -314,7 +333,7 @@ class DataProvider {
     $match->completions1 = intval($row[5]);
     $match->fouls1 = intval($row[6]);
     $match->special1 = mb_convert_encoding($row[7], "UTF-8");
-    $match->points1 = intval($row[8]);
+    $match->points1 = floatval($row[8]);
     $match->coach2 = mb_convert_encoding($row[9], "UTF-8");
     $match->teamName2 = mb_convert_encoding($row[10], "UTF-8");
     $match->teamId2 = intval($row[11]);
@@ -323,7 +342,7 @@ class DataProvider {
     $match->completions2 = intval($row[14]);
     $match->fouls2 = intval($row[15]);
     $match->special2 = mb_convert_encoding($row[16], "UTF-8");
-    $match->points2 = intval($row[17]);
+    $match->points2 = floatval($row[17]);
     $match->id = intval($row[18]);
     $match->table = intval($row[19]);
     $match->status = $row[20];
