@@ -34,59 +34,28 @@ class RankingStrategy2017 implements IRankingStrategy {
     $points2 = $points['points2'] * self::POINT_MULTIPLIER;
   }
     
-  // public function compareCoachs($coach1, $coach2) {
-  //   $returnValue = 0;
-  //   $params = array('points','opponentsPoints','netTd','netCasualties');
-  //   foreach ($params as $param){
-  //     $returnValue = $coach2->$param - $coach1->$param ;
-  //     if( 0 ==! $returnValue ){
-  //       break;
-  //     }
-  //   }
-  //   return $returnValue;
-  // }
-
-  public function compareCoachs($item1, $item2) {
-    $result = 0;
+  public function compareCoachs($coach1, $coach2) {
+    $returnValue = 0;
     $params = array('points','opponentsPoints','netTd','netCasualties');
     foreach ($params as $param){
-      if ($item1->$param > $item2->$param) {
-        $result = -1;
-        break;
-      } else if ($item1->$param < $item2->$param) {
-        $result = 1;
+      $returnValue = $coach2->$param - $coach1->$param ;
+      if( 0 ==! $returnValue ){
         break;
       }
     }
-    return $result; 
+    return $returnValue;
   }
 
-  // public function compareCoachTeams($item1, $item2) {
-  //   $returnValue = 0;
-  //   $params = array('coachTeamPoints','opponentCoachTeamPoints','opponentsPoints','netTd','netCasualties');
-  //   foreach ($params as $param){
-  //     $returnValue = $item2->$param - $item1->$param ;
-  //     //error_log("$returnValue\r\n", 3, "c:\\Temp\php.log");
-  //     if( 0 ==! $returnValue ){
-  //       break;
-  //     }
-  //   }
-  //   return $returnValue;
-  // }
-
   public function compareCoachTeams($item1, $item2) {
-    $result = 0;
+    $returnValue = 0;
     $params = array('coachTeamPoints','opponentCoachTeamPoints','opponentsPoints','netTd','netCasualties');
     foreach ($params as $param){
-      if ($item1->$param > $item2->$param) {
-        $result = -1;
-        break;
-      } else if ($item1->$param < $item2->$param) {
-        $result = 1;
+      $returnValue = $item2->$param - $item1->$param ;
+      if( 0 ==! $returnValue ){
         break;
       }
     }
-    return $result; 
+    return $returnValue;
   }
 
   public function computeCoachTeamPoints(&$points1, &$points2, $td1Array, $td2Array, $cas1Array, $cas2Array) {
