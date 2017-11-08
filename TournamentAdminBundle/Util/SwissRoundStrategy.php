@@ -56,6 +56,10 @@ class SwissRoundStrategy extends PairingStrategy{
             
         $tab_pairs = $this->pairing($paired, $newToPaired, $constraints);
         if ( null === $tab_pairs ){
+
+          // previous pairing failed, remove current pairing
+          $paired = $this->removeValuesByKeys($paired, array(count($paired)-1));
+          
           continue;
         }
         return $tab_pairs;

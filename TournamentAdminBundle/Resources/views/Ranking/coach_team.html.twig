@@ -40,4 +40,15 @@
     </tbody>
 </table>
 {{ block('menuButtons') }}
+
+<style>
+@media print {
+table th:nth-child(3),
+table td:nth-child(3),
+body > a {
+    display:none;
+}
+}
+</style>
+
 {% endblock %}

@@ -13,3 +13,8 @@ _ws_get_edition_list:
 _ws_get_current_edition:
   path: /Edition/current
   defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:getCurrentEdition }
+_ws_get_edition:
+  path:     /Edition/{editionId}
+  defaults: { _controller: FantasyFootballTournamentCoreBundle:Default:getEdition }
+  requirements:
+    editionId:  \d+

@@ -38,4 +38,13 @@
     </tbody>
 </table>
 {{ block('menuButtons') }}
+
+<style>
+@media print {
+body > a {
+    display:none;
+}
+}
+</style>
+
 {% endblock %}

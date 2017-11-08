@@ -1,7 +1,7 @@
 FantasyFootballTournament
 ===========================
 
-Symfony2 Bundles for fantasy football tournament (sucessfully used at RDVBB 14)
+Symfony2 Bundles for fantasy football tournament (sucessfully used at RDVBB 14, RDVBB 15, EuroBowl and EurOpen 2017)
 
  - TournamentCoreBundle to create a json web service for a fantasy football tournament ;
  - TournamentAdminBundle to administrate fantast football tournament.

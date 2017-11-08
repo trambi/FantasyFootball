@@ -39,7 +39,8 @@ class GameController extends Controller
     if ($form->isValid()) {
       $em->remove($game);
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      $edition = $game->getEdition();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
     return $this->render('FantasyFootballTournamentAdminBundle:Game:delete.html.twig', array(
             'game'=>$game,
@@ -98,7 +99,7 @@ class GameController extends Controller
       $game->setEdition($edition);
       $em->persist($game);
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
 
     return $this->render('FantasyFootballTournamentAdminBundle:Game:schedule.html.twig', array(
@@ -146,7 +147,8 @@ class GameController extends Controller
       $game->setPoints2($points2);
       $game->setStatus('resume');
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      $edition = $game->getEdition();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
     return $this->render('FantasyFootballTournamentAdminBundle:Game:resume.html.twig', array(
                         'form' => $form->createView(),
@@ -227,7 +229,8 @@ class GameController extends Controller
       $game->setPoints1($points1);
       $game->setPoints2($points2);
       $em->flush();
-      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
+      $edition = $game->getEdition();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
     return $this->render('FantasyFootballTournamentAdminBundle:Game:modify.html.twig', array(
                         'form' => $form->createView(),
