@@ -1,0 +1,3 @@
+_add_edition:
+   path:    /add/
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Edition:Add }

@@ -1,6 +1,6 @@
 <?php
 /*
-    FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament 
+    FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament
     Copyright (C) 2017  Bertrand Madet
 
     This program is free software: you can redistribute it and/or modify
@@ -56,4 +56,9 @@ class RankingStrategyFabric {
         return $strategy;
     }
 
+    static function getNames(){
+        return ['Rdvbb1','Rdvbb2To3','Rdvbb4To5','Rdvbb6To8',
+                'Rdvbb9To10','Rdvbb11','Rdvbb12','Rdvbb13',
+                'Rdvbb14','Eurobowl2017'];
+    }
 }

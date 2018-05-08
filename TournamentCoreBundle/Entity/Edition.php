@@ -1,6 +1,6 @@
 <?php
 /*
-    FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament 
+    FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament
     Copyright (C) 2017  Bertrand Madet
 
     This program is free software: you can redistribute it and/or modify
@@ -25,10 +25,14 @@ use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
  * Edition
  *
  * @ORM\Table(name="tournament_edition")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="FantasyFootball\TournamentCoreBundle\Entity\EditionRepository")
 */
 class Edition
 {
+  public function __construct()
+  {
+    $this->currentRound = 0;
+  }
   /**
    * @var integer
    *
@@ -36,7 +40,7 @@ class Edition
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="AUTO")
   */
-  protected $id;
+  private $id;
 
   /**
    * @var \DateTime
@@ -95,7 +99,7 @@ class Edition
    * @ORM\Column(name="first_day_round", type="smallint")
   */
   protected $firstDayRound;
-  
+
 
   /**
   * Set id
@@ -112,7 +116,7 @@ class Edition
   /**
    * Get id
    *
-   * @return integer 
+   * @return integer
    */
   public function getId()
   {
@@ -134,7 +138,7 @@ class Edition
   /**
   * Get day1
   *
-  * @return \DateTime 
+  * @return \DateTime
   */
   public function getDay1()
   {
@@ -156,7 +160,7 @@ class Edition
   /**
   * Get day2
   *
-  * @return \DateTime 
+  * @return \DateTime
   */
   public function getDay2()
   {
@@ -178,7 +182,7 @@ class Edition
   /**
   * Get roundNumber
   *
-  * @return integer 
+  * @return integer
   */
   public function getRoundNumber()
   {
@@ -200,7 +204,7 @@ class Edition
   /**
   * Get currentRound
   *
-  * @return integer 
+  * @return integer
   */
   public function getCurrentRound()
   {
@@ -222,7 +226,7 @@ class Edition
   /**
   * Get useFinale
   *
-  * @return integer 
+  * @return integer
   */
   public function getUseFinale()
   {
@@ -244,7 +248,7 @@ class Edition
   /**
   * Get fullTriplette
   *
-  * @return integer 
+  * @return integer
   */
   public function getFullTriplette()
   {
@@ -268,17 +272,17 @@ class Edition
   /**
   * Get rankingStrategyName
   *
-  * @return string 
+  * @return string
   */
   public function getRankingStrategyName()
   {
     return $this->rankingStrategyName;
   }
-    
+
   /**
   * Get rankingStrategy
   *
-  * @return RankingStrategy 
+  * @return RankingStrategy
   */
   public function getRankingStrategy()
   {
@@ -287,14 +291,14 @@ class Edition
     }
     return $this->rankingStrategy;
   }
-    
+
   /**
   * Get rankings
   *
-  * @return Rankings 
+  * @return Rankings
   */
   public function getRankings()
-  { 
+  {
     if ( null == $this->rankings){
       if ( null == $this->rankingStrategy){
         $this->rankingStrategy = RankingStrategyFabric::getByName($this->rankingStrategyName);
@@ -319,13 +323,13 @@ class Edition
   /**
   * Get firstDayRound
   *
-  * @return integer 
+  * @return integer
   */
   public function getFirstDayRound()
   {
     return $this->firstDayRound;
   }
-  
+
   public function toArray(){
     $returnedArray = array();
     $keys = array_keys(get_class_vars(__class__));

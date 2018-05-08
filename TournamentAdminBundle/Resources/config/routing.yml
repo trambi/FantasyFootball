@@ -9,14 +9,19 @@ fantasy_football_tournament_admin_coach:
 fantasy_football_tournament_admin_coach_team:
     resource: "routing/coach_team.yml"
     prefix:   /coachTeam
-    
+
 fantasy_football_tournament_admin_game:
     resource: "routing/game.yml"
     prefix:   /game
-    
+
 fantasy_football_tournament_admin_ranking:
     resource: "routing/ranking.yml"
     prefix:   /ranking
+
 fantasy_football_tournament_admin_simulate:
     resource: "routing/simulate.yml"
     prefix:   /simulate
+
+fantasy_football_tournament_admin_edition:
+    resource: "routing/edition.yml"
+    prefix:   /edition
