@@ -32,6 +32,8 @@ class Edition
   public function __construct()
   {
     $this->currentRound = 0;
+    $this->rankingStrategy = null;
+    $this->rankings = [];
   }
   /**
    * @var integer
@@ -43,16 +45,16 @@ class Edition
   private $id;
 
   /**
-   * @var \DateTime
+   * @var string
    *
-   * @ORM\Column(name="day_1", type="date")
+   * @ORM\Column(name="day_1", type="string",length=10)
   */
   protected $day1;
 
   /**
-   * @var \DateTime
+   * @var string
    *
-   * @ORM\Column(name="day_2", type="date")
+   * @ORM\Column(name="day_2", type="string",length=10)
   */
   protected $day2;
 
@@ -126,7 +128,7 @@ class Edition
   /**
   * Set day1
   *
-  * @param \DateTime $day1
+  * @param string $day1
   * @return Edition
   */
   public function setDay1($day1)
@@ -138,7 +140,7 @@ class Edition
   /**
   * Get day1
   *
-  * @return \DateTime
+  * @return string
   */
   public function getDay1()
   {
@@ -148,7 +150,7 @@ class Edition
   /**
   * Set day2
   *
-  * @param \DateTime $day2
+  * @param string $day2
   * @return Edition
   */
   public function setDay2($day2)
@@ -160,7 +162,7 @@ class Edition
   /**
   * Get day2
   *
-  * @return \DateTime
+  * @return string
   */
   public function getDay2()
   {
@@ -287,7 +289,7 @@ class Edition
   public function getRankingStrategy()
   {
     if ( null == $this->rankingStrategy){
-      $this->rankingStrategy = RankingStrategyFabric::getByName($this->rankingStrategyName);
+      $this->refresh();
     }
     return $this->rankingStrategy;
   }
@@ -300,10 +302,7 @@ class Edition
   public function getRankings()
   {
     if ( null == $this->rankings){
-      if ( null == $this->rankingStrategy){
-        $this->rankingStrategy = RankingStrategyFabric::getByName($this->rankingStrategyName);
-      }
-      $this->rankings = $this->rankingStrategy->rankingOptions();
+      $this->refresh();
     }
     return $this->rankings;
   }
@@ -330,11 +329,22 @@ class Edition
     return $this->firstDayRound;
   }
 
+  public function refresh(){
+      $this->rankingStrategy = RankingStrategyFabric::getByName($this->rankingStrategyName);
+      $this->rankings = $this->rankingStrategy->rankingOptions();
+      return $this;
+  }
+
   public function toArray(){
     $returnedArray = array();
     $keys = array_keys(get_class_vars(__class__));
     foreach ($keys as $attribute){
-      $returnedArray[$attribute] = $this->$attribute;
+      if ( True == is_a($this->$attribute,"DateTime") ){
+        $returnedArray[$attribute] = explode(" ",$this->$attribute->date)[0];
+    }else{
+        $returnedArray[$attribute] = $this->$attribute;
+    }
+
     }
     return $returnedArray;
   }

@@ -1060,16 +1060,6 @@ class DataProvider {
     return $edition;
   }
 
-  public function getCurrentEdition() {
-    $clause = 'day_1 = (SELECT max(day_1) FROM tournament_edition)';
-    $editions = $this->getEditions($clause);
-    $edition = NULL;
-    if (0 < count($editions)) {
-      $edition = reset($editions);
-    }
-    return $edition;
-  }
-
   public function getEditions($clause='1=1') {
     $query = self::editionQuery;
     $query .= ' WHERE ' . $clause;

@@ -28,5 +28,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class EditionRepository extends EntityRepository
 {
-    
+    public function findOneByCurrent($useless)
+    {
+        $qb = $this->createQueryBuilder('e');
+        $query = $qb->orderBy('e.day1', 'DESC')
+                    ->setMaxResults(1)
+                    ->getQuery();
+        try {
+              $currentEdition = $query->getSingleResult();
+              $currentEdition->setRankingStrategyName(
+                  $currentEdition->getRankingStrategyName());
+              return $currentEdition;
+          } catch (\Doctrine\ORM\NoResultException $e) {
+              return null;
+          }
+    }
 }

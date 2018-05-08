@@ -1,6 +1,6 @@
 <?php
 /*
-    FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament 
+    FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament
     Copyright (C) 2017  Bertrand Madet
 
     This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ class DefaultController extends Controller
 			if (isset($defaults['_controller']))
 			{
         		if ( 0 === strncmp($defaults['_controller'],"FantasyFootball\\TournamentCoreBundle",strlen("FantasyFootball\\TournamentCoreBundle") ) ){
-        			$routes[$route]=$params->getPath();	
+        			$routes[$route]=$params->getPath();
         		}
 			}
 		}
@@ -49,45 +49,51 @@ class DefaultController extends Controller
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
 	}
-  
+
   public function getVersionAction(){
 		$response = new JsonResponse(array('version'=>'1.16.0alpha1'));
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
-  
+
   public function getEditionListAction(){
-    $conf = $this->get('fantasy_football_core_db_conf');
-    $data = new DataProvider($conf);
-    $editions = $data->getEditions();
+    $em = $this->getDoctrine()->getManager();
+    $editions = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
+                  ->findAll();
     $exposedEditions = array();
     foreach($editions as $edition){
-      $exposedEditions[] = $edition->toArray();
+      $exposedEditions[] = $edition->refresh()->toArray();
     }
-		$response = new JsonResponse($exposedEditions);
-		$response->headers->set('Access-Control-Allow-Origin','*');
-		return $response;
+	$response = new JsonResponse($exposedEditions);
+	$response->headers->set('Access-Control-Allow-Origin','*');
+	return $response;
   }
-  
+
   public function getEditionAction($editionId){
     $em = $this->getDoctrine()->getManager();
-    $edition = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->findOneById($editionId);
+    $edition = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
+                  ->findOneById($editionId);
     if( null == $edition ){
       $response = new JsonResponse(Array());
     }else {
+      $edition->refresh();
       $response = new JsonResponse($edition->toArray());
     }
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
-  
+
   public function getCurrentEditionAction(){
-    $conf = $this->get('fantasy_football_core_db_conf');
-    $data = new DataProvider($conf);
-    $edition = $data->getCurrentEdition();
-		$response = new JsonResponse($edition->toArray());
-		$response->headers->set('Access-Control-Allow-Origin','*');
-		return $response;
+    $em = $this->getDoctrine()->getManager();
+    $edition = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
+                  ->findOneByCurrent(null);
+    if( null == $edition ){
+      $response = new JsonResponse(Array());
+    }else {
+      $response = new JsonResponse($edition->toArray());
+    }
+  	$response->headers->set('Access-Control-Allow-Origin','*');
+  	return $response;
   }
-  
+
 }
