@@ -1,6 +1,6 @@
 <?php
 /*
-    FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament 
+    FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament
     Copyright (C) 2017  Bertrand Madet
 
     This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,9 @@ class RankingController extends Controller
   {
     $conf = $this->get('fantasy_football_core_db_conf');
     $data = new DataProvider($conf);
-    $editionObj = $data->getEditionById($edition);
+    $em = $this->getDoctrine()->getManager();
+    $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
+                  ->findOneById($edition);
     $availableRankings = $editionObj->getRankings();
     $currentRound = $editionObj->getCurrentRound();
     if( array_key_exists($type,$availableRankings['coachTeam'] ) ){
@@ -47,18 +49,20 @@ class RankingController extends Controller
       }else{
         $ranking = $data->getCoachTeamRanking($editionObj);
       }
-      return $this->render('FantasyFootballTournamentAdminBundle:Ranking:coach_team.html.twig', 
+      return $this->render('FantasyFootballTournamentAdminBundle:Ranking:coach_team.html.twig',
         ['edition' => $edition,'ranking' => $ranking,'type'=>$type,'round'=>$currentRound,
         'params' => $params,'availableRankings'=>$availableRankings]);
     }else{
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
   }
-  
+
   public function coachAction($edition,$type) {
     $conf = $this->get('fantasy_football_core_db_conf');
     $data = new DataProvider($conf);
-    $editionObj = $data->getEditionById($edition);
+    $em = $this->getDoctrine()->getManager();
+    $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
+                  ->findOneById($edition);
     $currentRound = $editionObj->getCurrentRound();
     $availableRankings = $editionObj->getRankings();
     if( array_key_exists($type,$availableRankings['coach'] ) ){
@@ -78,19 +82,21 @@ class RankingController extends Controller
       }else{
         $ranking = $data->getMainCoachRanking($editionObj);
       }
-      return $this->render('FantasyFootballTournamentAdminBundle:Ranking:coach.html.twig', 
+      return $this->render('FantasyFootballTournamentAdminBundle:Ranking:coach.html.twig',
         ['edition' => $edition,'ranking' => $ranking,'type'=>$type,'round'=>$currentRound,
         'params' => $params,'availableRankings'=>$availableRankings]);
     }else{
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
   }
-  
+
   public function allAction($edition)
   {
     $conf = $this->get('fantasy_football_core_db_conf');
     $data = new DataProvider($conf);
-    $editionObj = $data->getEditionById($edition);
+    $em = $this->getDoctrine()->getManager();
+    $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
+                  ->findOneById($edition);
     $availableRankings = $editionObj->getRankings();
     $allRanking = ['coach'=>[],'coachTeam'=>[]];
     $allParams = ['coach'=>[],'coachTeam'=>[]];

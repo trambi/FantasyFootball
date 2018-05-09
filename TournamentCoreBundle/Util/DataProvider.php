@@ -89,7 +89,6 @@ class DataProvider {
   const resumeMatchQuery = 'UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
   const deleteMatchQuery = 'DELETE FROM tournament_match';
   const updateRankingQuery = 'UPDATE INTO tournament_coach SET points=?,opponents_points=?,net_td=?,casualties=? WHERE id=?';
-  const editionQuery = 'SELECT id,day_1 as day1, day_2 as day2, round_number as roundNumber, current_round as currentRound, use_finale as useFinale, ranking_strategy as rankingStrategy, first_day_round as firstDayRound, full_triplette as fullTriplette FROM tournament_edition';
   const deletepreCoachQuery = 'DELETE FROM tournament_precoach';
   const updateTeamQuery = 'UPDATE INTO tournament_coach SET team_name=?,name=?,id_race=?,email=?,fan_factor=?,naf_number=?,edition=?,ready=? WHERE id=?';
   const coachTeamGames = 'SELECT DISTINCT c1.id_coach_team as id1, c2.id_coach_team as id2 FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
@@ -1048,49 +1047,6 @@ class DataProvider {
     }
     usort($coachTeams, array($this,$functionName));
     return $coachTeams;
-  }
-
-  public function getEditionById($id) {
-    $clause = 'id = ' . intval($id);
-    $editions = $this->getEditions($clause);
-    $edition = NULL;
-    if (0 < count($editions)) {
-      $edition = reset($editions);
-    }
-    return $edition;
-  }
-
-  public function getEditions($clause='1=1') {
-    $query = self::editionQuery;
-    $query .= ' WHERE ' . $clause;
-    //echo 'request : [',$query,']<br />';
-    $result = $this->query($query);
-    $editions = array();
-    $edition = $this->convertResultIntoEdition($result);
-    while (null != $edition) {
-      $editions[] = $edition;
-      $edition = $this->convertResultIntoEdition($result);
-    }
-    $this->resultClose($result);
-    return $editions;
-  }
-
-  public function convertResultIntoEdition($result){
-    $edition = null;
-    $obj = $this->resultFetchObject($result);
-    if(null != $obj){
-      $edition = new Edition();
-      $edition->setId($obj->id);
-      $edition->setDay1($obj->day1);
-      $edition->setDay2($obj->day2);
-      $edition->setRoundNumber($obj->roundNumber);
-      $edition->setCurrentRound($obj->currentRound);
-      $edition->setUseFinale($obj->useFinale);
-      $edition->setFullTriplette($obj->fullTriplette);
-      $edition->setRankingStrategyName($obj->rankingStrategy);
-      $edition->setFirstDayRound($obj->firstDayRound);
-    }
-    return $edition;
   }
 
   private static function hydrateGames(Array $games, $id1, $id2)
