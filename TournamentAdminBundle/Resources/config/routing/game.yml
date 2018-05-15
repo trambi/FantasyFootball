@@ -23,8 +23,9 @@ _delete_game:
    requirements:
       gameId:  \d+
 
-_view_game:
-   path:    /view/{gameId}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:View }
+_summarize:
+   path:    /summarize/{edition}/{round}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Game:Summarize }
    requirements:
-      gameId:  \d+
+      edition:  \d+
+      round:  \d+

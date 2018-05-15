@@ -1,0 +1,17 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Synthese du round {{round}} du tournoi {{edition}}{% endblock %}
+
+{% block body %}
+{% block menuButtons %}
+<a href="{{ path('_all_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Synth&egrave;se des classements</a>
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}" class="btn btn-primary" role="button">Administration</a>
+{% endblock %}
+<h1>Synthese du round {{round}} du tournoi {{edition}}</h1>
+<ul>
+{% for game in games %}
+<li>{{game.getTableNumber}} - {{game.getCoach1.getName}} vs {{game.getCoach2.getName}}</li>
+{% endfor %}
+</ul>
+{{ block('menuButtons') }}
+{% endblock %}

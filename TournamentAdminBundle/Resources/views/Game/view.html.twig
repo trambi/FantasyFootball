@@ -1,8 +1,12 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}FantasyFootballTournamentAdminBundle:Game:view{% endblock %}
+{% block title %}FantasyFootballTournamentAdminBundle:Game:summarize{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Game:view page</h1>
-<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+<h1>Welcome to the Game:Summarize page</h1>
+{% for game in games %}
+{{game.id}} - {{game.tableNumber}} - {{game.coach1.name}} (){{game.coach1.coachTeam.name}} - {{game.coach2.name}} (){{game.coach2.coachTeam.name}} 
+{% endfor %}
+{% endblock %}
+{{ block('menuButtons') }}
 {% endblock %}

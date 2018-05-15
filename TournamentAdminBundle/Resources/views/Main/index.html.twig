@@ -8,6 +8,7 @@
 <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':round-1} )  }}" class="btn btn-primary " role="button">Ronde précédente</a>
 <a href="{{ path('_add_game',{'edition':edition,'round':round} )  }}" class="btn btn-primary" role="button">Ajouter un match</a>
 <a href="{{ path('fantasy_football_tournament_simulate_games',{'edition':edition,'round':round} )  }}" class="btn btn-primary" role="button">Simuler</a>
+<a href="{{ path('_summarize',{'edition':edition,'round':round} )  }}" class="btn btn-primary " role="button">Synth&egrave;se des matchs</a>
 {% if  (matchesToPlay|length == 0) and (round != roundNumber) %}<a href="{{ path('fantasy_football_tournament_admin_next',{'edition':edition} )  }}" class="btn btn-primary " role="button">Générer la prochaine ronde</a>{% endif %}
 {% if  round < roundNumber %}<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':round+1} )  }}" class="btn btn-primary " role="button">Ronde suivante</a>{% endif %}
 {% for coachRanking in rankings.coach|keys %}
@@ -16,7 +17,7 @@
 {% for coachTeamranking in rankings.coachTeam|keys %}
 <a href="{{ path('_coach_team_ranking',{'edition':edition,'type':coachTeamranking} )  }}" class="btn btn-info" role="button">Classement équipe ({{coachTeamranking}})</a>
 {% endfor %}
-<a href="{{ path('_all_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Synth&egrave;se</a>
+<a href="{{ path('_all_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Synth&egrave;se des classements</a>
 {% if  round == roundNumber %}<a href="{{ path('fantasy_football_tournament_admin_naf',{'edition':edition} )  }}" class="btn btn-info" role="button">Fichier XML NAF</a>{% endif %}
 {% endblock %}
 
@@ -67,7 +68,7 @@
     - <a href="{{ path('_view_coach',{'coachId':match.teamId2} )  }}" class="btn btn-info" role="button"  >{{match.coach2}}</a> ({{match.teamName2}})</td>
     <td>{{match.td1}} - {{match.td2}}</td>
     <td>{{match.casualties1}} - {{match.casualties2}}</td>
-    <td>{{match.points1}} - {{match.points2}}</td>    
+    <td>{{match.points1}} - {{match.points2}}</td>
     <td>
         <a href="{{ path('_modify_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >Modifier</a>
         <a href="{{ path('_delete_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >Supprimer</a></td>
