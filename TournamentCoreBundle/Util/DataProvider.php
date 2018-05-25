@@ -348,7 +348,7 @@ class DataProvider {
     $match->edition = intval($row[21]);
     $match->round = intval($row[22]);
 
-    if ("true" === $row[23]) {
+    if ( 1 === intval($row[23]) ) {
       $match->finale = true;
     } else {
       $match->finale = false;
