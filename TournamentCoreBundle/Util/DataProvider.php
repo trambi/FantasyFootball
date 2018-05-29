@@ -875,7 +875,7 @@ class DataProvider {
       $tempPoints2 = 0;
       $rankingStrategy->computePoints($tempPoints1, $tempPoints2, $coachTeamMatchElt->tdFor, $coachTeamMatchElt->tdAgainst, $coachTeamMatchElt->casualtiesFor, $coachTeamMatchElt->casualtiesAgainst);
       $coachTeam->points += $tempPoints1;
-      if( "true" === $coachTeamMatchElt->finale ){
+      if( 1 === intval($coachTeamMatchElt->finale) ){
         $coachTeam->finale = true;
       }
 
