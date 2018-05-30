@@ -4,6 +4,20 @@
 
 {% block body %}
 <h1>match {{ game.coach1.name}} vs {{ game.coach2.name}} <span class="badge">{{game.id}}</span></h1>
-{{ form(form) }}
+
+
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+<table>
+<tr><td>{{ form_row(form.edition) }}</td><td>{{ form_row(form.round) }}</td><td>{{ form_row(form.tableNumber) }}</td></tr>
+<tr><td>{{ form_row(form.td1) }}</td><td>&nbsp;</td><td>{{ form_row(form.td2) }}</td></tr>
+<tr><td>{{ form_row(form.casualties1) }}</td><td>&nbsp;</td><td>{{ form_row(form.casualties2) }}</td></tr>
+<tr><td>{{ form_row(form.fouls1) }}</td><td>&nbsp;</td><td>{{ form_row(form.fouls2) }}</td></tr>
+<tr><td>{{ form_row(form.completions1) }}</td><td>&nbsp;</td><td>{{ form_row(form.completions2) }}</td></tr>
+<tr><td>{{ form_row(form.special1) }}</td><td>&nbsp;</td><td>{{ form_row(form.special2) }}</td></tr>
+<tr><td>{{ form_row(form.status) }}</td><td>&nbsp;</td><td>{{ form_row(form.finale) }}</td></tr>
+<tr><td>&nbsp;</td><td>{{form_row(form.save)}}</td><td>&nbsp;</td></tr>
+</table>
+{{ form_end(form) }}
 <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}
