@@ -132,6 +132,18 @@ class GameController extends Controller
             ->add('fouls2', 'integer',
                 array('label'=>'Aggressions de '.$name2.' :',
                 'required'  => false))
+            ->add('completions1', 'integer',
+                array('label'=>'Passe de '.$name1.' :',
+                'required'  => false))
+            ->add('completions2', 'integer',
+                array('label'=>'Passe de '.$name2.' :',
+                'required'  => false))
+            ->add('special1', 'text',
+                array('label'=>'Special de '.$name1.' :',
+                'required'  => false))
+            ->add('special2', 'text',
+                array('label'=>'Special de '.$name2.' :',
+                'required'  => false))
             ->add('save','submit',array('label'=>'Valider'))
             ->getForm();
     $form->handleRequest($request);
