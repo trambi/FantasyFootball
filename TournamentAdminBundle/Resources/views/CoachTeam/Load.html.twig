@@ -3,6 +3,27 @@
 {% block title %}FantasyFootballTournamentAdminBundle:CoachTeam:Load{% endblock %}
 
 {% block body %}
+<div class="alert alert-info" role="alert">
+  The file to upload must be a csv file. The headers must be:
+  <ul>
+  <li>coach_team_name</li>
+  <li>email</li>
+  <li>coach_1_name</li>
+  <li>coach_1_naf</li>
+  <li>coach_1_race</li>
+  <li>coach_2_name</li>
+  <li>coach_2_naf</li>
+  <li>coach_2_race</li>
+  <li>...</li>
+  </ul>
+  For example, you can have a file like that:
+  <pre>
+  coach_team_name,email,coach_1_name,coach_1_naf,coach_1_race,coach_2_name,coach_2_naf,coach_2_race
+  crazy team,crazy@team.org,crazy_one,101547,orc,crazy_two,101548,amazon
+  socks_bowl,socks@bowl.org,trambi,99,Skaven,longshot,101,Wood elf
+  </pre>
+  It will create two coach teams. One with crazy_one and crazy_two a second one with trambi and longshot.
+</div>
     <form action="{{ path('_load_coach_team',{'edition':edition}) }}" method="post" {{ form_enctype(form) }}>
     {{ form_rest(form) }}
     <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':0} )  }}"class="btn btn-primary" role="button"  >Administration</a>
