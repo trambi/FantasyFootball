@@ -99,12 +99,6 @@ class DataProvider {
   const matchQuery = 'SELECT c1.name,c1.team_name,c1.id,m.td_1,m.casualties_1,m.completions_1,m.fouls_1,m.special_1,
   m.points_1,c2.name,c2.team_name,c2.id,m.td_2,m.casualties_2,m.completions_2,m.fouls_2,m.special_2,m.points_2,
   m.id,m.table_number,m.status,m.edition,m.round,m.finale FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
-  const insertMatchQuery = 'INSERT INTO tournament_match (id_coach_1,id_coach_2,round,edition,table_number) VALUES(?,?,?,?,?)';
-  const resumeMatchQuery = 'UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
-  const deleteMatchQuery = 'DELETE FROM tournament_match';
-  const updateRankingQuery = 'UPDATE INTO tournament_coach SET points=?,opponents_points=?,net_td=?,casualties=? WHERE id=?';
-  const deletepreCoachQuery = 'DELETE FROM tournament_precoach';
-  const updateTeamQuery = 'UPDATE INTO tournament_coach SET team_name=?,name=?,id_race=?,email=?,fan_factor=?,naf_number=?,edition=?,ready=? WHERE id=?';
   const coachTeamGames = 'SELECT DISTINCT c1.id_coach_team as id1, c2.id_coach_team as id2 FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
 
   public function getRacesByEdition($edition) {
