@@ -54,12 +54,9 @@ class SimulateController extends Controller
     $game->setTd2(self::$tdProbability[rand(0,16)]);
     $game->setCasualties1(self::$casProbability[rand(0,16)]);
     $game->setCasualties2(self::$casProbability[rand(0,16)]);
-    $points1 = 0;
-    $points2 = 0;
-    $strategy->computePoints($points1, $points2, $game->getTd1(), $game->getTd2(),
-    $game->getCasualties1(), $game->getCasualties2() );
-    $game->setPoints1($points1);
-    $game->setPoints2($points2);
+    $points = $strategy->computePoints($game);
+    $game->setPoints1($points[0]);
+    $game->setPoints2($points[1]);
     $game->setStatus('resume');
   }
 }
