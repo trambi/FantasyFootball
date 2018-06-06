@@ -174,14 +174,15 @@ class Game
      */
     private $tableNumber;
 
-    public function __construct()
+    public function __construct($td1=0,$td2=0)
     {
+
         $this->status = self::SCHEDULED;
         $this->finale = false;
         $this->points1 = 0;
         $this->points2 = 0;
-        $this->td1 = 0;
-        $this->td2 = 0;
+        $this->td1 = $td1;
+        $this->td2 = $td2;
         $this->casualties1 = 0;
         $this->casualties2 = 0;
         $this->completion1 = 0;

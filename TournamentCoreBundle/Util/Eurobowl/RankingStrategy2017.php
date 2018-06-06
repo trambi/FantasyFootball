@@ -28,10 +28,11 @@ class RankingStrategy2017 implements IRankingStrategy {
     return true;
   }
 
-  public function computePoints(&$points1, &$points2, $td1, $td2, $cas1, $cas2) {
-    $points = PointsComputor::win2Draw1Loss0($td1,$td2,$cas1,$cas2);
-    $points1 = $points['points1'] * self::POINT_MULTIPLIER;
-    $points2 = $points['points2'] * self::POINT_MULTIPLIER;
+  public function computePoints($game) {
+    $points = PointsComputor::win2Draw1Loss0($game);
+    $points1 = $points[0] * self::POINT_MULTIPLIER;
+    $points2 = $points[1] * self::POINT_MULTIPLIER;
+    return [$points1,$points2];
   }
     
   public function compareCoachs($coach1, $coach2) {
@@ -58,10 +59,11 @@ class RankingStrategy2017 implements IRankingStrategy {
     return $returnValue;
   }
 
-  public function computeCoachTeamPoints(&$points1, &$points2, $td1Array, $td2Array, $cas1Array, $cas2Array) {
-    $points = PointsComputor::teamWin2Draw1Loss0FullTeamBonus($td1Array, $td2Array, $cas1Array, $cas2Array);
-    $points1 = $points['points1'] * self::POINT_MULTIPLIER;
-    $points2 = $points['points2'] * self::POINT_MULTIPLIER;
+  public function computeCoachTeamPoints($games) {
+    $points = PointsComputor::teamWin2Draw1Loss0FullTeamBonus($games);
+    $points1 = $points[0] * self::POINT_MULTIPLIER;
+    $points2 = $points[1] * self::POINT_MULTIPLIER;
+    return [$points1,$points2];
   }
 
   public function useOpponentPointsOfYourOwnMatch() {
