@@ -72,99 +72,64 @@ class RankingStrategy11Test extends \PHPUnit_Framework_TestCase
 
 	public function testComputeCoachTeamPoints(){
         $strategy = new RankingStrategy11();
-        $game1 = new Game;
-        $game2 = new Game;
-        $game3 = new Game;
 
-        $game1->setTd1(2);
-        $game2->setTd1(2);
-        $game3->setTd1(2);
-        $games = [$game1,$game2,$game3];
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(2,0),new Game(2,0),new Game(2,0)]);
         $this->assertEquals(27, $points[0]);
         $this->assertEquals(0, $points[1]);
 
-        $games[0]->setTd2(1);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(2,1),new Game(2,0),new Game(2,0)]);
         $this->assertEquals(26, $points[0]);
         $this->assertEquals(1, $points[1]);
 
-        $games[0]->setTd2(2);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(2,2),new Game(2,0),new Game(2,0)]);
         $this->assertEquals(22, $points[0]);
         $this->assertEquals(4, $points[1]);
 
-        $games[0]->setTd2(3);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(2,3),new Game(2,0),new Game(2,0)]);
         $this->assertEquals(19, $points[0]);
         $this->assertEquals(8, $points[1]);      
 
-        $games[0]->setTd2(4);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(2,4),new Game(2,0),new Game(2,0)]);
         $this->assertEquals(18, $points[0]);
         $this->assertEquals(9, $points[1]);      
 
-        $games[0]->setTd1(0);
-        $games[0]->setTd2(2);
-        $games[1]->setTd2(1);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(0,2),new Game(2,1),new Game(2,0)]);
         $this->assertEquals(17, $points[0]);
         $this->assertEquals(10, $points[1]);
 
-        $games[1]->setTd2(2);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(0,2),new Game(2,2),new Game(2,0)]);
         $this->assertEquals(13, $points[0]);
         $this->assertEquals(13, $points[1]);      
 
-        $games[1]->setTd2(3);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(0,2),new Game(2,3),new Game(2,0)]);
         $this->assertEquals(10, $points[0]);
         $this->assertEquals(17, $points[1]);
 
-        $games[1]->setTd2(4);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(0,2),new Game(2,4),new Game(2,0)]);
         $this->assertEquals(9, $points[0]);
         $this->assertEquals(18, $points[1]);
 
-        $games[1]->setTd1(0);
-        $games[1]->setTd2(2);
-        $games[2]->setTd2(1);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(0,2),new Game(0,2),new Game(2,1)]);
         $this->assertEquals(8, $points[0]);
         $this->assertEquals(19, $points[1]);
 
-        $games[2]->setTd2(2);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(0,2),new Game(0,2),new Game(2,2)]);
         $this->assertEquals(4, $points[0]);
         $this->assertEquals(22, $points[1]);      
 
-        $games[2]->setTd1(1);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(0,2),new Game(0,2),new Game(1,2)]);
         $this->assertEquals(1, $points[0]);
         $this->assertEquals(26, $points[1]);
 
-        $games[2]->setTd1(0);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(0,2),new Game(0,2),new Game(0,2)]);
         $this->assertEquals(0, $points[0]);
         $this->assertEquals(27, $points[1]);
 
-        $tds1 = array(1,1,1);
-        $tds2= array(1,1,1);
-        $games[0]->setTd1(1);
-        $games[0]->setTd2(1);
-        $games[1]->setTd1(1);
-        $games[1]->setTd2(1);
-        $games[2]->setTd1(1);
-        $games[2]->setTd2(1);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(1,1),new Game(1,1),new Game(1,1)]);
         $this->assertEquals(12, $points[0]);
         $this->assertEquals(12, $points[1]);
 
-        $tds1 = array(1,2,1);
-        $tds2= array(1,1,2);
-        $games[1]->setTd1(2);
-        $games[2]->setTd2(2);
-        $points = $strategy->computeCoachTeamPoints($games);
+        $points = $strategy->computeCoachTeamPoints([new Game(1,1),new Game(2,1),new Game(1,2)]);
         $this->assertEquals(13, $points[0]);
         $this->assertEquals(13, $points[1]);
 	}
