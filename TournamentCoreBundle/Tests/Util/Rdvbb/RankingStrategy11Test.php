@@ -25,47 +25,36 @@ class RankingStrategy11Test extends \PHPUnit_Framework_TestCase
 {
 	public function testComputePoints(){
         $strategy = new RankingStrategy11();
-        $game = new Game;
 
-        $game->setTd1(3);
-        $points = $strategy->computePoints($game);
+        $points = $strategy->computePoints(new Game(3,0));
         $this->assertEquals(9, $points[0]);
         $this->assertEquals(0, $points[1]);
             
-        $game->setTd1(2);
-        $points = $strategy->computePoints($game);
+        $points = $strategy->computePoints(new Game(2,0));
         $this->assertEquals(9, $points[0]);
         $this->assertEquals(0, $points[1]);
 
-        $game->setTd2(1);
-        $points = $strategy->computePoints($game);
+        $points = $strategy->computePoints(new Game(2,1));
         $this->assertEquals(8, $points[0]);
         $this->assertEquals(1, $points[1]);
             
-        $game->setTd2(2);
-        $points = $strategy->computePoints($game);
+        $points = $strategy->computePoints(new Game(2,2));
         $this->assertEquals(4, $points[0]);
         $this->assertEquals(4, $points[1]);
         
-        $game->setTd1(1);
-        $game->setTd2(1);
-        $points = $strategy->computePoints($game);
+        $points = $strategy->computePoints(new Game(1,1));
         $this->assertEquals(4, $points[0]);
         $this->assertEquals(4, $points[1]);
 
-        $game->setTd2(2);
-        $points = $strategy->computePoints($game);
+        $points = $strategy->computePoints(new Game(1,2));
         $this->assertEquals(1, $points[0]);
         $this->assertEquals(8, $points[1]);
 
-        $game->setTd2(3);
-        $points = $strategy->computePoints($game);
+        $points = $strategy->computePoints(new Game(1,3));
         $this->assertEquals(0, $points[0]);
         $this->assertEquals(9, $points[1]);
 
-        $game->setTd1(0);
-        $game->setTd2(3);
-        $points = $strategy->computePoints($game);
+        $points = $strategy->computePoints(new Game(0,3));
         $this->assertEquals(0, $points[0]);
         $this->assertEquals(9, $points[1]);        
 	}
