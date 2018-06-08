@@ -1,7 +1,7 @@
 <?php
 /*
     FantasyFootball Symfony2 bundles - Symfony2 bundles collection to handle fantasy football tournament
-    Copyright (C) 2017  Bertrand Madet
+    Copyright (C) 2014-2018  Bertrand Madet
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ class DefaultController extends Controller
 	}
 
   public function getVersionAction(){
-		$response = new JsonResponse(array('version'=>'1.16'));
+		$response = new JsonResponse(array('version'=>'1.17beta'));
 		$response->headers->set('Access-Control-Allow-Origin','*');
 		return $response;
   }
