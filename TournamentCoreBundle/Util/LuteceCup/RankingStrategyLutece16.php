@@ -108,15 +108,16 @@ class RankingStrategyLutece16 implements IRankingStrategy {
   public function rankingOptions(){
     return array(
     'coach' => array(
-      'main' => array('points','opponentsPoints','netTd','netCasualties'),
+      'main' => array('points'),
       'casualties' => array('casualtiesFor'),
       'fouls'=> array('foulsFor'),
       'td' => array('tdFor'),
       'completions' => array('completionsFor'),
-      'casualties' => array('casualtiesFor'),'defense' => array('tdAgainst')
+      'casualties' => array('casualtiesFor'),
+      'defense' => array('tdAgainst')
     ),
     'coachTeam' => array(
-      'main' => array('coachTeamPoints','opponentCoachTeamPoints','netTd','netCasualties')
+      'main' => array('coachTeamPoints')
       )
     );
   }
