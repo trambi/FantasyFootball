@@ -20,6 +20,7 @@ namespace FantasyFootball\TournamentCoreBundle\Util;
 
 use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 use FantasyFootball\TournamentCoreBundle\Entity\Edition;
+use FantasyFootball\TournamentCoreBundle\Entity\Game;
 
 class DataProvider {
 
@@ -76,6 +77,19 @@ class DataProvider {
     }
   }
 
+  protected function stdClassToGame($object){
+    $game = new Game($object->tdFor,$object->tdAgainst);
+    $game->setCasualties1($object->casualtiesFor);
+    $game->setCasualties2($object->casualtiesAgainst);
+    $game->setCompletions1($object->completionsFor);
+    $game->setCompletions2($object->completionsAgainst);
+    $game->setFouls1($object->foulsFor);
+    $game->setFouls2($object->foulsAgainst);
+    $game->setFinale($object->finale);
+    $game->setRound($object->round);
+    return $game;
+  }
+
   const raceQuery = 'SELECT r.edition,r.id_race as id,r.nom_fr,r.nom_en,r.nom_en_2,r.nom_fr_2,r.reroll FROM tournament_race r';
   const coachQuery = 'SELECT c.id, c.team_name, c.name, c.id_race,c.email,c.fan_factor,c.reroll,c.apothecary,c.assistant_coach,c.cheerleader,c.edition,c.naf_number, c.id_coach_team,r.nom_fr,ct.name,c.ready FROM tournament_coach c INNER JOIN tournament_race r ON c.id_race=r.id_race LEFT JOIN tournament_coach_team ct ON c.id_coach_team=ct.id';
   const setReadyCoachQuery = 'UPDATE tournament_coach SET ready = 1';
@@ -85,12 +99,6 @@ class DataProvider {
   const matchQuery = 'SELECT c1.name,c1.team_name,c1.id,m.td_1,m.casualties_1,m.completions_1,m.fouls_1,m.special_1,
   m.points_1,c2.name,c2.team_name,c2.id,m.td_2,m.casualties_2,m.completions_2,m.fouls_2,m.special_2,m.points_2,
   m.id,m.table_number,m.status,m.edition,m.round,m.finale FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
-  const insertMatchQuery = 'INSERT INTO tournament_match (id_coach_1,id_coach_2,round,edition,table_number) VALUES(?,?,?,?,?)';
-  const resumeMatchQuery = 'UPDATE tournament_match SET td_1=?,td_2=?,sortie_1=?,sortie_2=?,points_1=?,points_2=?,status=\'resume\'	WHERE id_match=?';
-  const deleteMatchQuery = 'DELETE FROM tournament_match';
-  const updateRankingQuery = 'UPDATE INTO tournament_coach SET points=?,opponents_points=?,net_td=?,casualties=? WHERE id=?';
-  const deletepreCoachQuery = 'DELETE FROM tournament_precoach';
-  const updateTeamQuery = 'UPDATE INTO tournament_coach SET team_name=?,name=?,id_race=?,email=?,fan_factor=?,naf_number=?,edition=?,ready=? WHERE id=?';
   const coachTeamGames = 'SELECT DISTINCT c1.id_coach_team as id1, c2.id_coach_team as id2 FROM tournament_match m INNER JOIN tournament_coach c1 ON m.id_coach_1 = c1.id INNER JOIN tournament_coach c2 ON m.id_coach_2 = c2.id';
 
   public function getRacesByEdition($edition) {
@@ -807,12 +815,7 @@ class DataProvider {
 
     $currentCoachTeamId = 0;
     $currentRound = 0;
-    $td1Array = array();
-    $td2Array = array();
-    $cas1Array = array();
-    $cas2Array = array();
-    $tempCoachTeamPoints1 = 0;
-    $tempCoachTeamPoints2 = 0;
+    $gameArray = array();
 
     $coachTeam = $this->initCoachTeamForRanking();
     $coachTeamMatchElt = $this->resultFetchObject($result);
@@ -823,9 +826,9 @@ class DataProvider {
       $coachTeamMatchElt->coach = mb_convert_encoding($coachTeamMatchElt->coach, "UTF-8");
       if (( ( 0 !== $currentCoachTeamId ) && ( $currentCoachTeamId !== $coachTeamMatchElt->coachTeam ) ) || ( $currentRound !== $coachTeamMatchElt->round )) {
         if (0 !== $currentRound) {
-          $tempCoachTeamPoints1 = 0;
-          $tempCoachTeamPoints2 = 0;
-          $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
+          $tempCoachTeamPoints = $rankingStrategy->computeCoachTeamPoints($gameArray);
+          $tempCoachTeamPoints1 = $tempCoachTeamPoints[0];
+          $tempCoachTeamPoints2 = $tempCoachTeamPoints[1];
           if ($tempCoachTeamPoints1 > $tempCoachTeamPoints2){
             $coachTeam->coachTeamWin += 1;
             if( true === $coachTeam->finale ){
@@ -842,10 +845,7 @@ class DataProvider {
           $coachTeam->coachTeamPoints += $tempCoachTeamPoints1;
           //$coachTeam->opponentCoachTeamPoints += $tempCoachTeamPoints2;
         }
-        $td1Array = array();
-        $td2Array = array();
-        $cas1Array = array();
-        $cas2Array = array();
+        $gameArray = array();
         $currentRound = $coachTeamMatchElt->round;
       }
       if ($currentCoachTeamId !== $coachTeamMatchElt->coachTeam) {
@@ -871,9 +871,10 @@ class DataProvider {
       $coachTeam->foulsFor += $coachTeamMatchElt->foulsFor;
       $coachTeam->foulsAgainst += $coachTeamMatchElt->foulsAgainst;
 
-      $tempPoints1 = 0;
-      $tempPoints2 = 0;
-      $rankingStrategy->computePoints($tempPoints1, $tempPoints2, $coachTeamMatchElt->tdFor, $coachTeamMatchElt->tdAgainst, $coachTeamMatchElt->casualtiesFor, $coachTeamMatchElt->casualtiesAgainst);
+      
+      $tempPoints = $rankingStrategy->computePoints($this->stdClassToGame($coachTeamMatchElt));
+      $tempPoints1 = $tempPoints[0];
+      $tempPoints2 = $tempPoints[1];
       $coachTeam->points += $tempPoints1;
       if( 1 === intval($coachTeamMatchElt->finale) ){
         $coachTeam->finale = true;
@@ -887,10 +888,7 @@ class DataProvider {
       if (false === $rankingStrategy->useOpponentPointsOfYourOwnMatch()) {
         $coachTeam->opponentsPoints -= $tempPoints2;
       }
-      $td1Array[] = $coachTeamMatchElt->tdFor;
-      $td2Array[] = $coachTeamMatchElt->tdAgainst;
-      $cas1Array[] = $coachTeamMatchElt->casualtiesFor;
-      $cas2Array[] = $coachTeamMatchElt->casualtiesAgainst;
+      $gameArray[] = $this->stdClassToGame($coachTeamMatchElt);
       if (false === array_key_exists($coachTeamMatchElt->team, $coachTeam->teams)) {
         $coach = $this->initCoachForRanking();
         $coach->coach = $coachTeamMatchElt->coach;
@@ -925,9 +923,9 @@ class DataProvider {
       $coachTeamMatchElt = $this->resultFetchObject($result);
     }
     if (0 !== $currentCoachTeamId) {
-      $tempCoachTeamPoints1 = 0;
-      $tempCoachTeamPoints2 = 0;
-      $rankingStrategy->computeCoachTeamPoints($tempCoachTeamPoints1, $tempCoachTeamPoints2, $td1Array, $td2Array, $cas1Array, $cas2Array);
+      $tempCoachTeamPoints = $rankingStrategy->computeCoachTeamPoints($gameArray);
+      $tempCoachTeamPoints1 = $tempCoachTeamPoints[0];
+      $tempCoachTeamPoints2 = $tempCoachTeamPoints[1];
       if ($tempCoachTeamPoints1 > $tempCoachTeamPoints2){
         $coachTeam->coachTeamWin += 1;
         if( true === $coachTeam->finale ){

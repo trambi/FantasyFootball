@@ -26,10 +26,8 @@ class RankingStrategy9To10 implements IRankingStrategy{
     return false;
   }  
   
-  public function computePoints(&$points1,&$points2,$td1,$td2,$cas1,$cas2){
-    $points = PointsComputor::win10Draw4SmallLoss1Loss0($td1,$td2,$cas1,$cas2);
-    $points1 = $points['points1'];
-    $points2 = $points['points2'];
+  public function computePoints($game){
+    return PointsComputor::win10Draw4SmallLoss1Loss0($game);
   }
     
   public function compareCoachs($team1,$team2){
@@ -41,10 +39,8 @@ class RankingStrategy9To10 implements IRankingStrategy{
     return $this->compareCoachs($coachTeam1,$coachTeam2);
   }
     
-  public function computeCoachTeamPoints(&$points1,&$points2,$td1Array,$td2Array,$cas1Array,$cas2Array){
-    $points = PointsComputor::teamWithWin10Draw4SmallLoss1Loss0($td1Array,$td2Array,$cas1Array,$cas2Array);
-    $points1 = $points['points1'];
-    $points2 = $points['points2'];
+  public function computeCoachTeamPoints($games){
+    return PointsComputor::teamWithWin10Draw4SmallLoss1Loss0($games);
     }
             
   public function useOpponentPointsOfYourOwnMatch(){

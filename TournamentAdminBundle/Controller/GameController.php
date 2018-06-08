@@ -151,12 +151,9 @@ class GameController extends Controller
       $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
                     ->findOneById($game->getEdition());
       $strategy = $editionObj->getRankingStrategy();
-      $points1 = 0;
-      $points2 = 0;
-      $strategy->computePoints($points1, $points2, $game->getTd1(), $game->getTd2(),
-                                $game->getCasualties1(), $game->getCasualties2() );
-      $game->setPoints1($points1);
-      $game->setPoints2($points2);
+      $points = $strategy->computePoints($game);
+      $game->setPoints1($points[0]);
+      $game->setPoints2($points[1]);
       $game->setStatus('resume');
       $em->flush();
       $edition = $game->getEdition();
@@ -234,12 +231,9 @@ class GameController extends Controller
       $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')
                     ->findOneById($game->getEdition());
       $strategy = $editionObj->getRankingStrategy();
-      $points1 = 0;
-      $points2 = 0;
-      $strategy->computePoints($points1, $points2, $game->getTd1(), $game->getTd2(),
-                                $game->getCasualties1(), $game->getCasualties2() );
-      $game->setPoints1($points1);
-      $game->setPoints2($points2);
+      $points = $strategy->computePoints($game);
+      $game->setPoints1($points[0]);
+      $game->setPoints2($points[1]);
       $em->flush();
       $edition = $game->getEdition();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
