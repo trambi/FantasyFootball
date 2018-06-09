@@ -5,6 +5,9 @@
 {% block body %}
 <h1>R&eacute;sultats NAF &Eacute;dition {{edition.id}}</h1>
 Tournoi organis&eacute; par {{edition.organiser}}.
+<p>{% block menuButtons %}
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition.id} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{% endblock %}</p>
 <h2>Coachs <span class="badge">{{ coachs|length }}</span></h2>
 <ul class="list-group">
 {% for coach in coachs %}
@@ -15,7 +18,7 @@ Tournoi organis&eacute; par {{edition.organiser}}.
 {% endif %}
 {% endfor %}
 </ul>
-
+{{ block('menuButtons') }}
 {% if games %}
 <h2>Matchs jou&eacute;s <span class="badge">{{ games|length }}</span></h2>
 <ul class="list-group">
@@ -28,4 +31,5 @@ Tournoi organis&eacute; par {{edition.organiser}}.
 {% endfor %}
 </ul>
 {% endif %}
+{{ block('menuButtons') }}
 {% endblock %}
