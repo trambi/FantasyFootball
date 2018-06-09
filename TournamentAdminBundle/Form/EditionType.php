@@ -24,6 +24,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 
 class EditionType extends AbstractType
@@ -31,8 +32,11 @@ class EditionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $editionId = $this->editionId;
-        $builder->add('day1', DateType::class, array('label'=>'Day 1:','widget' => 'single_text'));
-        $builder->add('day2', DateType::class, array('label'=>'Day 2:','widget' => 'single_text'));
+        $builder->add('organiser', TextType::class, array('label'=>'Organiser:'));       
+        $builder->add('day1', DateType::class, 
+                      array('label'=>'Day 1:','widget' => 'single_text', 'input'=>'string'));
+        $builder->add('day2', DateType::class,
+                      array('label'=>'Day 2:','widget' => 'single_text', 'input'=>'string'));
         $builder->add('roundNumber', 'integer',array('label'=>'Round number:'));
         $builder->add('firstDayRound', 'integer',array('label'=>'Round number in first day:'));
         $builder->add('useFinale', 'checkbox',array(

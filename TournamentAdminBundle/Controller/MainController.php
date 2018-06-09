@@ -98,18 +98,16 @@ class MainController extends Controller{
 
   protected function createDates($edition)
   {
-    $em = $this->getDoctrine()->getManager();
-    $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
     $dates = array();
-    $firstDayRound = $editionObj->getFirstDayRound();
+    $firstDayRound = $edition->getFirstDayRound();
     for( $i = 0 ; $i < $firstDayRound ; $i++ ){
-      $date = \DateTime::CreateFromFormat('Y-m-d',$editionObj->getDay1());
+      $date = \DateTime::CreateFromFormat('Y-m-d',$edition->getDay1());
       $date->setTime( 10 + ( $i * 3 ) , 0);
       $dates[] = $date->format('Y-m-d H:i');
     }
-    $roundNumber = $editionObj->getRoundNumber();
+    $roundNumber = $edition->getRoundNumber();
     for(  ; $i < $roundNumber ; $i++ ){
-      $date = \DateTime::CreateFromFormat('Y-m-d',$editionObj->getDay2());
+      $date = \DateTime::CreateFromFormat('Y-m-d',$edition->getDay2());
       $date->setTime(10 + ( ($i-$firstDayRound) * 3 ), 0);
       $dates[] = $date->format('Y-m-d H:i');
     }
@@ -118,20 +116,23 @@ class MainController extends Controller{
     
   public function nafAction($edition,$format)
   {
-    $dates = $this->createDates($edition);
     $em = $this->getDoctrine()->getManager();
+    $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
+    $dates = $this->createDates($editionObj);
     $games =  $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->findByEdition($edition);
     $coachs =  $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
     if ( 'xml' === $format){
       $content = $this->renderView('FantasyFootballTournamentAdminBundle:Main:naf.xml.twig',
-        ['coachs' => $coachs,'games' => $games,'dates'=>$dates]);
+        ['edition'=>$editionObj,'coachs' => $coachs,
+         'games' => $games,'dates'=>$dates]);
 
       $response = new Response($content);
       $response->headers->set('Content-Type', 'xml');
       return $response;
     }else{
       return $this->render('FantasyFootballTournamentAdminBundle:Main:naf.html.twig',
-        ['edition'=>$edition,'coachs' => $coachs,'games' => $games,'dates'=>$dates]);
+        ['edition'=>$editionObj,'coachs' => $coachs,
+         'games' => $games,'dates'=>$dates]);
     }
   }
 }

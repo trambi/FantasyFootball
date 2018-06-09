@@ -97,7 +97,7 @@ INSERT INTO `tournament_coach_team` (`id`, `name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `tournament_edition` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `day_1` date NOT NULL,
   `day_2` date NOT NULL,
   `round_number` int(11) NOT NULL,
@@ -106,15 +106,16 @@ CREATE TABLE IF NOT EXISTS `tournament_edition` (
   `full_triplette` tinyint(4) NOT NULL DEFAULT '1',
   `ranking_strategy` varchar(65) COLLATE utf8_unicode_ci NOT NULL,
   `first_day_round` int(11) NOT NULL DEFAULT '3',
+  `organiser` varchar(65) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Contenu de la table `tournament_edition`
 --
 
 INSERT INTO `tournament_edition` (`id`, `day_1`, `day_2`, `round_number`, `current_round`, `use_finale`, `full_triplette`, `ranking_strategy`, `first_day_round`) VALUES
-(1, '2015-06-14', '2015-06-15', 5, 0, 1, 1, 'Rdvbb13', 3);
+(1, '2015-06-14', '2015-06-15', 5, 0, 1, 1, 'Rdvbb13', 3,'trambi');
 
 -- --------------------------------------------------------
 
@@ -181,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `tournament_race` (
   `nom_fr_2` varchar(33) COLLATE utf8_unicode_ci DEFAULT NULL,
   `reroll` tinyint(3) unsigned DEFAULT '5',
   PRIMARY KEY (`id_race`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=25 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=27 ;
 
 --
 -- Contenu de la table `tournament_race`
@@ -196,7 +197,7 @@ INSERT INTO `tournament_race` (`edition`, `id_race`, `nom_fr`, `nom_en`, `nom_en
 (1, 6, 'Haut elfe', 'High elf', 'High Elves', 'd''hauts elfes', 5),
 (1, 7, 'Gobelin', 'Goblin', 'Goblins', 'de gobelins', 6),
 (1, 8, 'Halfling', 'Halfling', 'Halflings', 'de halflings', 6),
-(1, 9, 'Elfe sylvain', 'Wood elf', 'Wood elves', 'd''elfes sylvains', 5),
+(1, 9, 'Elfe sylvain', 'Wood elf', 'Wood Elves', 'd''elfes sylvains', 5),
 (1, 10, 'Chaos', 'Chaos', 'Chaos', 'du Chaos', 7),
 (1, 11, 'Nain du Chaos', 'Chaos dwarf', 'Chaos dwarves', 'de nains du Chaos', 7),
 (1, 12, 'Mort-vivant', 'Undead', 'Undead', 'de mort-vivants', 7),
@@ -212,6 +213,8 @@ INSERT INTO `tournament_race` (`edition`, `id_race`, `nom_fr`, `nom_en`, `nom_en
 (7, 22, 'Bas fonds', 'Underworld', 'Underworld', 'des bas fonds', 7),
 (7, 23, 'Pacte chaotique', 'Chaos Pact', 'Chaos Pact', 'chaotique', 7),
 (7, 24, 'Slann', 'Slann', 'Slann', 'de slanns', 5);
+(16, 25, 'Khorne', 'Khorne', 'Khorne', 'Khorne', 7);
+(16, 26, 'Bretonniens', 'Bretonnians', 'Bretonnians', 'bretonniens', 7);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

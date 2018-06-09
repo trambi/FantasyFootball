@@ -102,6 +102,13 @@ class Edition
   */
   protected $firstDayRound;
 
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="organiser", type="string", length=65)
+  */
+  protected $organiser;
+
 
   /**
   * Set id
@@ -334,6 +341,29 @@ class Edition
       $this->rankings = $this->rankingStrategy->rankingOptions();
       return $this;
   }
+
+  /**
+  * Set organiser
+  *
+  * @param string $organiser
+  * @return Edition
+  */
+  public function setOrganiser($organiser)
+  {
+    $this->organiser = $organiser;
+    return $this;
+  }
+
+  /**
+  * Get organiser
+  *
+  * @return string
+  */
+  public function getOrganiser()
+  {
+    return $this->organiser;
+  }
+
 
   public function toArray(){
     $returnedArray = array();

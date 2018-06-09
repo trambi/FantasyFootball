@@ -1,9 +1,10 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}Résulats NAF &Eacute;dition {{edition}}{% endblock %}
+{% block title %}Résulats NAF &Eacute;dition {{edition.id}}{% endblock %}
 
 {% block body %}
-<h1>R&eacute;sultats NAF &Eacute;dition {{edition}}</h1>
+<h1>R&eacute;sultats NAF &Eacute;dition {{edition.id}}</h1>
+Tournoi organis&eacute; par {{edition.organiser}}.
 <h2>Coachs <span class="badge">{{ coachs|length }}</span></h2>
 <ul class="list-group">
 {% for coach in coachs %}
