@@ -8,7 +8,9 @@ Tournoi organis&eacute; par {{edition.organiser}}.
 <h2>Coachs <span class="badge">{{ coachs|length }}</span></h2>
 <ul class="list-group">
 {% for coach in coachs %}
-{% if ( 0 != coach.nafNumber ) %}
+{% if ( 0 == coach.nafNumber ) %}
+    <li class="list-group-item">{{coach.name}} - {{coach.race.englishName}} <span class="label label-warning">Pas de num&eacute;ro NAF </span></li>
+{% else %}
     <li class="list-group-item">{{coach.name}} ({{coach.nafNumber}}) - {{coach.race.englishName}}</li>
 {% endif %}
 {% endfor %}
