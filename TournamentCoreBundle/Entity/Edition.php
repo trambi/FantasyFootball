@@ -73,16 +73,16 @@ class Edition
   protected $currentRound;
 
   /**
-   * @var integer
+   * @var boolean
    *
-   * @ORM\Column(name="use_finale", type="smallint")
+   * @ORM\Column(name="use_finale", type="boolean")
   */
   protected $useFinale;
 
   /**
-   * @var integer
+   * @var boolean
    *
-   * @ORM\Column(name="full_triplette", type="smallint")
+   * @ORM\Column(name="full_triplette", type="boolean")
   */
   protected $fullTriplette;
 
@@ -223,7 +223,7 @@ class Edition
   /**
   * Set useFinale
   *
-  * @param integer $useFinale
+  * @param boolean $useFinale
   * @return Edition
   */
   public function setUseFinale($useFinale)
@@ -235,7 +235,7 @@ class Edition
   /**
   * Get useFinale
   *
-  * @return integer
+  * @return boolean
   */
   public function getUseFinale()
   {

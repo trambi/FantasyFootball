@@ -1,0 +1,8 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}FantasyFootballTournamentAdminBundle:Edition:Modify{% endblock %}
+
+{% block body %}
+{{ form(form) }}
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition.id,'round':0} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{% endblock %}

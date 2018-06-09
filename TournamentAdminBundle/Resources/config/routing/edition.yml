@@ -1,3 +1,8 @@
 _add_edition:
    path:    /add/
    defaults: { _controller: FantasyFootballTournamentAdminBundle:Edition:Add }
+_modify_edition:
+   path:    /modify/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Edition:Modify }
+   requirements:
+      edition:  \d+

@@ -42,4 +42,18 @@ class EditionController extends Controller{
     return $this->render('FantasyFootballTournamentAdminBundle:Edition:Add.html.twig',
       ['form' => $form->createView()]);
   }
+
+  public function ModifyAction(Request $request,$edition)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
+    $form = $this->createForm(new EditionType(),$editionObj);
+    $form->handleRequest($request);
+    if ($form->isValid()) {
+      $em->flush();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition)));
+    }
+    return $this->render('FantasyFootballTournamentAdminBundle:Edition:Modify.html.twig', 
+      ['form' => $form->createView(),'edition' => $editionObj] );    
+  }
 }

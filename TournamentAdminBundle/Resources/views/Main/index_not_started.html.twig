@@ -13,6 +13,7 @@
 {% if currentRound %}
 <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':1} )  }}"class="btn btn-primary" role="button"  >Journ&eacute;e 1</a>
 {% else %}
+<a href="{{ path('_modify_edition',{'edition':edition} ) }}" class="btn btn-warning" role="button" >Modifier l'&eacute;dition</a>
 <a href="{{ path('fantasy_football_tournament_admin_next',{'edition':edition} )  }}" class="btn btn-primary" role="button"  >Générer la prochaine ronde</a>
 {% endif %}
 {% endblock %}
