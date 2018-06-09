@@ -31,7 +31,7 @@ class RaceRepository extends EntityRepository
     public function getQueryBuilderForRaceByEditionOrLesser($editionId)
     {
         $qb = $this->createQueryBuilder('r');
-        $qb->where($qb->expr()->lt('r.edition', $editionId));
+        $qb->where($qb->expr()->lte('r.edition', $editionId));
         $qb->orderBy('r.frenchName');
         return $qb;
     }
