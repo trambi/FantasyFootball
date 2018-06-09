@@ -103,13 +103,13 @@ class MainController extends Controller{
     $dates = array();
     $firstDayRound = $editionObj->getFirstDayRound();
     for( $i = 0 ; $i < $firstDayRound ; $i++ ){
-      $date = new \DateTime($editionObj->getDay1()->format('Y-m-d'));
+      $date = \DateTime::CreateFromFormat('Y-m-d',$editionObj->getDay1());
       $date->setTime( 10 + ( $i * 3 ) , 0);
       $dates[] = $date->format('Y-m-d H:i');
     }
     $roundNumber = $editionObj->getRoundNumber();
     for(  ; $i < $roundNumber ; $i++ ){
-      $date = new \DateTime($editionObj->getDay2()->format('Y-m-d'));
+      $date = \DateTime::CreateFromFormat('Y-m-d',$editionObj->getDay2());
       $date->setTime(10 + ( ($i-$firstDayRound) * 3 ), 0);
       $dates[] = $date->format('Y-m-d H:i');
     }
