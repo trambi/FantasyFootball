@@ -7,9 +7,13 @@
 {% block menuButtons %}
 <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':round-1} )  }}" class="btn btn-primary " role="button">Ronde précédente</a>
 <a href="{{ path('_add_game',{'edition':edition,'round':round} )  }}" class="btn btn-primary" role="button">Ajouter un match</a>
-<a href="{{ path('fantasy_football_tournament_simulate_games',{'edition':edition,'round':round} )  }}" class="btn btn-primary" role="button">Simuler</a>
 <a href="{{ path('_summarize',{'edition':edition,'round':round} )  }}" class="btn btn-primary " role="button">Synth&egrave;se des matchs</a>
-{% if  (matchesToPlay|length == 0) and (round != roundNumber) %}<a href="{{ path('fantasy_football_tournament_admin_next',{'edition':edition} )  }}" class="btn btn-primary " role="button">Générer la prochaine ronde</a>{% endif %}
+{% if  (matchesToPlay|length == 0) and (round != roundNumber) %}
+<a href="{{ path('fantasy_football_tournament_admin_next',{'edition':edition} )  }}" class="btn btn-primary " role="button">Générer la prochaine ronde</a>
+{% endif %}
+{% if (matchesToPlay|length != 0) %}
+<a href="{{ path('fantasy_football_tournament_simulate_games',{'edition':edition,'round':round} )  }}" class="btn btn-warning" role="button">Simuler</a>
+{% endif %}
 {% if  round < roundNumber %}<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':round+1} )  }}" class="btn btn-primary " role="button">Ronde suivante</a>{% endif %}
 {% for coachRanking in rankings.coach|keys %}
 <a href="{{ path('_coach_ranking',{'edition':edition,'type':coachRanking} )  }}" class="btn btn-info" role="button">Classement individuel ({{coachRanking}})</a>
@@ -18,7 +22,10 @@
 <a href="{{ path('_coach_team_ranking',{'edition':edition,'type':coachTeamranking} )  }}" class="btn btn-info" role="button">Classement équipe ({{coachTeamranking}})</a>
 {% endfor %}
 <a href="{{ path('_all_ranking',{'edition':edition} )  }}" class="btn btn-info" role="button">Synth&egrave;se des classements</a>
-{% if  round == roundNumber %}<a href="{{ path('fantasy_football_tournament_admin_naf',{'edition':edition} )  }}" class="btn btn-info" role="button">Fichier XML NAF</a>{% endif %}
+{% if  round == roundNumber %}
+<a href="{{ path('fantasy_football_tournament_admin_naf',{'edition':edition} )  }}" class="btn btn-info" role="button">Fichier XML NAF</a>
+<a href="{{ path('_add_edition') }}" class="btn btn-warning" role="button" >Ajouter une &eacute;dition</a>
+{% endif %}
 {% endblock %}
 
 {% if matchesToPlay %}
