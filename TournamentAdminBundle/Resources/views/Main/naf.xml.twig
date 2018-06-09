@@ -4,6 +4,7 @@
     <coaches>{% for coach in coachs %}
         {% if ( 0 != coach.nafNumber ) %}
         <coach>
+            <name>{{coach.name}}</name>
             <number>{{coach.nafNumber}}</number>
             <team>{{coach.race.englishName2}}</team>
         </coach>
@@ -15,11 +16,13 @@
     <game>
         <timeStamp>{{dates[game.round-1]}}</timeStamp>
         <playerRecord>
+            <name>{{game.coach1.name}}</name>
             <number>{{game.coach1.nafNumber}}</number>
             <teamRating>110</teamRating>
             <touchDowns>{{game.td1}}</touchDowns>
         </playerRecord>
         <playerRecord>
+            <name>{{game.coach2.name}}</name>
             <number>{{game.coach2.nafNumber}}</number>
             <teamRating>110</teamRating>
             <touchDowns>{{game.td2}}</touchDowns>
