@@ -27,6 +27,7 @@ use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy11;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy12;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy13;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy14;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy15;
 use FantasyFootball\TournamentCoreBundle\Util\Eurobowl\RankingStrategy2017;
 use FantasyFootball\TournamentCoreBundle\Util\LuteceCup\RankingStrategyLutece16;
 
@@ -51,9 +52,11 @@ class RankingStrategyFabric {
             $strategy = new RankingStrategy13();
         } else if ( 'Rdvbb14' === $name ){
             $strategy = new RankingStrategy14();
-        }else if ( 'Eurobowl2017'=== $name ){
+        } else if ( 'Rdvbb17' === $name) {
+            $strategy = new RankingStrategy17();
+        } else if ( 'Eurobowl2017'=== $name ){
             $strategy = new RankingStrategy2017();
-        }else if ( 'Lutece16'=== $name ){
+        } else if ( 'Lutece16'=== $name ){
             $strategy = new RankingStrategyLutece16();
         }
         return $strategy;

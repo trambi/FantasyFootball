@@ -39,7 +39,7 @@ class RankedCoachWithFinalePairingContext extends CoachPairingContext {
     $toPair = array_keys($coachRanking);
 
     $constraints = $data->getCoachGamesByEdition($this->edition->getId());
-    $alreadyPairedGames = [array_shift($toPair),array_shift($toPair)]];
+    $alreadyPairedGames = [array_shift($toPair),array_shift($toPair)];
     return ([$toPair, $constraints,$alreadyPairedGames]);
   }
 }

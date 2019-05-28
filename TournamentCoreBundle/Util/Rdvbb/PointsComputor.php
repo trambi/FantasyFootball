@@ -66,6 +66,10 @@ class PointsComputor{
     return self::custom($game,5,5,2,1,0,-1);
   }
   
+  static public function win5Draw2SmallLoss0Loss0($game){
+    return self::custom($game,5,5,2,0,0,-5);
+  }
+
   static public function win5Draw3SmallLoss1Loss0($game){
     return self::custom($game,5,5,3,1,0,-1);
   }

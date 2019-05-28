@@ -1,17 +1,17 @@
 fantasy_football_tournament_admin_main:
    path:    /{edition}/{round}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Main:index,edition :0,round :-1 }
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Main:index,edition: 0,round: -1 }
    requirements:
       edition:  \d+
       round:  \d+
 fantasy_football_tournament_admin_next:
    path:    /next_round/{edition}
-   defaults: { _controller: FantasyFootballTournamentAdminBundle:Main:nextRound,edition :0 }
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:Main:nextRound,edition: 0 }
    requirements:
       edition:  \d+
 fantasy_football_tournament_admin_naf:
     path:   /naf/{edition}/{format}
-    defaults: { _controller: FantasyFootballTournamentAdminBundle:Main:naf,edition :0,format :xml }
+    defaults: { _controller: FantasyFootballTournamentAdminBundle:Main:naf,edition: 0,format: xml }
     requirements:
         edition:  \d+
         format:  xml|html

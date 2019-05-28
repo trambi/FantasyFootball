@@ -1,5 +1,5 @@
 {
-   "name": "FantasyFootball/ws",
+   "name": "fantasy-football/ws",
     "license": "GPL-V3",
     "type": "project",
     "autoload": {
@@ -22,17 +22,16 @@
         "doctrine/doctrine-bundle": "~1.4",
         "doctrine/orm": "^2.4.8",
         "incenteev/composer-parameter-handler": "~2.0",
-        "sensio/distribution-bundle": "~4.0",
-        "sensio/framework-extra-bundle": "^3.0.2",
-        "symfony/monolog-bundle": "^3.0.2",
-        "symfony/swiftmailer-bundle": "~2.3,>=2.3.10",
-        "symfony/symfony": "2.8.*",
-        "twig/twig": "^1.0||^2.0",
-        "symfony/assetic-bundle": "^2.8"
+        "sensio/distribution-bundle": "~5.0",
+        "sensio/framework-extra-bundle": "~5.0",
+        "symfony/monolog-bundle": "~3.3",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/symfony": "~3.4",
+        "twig/twig": "^1.0||^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
-        "symfony/phpunit-bridge": "~2.7"
+        "symfony/phpunit-bridge": "~3.4"
     },
     "scripts": {
         "symfony-scripts": [
