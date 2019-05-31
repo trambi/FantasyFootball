@@ -50,7 +50,7 @@ class CoachTeamController extends Controller{
       $em->flush();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition,'round'=>0]));
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Add.html.twig',
+    return $this->render('@tournament_admin/CoachTeam/Add.html.twig',
       ['form' => $form->createView(),'edition'=> $edition]);
   }
 
@@ -70,7 +70,7 @@ class CoachTeamController extends Controller{
       $em->flush();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Modify.html.twig',
+    return $this->render('@tournament_admin/CoachTeam/Modify.html.twig',
       ['form' => $form->createView(),'coachTeam' => $coachTeam,'edition' => $edition]);
     }
   
@@ -102,7 +102,7 @@ class CoachTeamController extends Controller{
         $edition = $coach->getEdition();
       }
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Delete.html.twig',
+    return $this->render('@tournament_admin/CoachTeam/Delete.html.twig',
       ['coachTeam'=>$coachTeam,'form' => $form->createView(),'edition'=>$edition]);
   }
 
@@ -181,7 +181,7 @@ class CoachTeamController extends Controller{
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition,'round'=>0]));
     }
 
-    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:Load.html.twig',
+    return $this->render('@tournament_admin/CoachTeam/Load.html.twig',
       ['form' => $form->createView(),'edition' => $edition]);
   }
 
@@ -195,13 +195,13 @@ class CoachTeamController extends Controller{
                       ->find($coachTeamId);
     $matchs = $data->getMatchsByCoachTeam($coachTeamId);
     $edition = $coachTeam->getCoachs()[0]->getEdition();
-    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:View.html.twig', 
+    return $this->render('@tournament_admin/CoachTeam/View.html.twig', 
       ['coachTeam'=>$coachTeam,'matchs'=>$matchs,'edition'=>$edition]);
   }
 
   public function ListAction($edition){
     $coachTeams = $this->getDoctrine()->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->findByEditionJoined($edition);
-    return $this->render('FantasyFootballTournamentAdminBundle:CoachTeam:List.html.twig',
+    return $this->render('@tournament_admin/CoachTeam/List.html.twig',
       ['coachTeams' => $coachTeams, 'edition'=>$edition]);
   }
   

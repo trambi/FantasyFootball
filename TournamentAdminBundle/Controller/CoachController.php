@@ -41,7 +41,7 @@ class CoachController extends Controller{
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition,'round'=>0)));
     }
 
-    return $this->render('FantasyFootballTournamentAdminBundle:Coach:Add.html.twig',
+    return $this->render('@tournament_admin/Coach/Add.html.twig',
       ['form' => $form->createView(),'edition'=>$edition]);    
   }
   
@@ -93,7 +93,7 @@ class CoachController extends Controller{
       $em->flush();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition)));
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:Coach:Modify.html.twig', 
+    return $this->render('@tournament_admin/Coach/Modify.html.twig', 
       ['form' => $form->createView(),'coach' => $coach] );    
   }
 
@@ -112,7 +112,7 @@ class CoachController extends Controller{
       $em->flush();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition)));
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:Coach:Delete.html.twig',
+    return $this->render('@tournament_admin/Coach/Delete.html.twig',
       ['coach'=>$coach,'form' => $form->createView()]);
   }
 
@@ -127,14 +127,14 @@ class CoachController extends Controller{
     }
     $matchs = $data->getMatchsByCoach($coachId);
     $edition = $coach->getEdition();
-    return $this->render('FantasyFootballTournamentAdminBundle:Coach:View.html.twig',
+    return $this->render('@tournament_admin/Coach/View.html.twig',
       ['coach'=>$coach,'race'=>$coach->getRace(),'coachTeam'=>$coach->getCoachTeam(),'matchs'=>$matchs]);
   }
 
   public function ListAction($edition){
     $em = $this->getDoctrine()->getManager();
     $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($edition);
-    return $this->render('FantasyFootballTournamentAdminBundle:Coach:List.html.twig',
+    return $this->render('@tournament_admin/Coach/List.html.twig',
       ['coachs' => $coachs, 'edition'=>$edition]);
   }
   

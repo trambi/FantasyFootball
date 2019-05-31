@@ -39,7 +39,7 @@ class EditionController extends Controller{
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('round'=>0)));
     }
 
-    return $this->render('FantasyFootballTournamentAdminBundle:Edition:Add.html.twig',
+    return $this->render('@tournament_admin/Edition/Add.html.twig',
       ['form' => $form->createView()]);
   }
 
@@ -53,7 +53,7 @@ class EditionController extends Controller{
       $em->flush();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',array('edition'=>$edition)));
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:Edition:Modify.html.twig', 
+    return $this->render('@tournament_admin/Edition/Modify.html.twig', 
       ['form' => $form->createView(),'edition' => $editionObj] );    
   }
 }

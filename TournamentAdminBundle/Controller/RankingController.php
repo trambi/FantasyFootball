@@ -49,7 +49,7 @@ class RankingController extends Controller
       }else{
         $ranking = $data->getCoachTeamRanking($editionObj);
       }
-      return $this->render('FantasyFootballTournamentAdminBundle:Ranking:coach_team.html.twig',
+      return $this->render('@tournament_admin/Ranking/coach_team.html.twig',
         ['edition' => $edition,'ranking' => $ranking,'type'=>$type,'round'=>$currentRound,
         'params' => $params,'availableRankings'=>$availableRankings]);
     }else{
@@ -82,7 +82,7 @@ class RankingController extends Controller
       }else{
         $ranking = $data->getMainCoachRanking($editionObj);
       }
-      return $this->render('FantasyFootballTournamentAdminBundle:Ranking:coach.html.twig',
+      return $this->render('@tournament_admin/Ranking/coach.html.twig',
         ['edition' => $edition,'ranking' => $ranking,'type'=>$type,'round'=>$currentRound,
         'params' => $params,'availableRankings'=>$availableRankings]);
     }else{
@@ -137,7 +137,7 @@ class RankingController extends Controller
       }
     }
     $currentRound = $editionObj->getCurrentRound();
-    return $this->render('FantasyFootballTournamentAdminBundle:Ranking:all.html.twig',
+    return $this->render('@tournament_admin/Ranking/all.html.twig',
       ['edition' => $edition,'round' => $currentRound,
       'allCoachRankings' => $allRanking['coach'],
       'allCoachTeamRankings' => $allRanking['coachTeam'],

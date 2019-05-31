@@ -32,7 +32,7 @@ class MainController extends Controller{
     $em = $this->getDoctrine()->getManager();
     $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($editionId,array('name'=>'ASC'));
     $coachTeams = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->findByEditionJoined($editionId);
-    return $this->render('FantasyFootballTournamentAdminBundle:Main:index_not_started.html.twig',
+    return $this->render('@tournament_admin/Main/index_not_started.html.twig',
       ['edition' => $editionId,'currentRound' => $edition->getCurrentRound(),'coachs' => $coachs,'coachTeams' => $coachTeams]);
   }
 
@@ -42,7 +42,7 @@ class MainController extends Controller{
     $data = new DataProvider($conf);
     $playedMatches = $data->getPlayedMatchsByEditionAndRound($edition->getId(), $round);
     $matchesToPlay = $data->getToPlayMatchsByEditionAndRound($edition->getId(), $round);
-    return $this->render('FantasyFootballTournamentAdminBundle:Main:index.html.twig',
+    return $this->render('@tournament_admin/Main/index.html.twig',
       ['edition' => $editionId,'round' => $round,'matchesToPlay' => $matchesToPlay,
         'playedMatches' => $playedMatches,'roundNumber' => $edition->getRoundNumber(),
         'rankings'=>$edition->getRankings()]);
@@ -130,7 +130,7 @@ class MainController extends Controller{
       $response->headers->set('Content-Type', 'xml');
       return $response;
     }else{
-      return $this->render('FantasyFootballTournamentAdminBundle:Main:naf.html.twig',
+      return $this->render('@tournament_admin/Main/naf.html.twig',
         ['edition'=>$editionObj,'coachs' => $coachs,
          'games' => $games,'dates'=>$dates]);
     }

@@ -42,7 +42,7 @@ class GameController extends Controller
       $edition = $game->getEdition();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:Game:delete.html.twig', array(
+    return $this->render('@tournament_admin/Game/delete.html.twig', array(
             'game'=>$game,
             'coach1'=>$coach1,
             'coach2'=>$coach2,
@@ -102,7 +102,7 @@ class GameController extends Controller
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
 
-    return $this->render('FantasyFootballTournamentAdminBundle:Game:schedule.html.twig', array(
+    return $this->render('@tournament_admin/Game/schedule.html.twig', array(
                         'form' => $form->createView(),
                         'edition' => $edition) );
   }
@@ -159,7 +159,7 @@ class GameController extends Controller
       $edition = $game->getEdition();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:Game:resume.html.twig', array(
+    return $this->render('@tournament_admin/Game/resume.html.twig', array(
                         'form' => $form->createView(),
                         'game' => $game,
                         'edition'=> $game->getEdition()) );
@@ -238,7 +238,7 @@ class GameController extends Controller
       $edition = $game->getEdition();
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition]));
     }
-    return $this->render('FantasyFootballTournamentAdminBundle:Game:modify.html.twig', array(
+    return $this->render('@tournament_admin/Game/modify.html.twig', array(
                         'form' => $form->createView(),
                         'game' => $game,
                         'edition'=> $game->getEdition()) );
@@ -284,7 +284,7 @@ class GameController extends Controller
           $confrontation->games[] = $game;
       }
       $confrontations[] = $confrontation;
-      return $this->render('FantasyFootballTournamentAdminBundle:Game:summarize_team.html.twig',
+      return $this->render('@tournament_admin/Game/summarize_team.html.twig',
                            array(
                                'edition'=>$edition,
                                'round'=>$round,
@@ -293,7 +293,7 @@ class GameController extends Controller
 
   protected function _summarize($games, $edition, $round)
   {
-      return $this->render('FantasyFootballTournamentAdminBundle:Game:summarize.html.twig',
+      return $this->render('@tournament_admin/Game/summarize.html.twig',
                            array(
                                'edition'=>$edition,
                                'round'=>$round,
