@@ -24,6 +24,13 @@ use Symfony\Component\HttpFoundation\Request;
 use FantasyFootball\TournamentCoreBundle\Entity\Game;
 use FantasyFootball\TournamentCoreBundle\Entity\CoachRepository;
 
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 class GameController extends Controller
 {
   public function DeleteAction(Request $request,$gameId)
@@ -33,7 +40,7 @@ class GameController extends Controller
     $coach1 = $game->getCoach1();
     $coach2 = $game->getCoach2();
     $form = $this->createFormBuilder($game)
-            ->add('delete','submit')
+            ->add('delete', SubmitType::class)
             ->getForm();
     $form->handleRequest($request);
     if ($form->isValid()) {
@@ -67,31 +74,35 @@ class GameController extends Controller
     }
     $tableChoice = range(0,$gameCount);
     $form = $this->createFormBuilder($game)
-                  ->add('round', 'choice',
+                  ->add('round', ChoiceType::class,
                     array('label'=>'Tour :',
                       'choices'   => $roundChoice,
                       'required'  => true,
                       'choices_as_values' => true))
-                  ->add('tableNumber', 'choice',
+                  ->add('tableNumber', ChoiceType::class,
                     array('label'=>'Table :',
                       'choices'   => $tableChoice,
                       'required'  => true,
                       'choices_as_values' => true))
-                  ->add('coach1', 'entity',
+                  ->add('coach1', EntityType::class,
                       array('label'=>'Coach 1 :',
                         'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
-                        'property'  => 'name',
+                        'choice_label' => function ($coach) {
+                          return $coach->getName();
+                        },
                         'query_builder' => function(CoachRepository $cr) use ($edition,$round){
                           return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$round);
                         }))
-                  ->add('coach2', 'entity',
+                  ->add('coach2', EntityType::class,
                     array('label'=>'Coach 2 :',
                       'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
-                      'property'  => 'name',
+                      'choice_label' => function ($coach) {
+                        return $coach->getName();
+                      },
                       'query_builder' => function(CoachRepository $cr) use ($edition,$round) {
                         return $cr->getQueryBuilderForCoachsWithoutGameByEditionAndRound($edition,$round);
                       }))
-                  ->add('save','submit',array('label'=>'Valider'))
+                  ->add('save',SubmitType::class,array('label'=>'Valider'))
                   ->getForm();
     $form->handleRequest($request);
     if ($form->isValid()) {
@@ -114,37 +125,37 @@ class GameController extends Controller
     $name1 = $game->getCoach1()->getName();
     $name2 = $game->getCoach2()->getName();
     $form = $this->createFormBuilder($game)
-            ->add('td1', 'integer',
+            ->add('td1', IntegerType::class,
               array('label'=>'Touchdown de '.$name1.' :',
                 'required'  => true))
-            ->add('td2', 'integer',
+            ->add('td2', IntegerType::class,
               array('label'=>'Touchdown de '.$name2.' :',
                 'required'  => true))
-            ->add('casualties1', 'integer',
+            ->add('casualties1', IntegerType::class,
               array('label'=>'Sorties de '.$name1.' :',
                 'required'  => true))
-            ->add('casualties2', 'integer',
+            ->add('casualties2', IntegerType::class,
               array('label'=>'Sorties de '.$name2.' :',
                 'required'  => true))
-            ->add('fouls1', 'integer',
+            ->add('fouls1', IntegerType::class,
                 array('label'=>'Aggressions de '.$name1.' :',
                 'required'  => false))
-            ->add('fouls2', 'integer',
+            ->add('fouls2', IntegerType::class,
                 array('label'=>'Aggressions de '.$name2.' :',
                 'required'  => false))
-            ->add('completions1', 'integer',
+            ->add('completions1', IntegerType::class,
                 array('label'=>'Passe de '.$name1.' :',
                 'required'  => false))
-            ->add('completions2', 'integer',
+            ->add('completions2', IntegerType::class,
                 array('label'=>'Passe de '.$name2.' :',
                 'required'  => false))
-            ->add('special1', 'text',
+            ->add('special1', TextType::class,
                 array('label'=>'Special de '.$name1.' :',
                 'required'  => false))
-            ->add('special2', 'text',
+            ->add('special2', TextType::class,
                 array('label'=>'Special de '.$name2.' :',
                 'required'  => false))
-            ->add('save','submit',array('label'=>'Valider'))
+            ->add('save', SubmitType::class,array('label'=>'Valider'))
             ->getForm();
     $form->handleRequest($request);
     if ($form->isValid()) {
@@ -169,53 +180,53 @@ class GameController extends Controller
     $name1 = $game->getCoach1()->getName();
     $name2 = $game->getCoach2()->getName();
     $form = $this->createFormBuilder($game)
-              ->add('edition', 'integer',
+              ->add('edition', IntegerType::class,
                 array('label'=>'Edition :',
                 'required'  => true))
-              ->add('round', 'integer',
+              ->add('round', IntegerType::class,
                 array('label'=>'Round :',
                 'required'  => true))
-              ->add('tableNumber', 'integer',
+              ->add('tableNumber', IntegerType::class,
                 array('label'=>'Table :',
                 'required'  => true))
-              ->add('td1', 'integer',
+              ->add('td1', IntegerType::class,
                 array('label'=>'Touchdown de '.$name1.' :',
                 'required'  => true))
-              ->add('td2', 'integer',
+              ->add('td2', IntegerType::class,
                 array('label'=>'Touchdown de '.$name2.' :',
                 'required'  => true))
-              ->add('casualties1', 'integer',
+              ->add('casualties1', IntegerType::class,
                 array('label'=>'Sorties de '.$name1.' :',
                 'required'  => true))
-              ->add('casualties2', 'integer',
+              ->add('casualties2', IntegerType::class,
                 array('label'=>'Sorties de '.$name2.' :',
                 'required'  => true))
-              ->add('completions1', 'integer',
+              ->add('completions1', IntegerType::class,
                 array('label'=>'Passe de '.$name1.' :',
                 'required'  => false))
-              ->add('completions2', 'integer',
+              ->add('completions2', IntegerType::class,
                 array('label'=>'Passe de '.$name2.' :',
                 'required'  => false))
-              ->add('fouls1', 'integer',
+              ->add('fouls1', IntegerType::class,
                 array('label'=>'Aggressions de '.$name1.' :',
                 'required'  => false))
-              ->add('fouls2', 'integer',
+              ->add('fouls2', IntegerType::class,
                 array('label'=>'Aggressions de '.$name2.' :',
                 'required'  => false))
-              ->add('special1', 'text',
+              ->add('special1', TextType::class,
                 array('label'=>'Special de '.$name1.' :',
                 'required'  => false))
-              ->add('special2', 'text',
+              ->add('special2', TextType::class,
                 array('label'=>'Special de '.$name2.' :',
                 'required'  => false))
-              ->add('status', 'text', array(
-                /*'choices'  => Game::getAllowedStatus(),*/
+              ->add('status', ChoiceType::class, array(
+                'choices' =>array_combine( Game::getAllowedStatus(), Game::getAllowedStatus()),
                 'label'=>'Statut du match :',
                 'required' => true))
-              ->add('finale', 'checkbox',array(
+              ->add('finale', CheckboxType::class, array(
                 'label' => 'Finale ?',
                 'required' => false))
-              ->add('save','submit',array('label'=>'Valider'))
+              ->add('save',SubmitType::class,array('label'=>'Valider'))
               ->getForm();
     return $form;
   }
