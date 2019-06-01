@@ -30,7 +30,7 @@ class EditionController extends Controller{
   public function AddAction(Request $request){
     $edition = new Edition();
 
-    $form = $this->createForm(new EditionType(),$edition);
+    $form = $this->createForm(EditionType::class, $edition);
     $form->handleRequest($request);
     if ( $form->isValid() ) {
       $em = $this->getDoctrine()->getManager();
@@ -47,7 +47,7 @@ class EditionController extends Controller{
   {
     $em = $this->getDoctrine()->getManager();
     $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
-    $form = $this->createForm(new EditionType(),$editionObj);
+    $form = $this->createForm(EditionType::class, $editionObj);
     $form->handleRequest($request);
     if ($form->isValid()) {
       $em->flush();

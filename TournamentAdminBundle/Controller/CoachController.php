@@ -25,6 +25,7 @@ use FantasyFootball\TournamentAdminBundle\Util\DataUpdater;
 
 use FantasyFootball\TournamentCoreBundle\Entity\Coach;
 use FantasyFootball\TournamentAdminBundle\Form\CoachType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class CoachController extends Controller{
   
@@ -32,7 +33,7 @@ class CoachController extends Controller{
     $coach = new Coach();
     $coach->setEdition($edition);
 
-    $form = $this->createForm(new CoachType($edition),$coach);
+    $form = $this->createForm(CoachType::class, $coach);
     $form->handleRequest($request);
     if ($form->isValid()) {
       $em = $this->getDoctrine()->getManager();
@@ -87,7 +88,7 @@ class CoachController extends Controller{
     $em = $this->getDoctrine()->getManager();
     $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);
     $edition = $coach->getEdition();
-    $form = $this->createForm(new CoachType($edition),$coach);
+    $form = $this->createForm(CoachType::class,$coach);
     $form->handleRequest($request);
     if ($form->isValid()) {
       $em->flush();
@@ -103,7 +104,7 @@ class CoachController extends Controller{
     $coach = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->find($coachId);	
     $edition = $coach->getEdition();
     $form = $this->createFormBuilder($coach)
-                  ->add('delete','submit')
+                  ->add('delete',SubmitType::class)
                   ->getForm();
 
     $form->handleRequest($request);

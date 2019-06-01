@@ -25,24 +25,26 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use FantasyFootball\TournamentCoreBundle\Util\RankingStrategyFabric;
 
 class EditionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $editionId = $this->editionId;
         $builder->add('organiser', TextType::class, array('label'=>'Organiser:'));       
         $builder->add('day1', DateType::class, 
                       array('label'=>'Day 1:','widget' => 'single_text', 'input'=>'string'));
         $builder->add('day2', DateType::class,
                       array('label'=>'Day 2:','widget' => 'single_text', 'input'=>'string'));
-        $builder->add('roundNumber', 'integer',array('label'=>'Round number:'));
-        $builder->add('firstDayRound', 'integer',array('label'=>'Round number in first day:'));
-        $builder->add('useFinale', 'checkbox',array(
+        $builder->add('roundNumber', IntegerType::class, array('label'=>'Round number:'));
+        $builder->add('firstDayRound', IntegerType::class, array('label'=>'Round number in first day:'));
+        $builder->add('useFinale', CheckboxType::class, array(
                 'label' => 'Use finale:',
 		        'required' => false));
-        $builder->add('fullTriplette', 'checkbox',array(
+        $builder->add('fullTriplette', CheckboxType::class, array(
                 'label' => 'Is CoachTeam tournament:',
 		        'required' => false));
         $strategyChoices = [];
@@ -55,7 +57,7 @@ class EditionType extends AbstractType
             'choices_as_values' => true)
         );
 
-        $builder->add('save','submit',array('label'=>'Valider'));
+        $builder->add('save',SubmitType::class, array('label'=>'Valider'));
     }
 
     public function configureOptions(OptionsResolver $resolver)

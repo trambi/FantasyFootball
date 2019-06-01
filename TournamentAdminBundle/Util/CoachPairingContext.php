@@ -24,19 +24,27 @@ use FantasyFootball\TournamentCoreBundle\DatabaseConfiguration;
 use Doctrine\ORM\EntityManager;
 
 abstract class CoachPairingContext extends PairingContext implements IPairingContext {
+  protected $coachsById;
 
   public function __construct(Edition $edition,EntityManager $em,DatabaseConfiguration $conf){
     parent::__construct($edition, $em, $conf);
+    $this->coachsById = [];
   }
 
   public function init(){
+    $editionId = $this->edition->getId();
+    $coachs = $this->em->getRepository('FantasyFootballTournamentCoreBundle:Coach')
+                        ->findByEdition($editionId);
+    foreach ($coachs as $coach){
+      $this->coachsById[$coach->getId()] = $coach;
+    }
     return $this->customInit();
   }
 
   public function persist(Array $games,$round){
     $table = 1;
     $edition = $this->edition->getId();
-    $coachsById = $this->$coachsById;
+    $coachsById = $this->coachsById;
     foreach($games as $coachGame){
       $rosterId = $coachGame[0];
       $opponentRosterId = $coachGame[1];
@@ -46,7 +54,7 @@ abstract class CoachPairingContext extends PairingContext implements IPairingCon
       $game->setTableNumber($table);
       $game->setCoach1($coachsById[$rosterId]);
       $game->setCoach2($coachsById[$opponentRosterId]);
-      $em->persist($game);
+      $this->em->persist($game);
       $table ++;
     }
   }

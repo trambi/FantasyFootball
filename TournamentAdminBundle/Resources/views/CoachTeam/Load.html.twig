@@ -18,13 +18,14 @@
   </ul>
   For example, you can have a file like that:
   <pre>
+  <code>
   coach_team_name,email,coach_1_name,coach_1_naf,coach_1_race,coach_2_name,coach_2_naf,coach_2_race
   crazy team,crazy@team.org,crazy_one,101547,orc,crazy_two,101548,amazon
   socks_bowl,socks@bowl.org,trambi,99,Skaven,longshot,101,Wood elf
+  </code>
   </pre>
   It will create two coach teams. One with crazy_one and crazy_two a second one with trambi and longshot.
 </div>
-    <form action="{{ path('_load_coach_team',{'edition':edition}) }}" method="post" {{ form_enctype(form) }}>
-    {{ form_rest(form) }}
-    <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':0} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+  {{ form(form) }}
+  <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':0} )  }}"class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}

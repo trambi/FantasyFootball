@@ -39,6 +39,9 @@ class RaceRepository extends EntityRepository
     public function getRaceByName($name)
     {
       $qb = $this->createQueryBuilder('r');
-      return $qb->where($qb->expr()->eq('r.frenchName',"'".$name."'"))->orWhere($qb->expr()->eq('r.englishName',"'".$name."'"))->getQuery()->getSingleResult();
+      return $qb->where($qb->expr()->eq('r.frenchName',"'".$name."'"))
+        ->orWhere($qb->expr()->eq('r.englishName',"'".$name."'"))
+        ->orWhere($qb->expr()->eq('r.englishName2',"'".$name."'"))
+        ->getQuery()->getSingleResult();
     }
 }

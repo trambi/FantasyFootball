@@ -18,6 +18,7 @@
 */
 namespace FantasyFootball\TournamentAdminBundle\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FantasyFootball\TournamentCoreBundle\Util\DataProvider;
 use FantasyFootball\TournamentAdminBundle\Util\PairingContextFabric;
@@ -73,6 +74,8 @@ class MainController extends Controller{
   }
 
   public function nextRoundAction($edition){
+    $logger = $this->get('logger');
+    
     $em = $this->getDoctrine()->getManager();
     $editionObj = $em->getRepository('FantasyFootballTournamentCoreBundle:Edition')->find($edition);
     $round = $editionObj->getCurrentRound();
@@ -81,8 +84,11 @@ class MainController extends Controller{
     if( ( 0 === $count ) || ( $editionObj->getRoundNumber() === $round  ) ){
       return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main'));
     }
+    $logger->info('round: '. $round . " " . gettype($round));
+    $logger->info('fullTriplette: '. $editionObj->getFullTriplette(). " " . gettype($editionObj->getFullTriplette()));
     $pairingContext = PairingContextFabric::create($editionObj,$em,$this->get('fantasy_football_core_db_conf'));
     list($toPair,$constraints,$alreadyPairedGames) = $pairingContext->init();
+    $logger->info('pairingContext: '.get_class($pairingContext));
     $pairing = new SwissRoundStrategy();
     $games = $pairing->pairing(array(), $toPair,$constraints);
     if (null == $games){

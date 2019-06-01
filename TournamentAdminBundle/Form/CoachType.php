@@ -22,35 +22,39 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use FantasyFootball\TournamentCoreBundle\Entity\RaceRepository;
 
 class CoachType extends AbstractType
-{
-    public function __construct($editionId)
-    {
-        $this->editionId = $editionId;
-    }
-    
+{    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $editionId = $this->editionId;
-        $builder->add('teamName', 'text',array('label'=>'Nom de l\'équipe :','required' => false));
-        $builder->add('name', 'text',array('label'=>'Nom :'));
-        $builder->add('race', 'entity',
+        
+        $editionId = $options['data']->getEdition();
+        $builder->add('teamName', TextType::class,array('label'=>'Nom de l\'équipe :','required' => false));
+        $builder->add('name', TextType::class,array('label'=>'Nom :'));
+        $builder->add('race', EntityType::class,
                 array('label'=>'Race :',
-                            'class'   => 'FantasyFootballTournamentCoreBundle:Race',
-                            'property'  => 'frenchName',
-                            'query_builder' => function(RaceRepository $rr) use ($editionId) {
+                      'class'   => 'FantasyFootballTournamentCoreBundle:Race',
+                      'choice_label' => function ($race) {
+                        return $race->getFrenchName();
+                      },
+                      'query_builder' => function(RaceRepository $rr) use ($editionId) {
                                 return $rr->getQueryBuilderForRaceByEditionOrLesser($editionId);
                             }));
-        $builder->add('email', 'email',array('label'=>'Courriel :','required' => false));
-        $builder->add('nafNumber', 'integer',array('label'=>'Numéro NAF :'));
-        $builder->add('ready', 'checkbox',array(
+        $builder->add('email', EmailType::class, array('label'=>'Courriel :','required' => false));
+        $builder->add('nafNumber', IntegerType::class, array('label'=>'Numéro NAF :'));
+        $builder->add('ready', CheckboxType::class, array(
                 'label' => 'Coach prêt ?',
 		'required' => false))
         ;
-        $builder->add('save','submit',array('label'=>'Valider'));
+        $builder->add('save', SubmitType::class, array('label'=>'Valider'));
     }
 
     public function configureOptions(OptionsResolver $resolver)

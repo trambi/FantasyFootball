@@ -27,11 +27,12 @@ use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy11;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy12;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy13;
 use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy14;
-use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy15;
+use FantasyFootball\TournamentCoreBundle\Util\Rdvbb\RankingStrategy17;
 use FantasyFootball\TournamentCoreBundle\Util\Eurobowl\RankingStrategy2017;
 use FantasyFootball\TournamentCoreBundle\Util\LuteceCup\RankingStrategyLutece16;
 
 class RankingStrategyFabric {
+
     static function getByName($name) {
         $strategy = null;
         if ( 'Rdvbb1' === $name ) {
@@ -65,6 +66,6 @@ class RankingStrategyFabric {
     static function getNames(){
         return ['Rdvbb1','Rdvbb2To3','Rdvbb4To5','Rdvbb6To8',
                 'Rdvbb9To10','Rdvbb11','Rdvbb12','Rdvbb13',
-                'Rdvbb14','Eurobowl2017','Lutece16'];
+                'Rdvbb14','Eurobowl2017','Lutece16', 'Rdvbb17'];
     }
 }

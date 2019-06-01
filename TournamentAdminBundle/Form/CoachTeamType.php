@@ -18,33 +18,41 @@
 */
 namespace FantasyFootball\TournamentAdminBundle\Form;
 
+use FantasyFootball\TournamentCoreBundle\Entity\CoachRepository;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use FantasyFootball\TournamentCoreBundle\Entity\CoachRepository;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class CoachTeamType extends AbstractType{
-  protected $editionId;
-  protected $coachTeamId;
-    
-  public function __construct($editionId,$coachTeamId=0) {
-    $this->editionId = $editionId;
-    $this->coachTeamId = $coachTeamId;
-  }
 
   public function buildForm(FormBuilderInterface $builder, array $options){
-    $editionId = $this->editionId;
-    $coachTeamId = $this->coachTeamId;
-    $builder->add('name', 'text',['label'=>'Nom :'])
-            ->add('coachs', 'collection',
-              ['label' =>  'Membres :','type'   => 'entity',
-              'options' =>['label'=>'Coach :',
+    $coachs = $options['data']->getCoachs();
+    $editionId = -1;
+    if (null !== $coachs && 0 < count($coachs) ){
+      $editionId = $coachs[0]->getEdition();
+
+    }
+    $coachTeamId = $options['data']->getId();
+    if(null === $coachTeamId){
+      $coachTeamId = 0;
+    }
+    $builder->add('name', TextType::class, ['label'=>'Nom :'])
+            ->add('coachs', CollectionType::class,
+              ['label' =>  'Membres :','entry_type'   => EntityType::class,
+              'entry_options' =>['label'=>'Coach :',
                 'class'   => 'FantasyFootballTournamentCoreBundle:Coach',
-                'property'  => 'name',
-                'query_builder' => function(CoachRepository $cr) use ($editionId,$coachTeamId) {
-                  return $cr->getQueryBuilderFreeCoachsByEditionAndCoachTeam($editionId,$coachTeamId);
+                'choice_label' => function ($coach) {
+                  return $coach->getName();
+                },
+                'query_builder' => function(CoachRepository $cr) use ($editionId, $coachTeamId) {
+                  return $cr->getQueryBuilderFreeCoachsByEditionAndCoachTeam($editionId, $coachTeamId);
                 }]])
-            ->add('save','submit',array('label'=>'Valider'));
+            ->add('save', SubmitType::class, array('label'=>'Valider'));
   }
 
   public function configureOptions(OptionsResolver $resolver){

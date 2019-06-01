@@ -27,7 +27,12 @@ use FantasyFootball\TournamentCoreBundle\Entity\Coach;
 use FantasyFootball\TournamentCoreBundle\Entity\CoachTeam;
 use FantasyFootball\TournamentCoreBundle\Entity\RaceRepository;
 
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use FantasyFootball\TournamentAdminBundle\Form\CoachTeamType;
+
+use Doctrine\ORM\NoResultException;
 
 
 class CoachTeamController extends Controller{
@@ -43,7 +48,7 @@ class CoachTeamController extends Controller{
     foreach ($coachs as $coach){
       $coachTeam->addCoach($coach);
     }
-    $form = $this->createForm(new CoachTeamType($edition),$coachTeam);
+    $form = $this->createForm(CoachTeamType::class, $coachTeam);
     $form->handleRequest($request);
     if ($form->isValid()) {
       $em->persist($coachTeam);
@@ -58,7 +63,7 @@ class CoachTeamController extends Controller{
     $em = $this->getDoctrine()->getManager();
     $coachTeam = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')
                   ->findOneById($coachTeamId);
-    $form = $this->createForm(new CoachTeamType($edition,$coachTeamId),$coachTeam);
+    $form = $this->createForm(CoachTeamType::class, $coachTeam);
     foreach($coachTeam->getCoachs() as $coach){
         $coach->setCoachTeam(null);
       }
@@ -83,7 +88,7 @@ class CoachTeamController extends Controller{
     }
 
     $form = $this->createFormBuilder($coachTeam)
-                  ->add('delete','submit')
+                  ->add('delete',SubmitType::class)
                   ->getForm();
 
     $form->handleRequest($request);
@@ -129,9 +134,9 @@ class CoachTeamController extends Controller{
   public function LoadAction(Request $request,$edition){
     $loadParameters = array();
     $form = $this->createFormBuilder($loadParameters)
-                  ->add('attachment', 'file',array('label'=>'Fichier :'))
-                  ->add('edition', 'integer',array('label'=>'Edition :','data'=>$edition))
-                  ->add('save','submit',array('label'=>'Valider'))
+                  ->add('attachment', FileType::class, array('label'=>'Fichier :'))
+                  ->add('edition', IntegerType::class, array('label'=>'Edition :','data'=>$edition))
+                  ->add('save',SubmitType::class, array('label'=>'Valider'))
                   ->getForm();
     $form->handleRequest($request);
     if ($form->isValid()) {
@@ -164,7 +169,13 @@ class CoachTeamController extends Controller{
               $coach->setName($row['coach_team_name'].'_'.$i);
             }
             if('' != $row['coach_'.$i.'_race']){
-              $coach->setRace($em->getRepository('FantasyFootballTournamentCoreBundle:Race')->getRaceByName($row['coach_'.$i.'_race']));
+              $race = trim($row['coach_'.$i.'_race']);
+              try{
+                $coach->setRace($em->getRepository('FantasyFootballTournamentCoreBundle:Race')->getRaceByName($race));
+              }catch(NoResultException $e){
+                var_dump($e);
+                $coach->setRace($defaultRace);  
+              }
             }else{
               $coach->setRace($defaultRace);
             }
