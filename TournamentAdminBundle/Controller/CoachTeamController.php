@@ -170,11 +170,11 @@ class CoachTeamController extends Controller{
             }
             if('' != $row['coach_'.$i.'_race']){
               $race = trim($row['coach_'.$i.'_race']);
-              try{
-                $coach->setRace($em->getRepository('FantasyFootballTournamentCoreBundle:Race')->getRaceByName($race));
-              }catch(NoResultException $e){
-                var_dump($e);
-                $coach->setRace($defaultRace);  
+	      $objRace = $em->getRepository('FantasyFootballTournamentCoreBundle:Race')->getRaceByName($race);
+	      if(null === $objRace){
+	        $coach->setRace($defaultRace);
+              }else{
+                $coach->setRace($objRace);
               }
             }else{
               $coach->setRace($defaultRace);
