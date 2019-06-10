@@ -41,3 +41,10 @@ _ready_coach_team:
    defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:Ready }
    requirements:
       coachTeamId:  \d+
+
+
+_delete_coach_team_by_edition:
+   path:    /deleteByEdition/{edition}
+   defaults: { _controller: FantasyFootballTournamentAdminBundle:CoachTeam:DeleteByEdition }
+   requirements:
+      edition:  \d+

@@ -38,6 +38,18 @@ class CoachTeamRepository  extends EntityRepository {
             return null;
         }
     }
+
+    public function deleteByEdition($edition){
+        $coachTeams = $this->findByEditionJoined($edition);
+        $em = $this->getEntityManager();
+        foreach ($coachTeams as $coachTeam){
+            foreach($coachTeam->getCoachs() as $coach){
+                $coach->setCoachTeam(null);
+            }
+            $em->remove($coachTeam);
+        }
+        $em->flush();
+    }
     
 }
 ?>

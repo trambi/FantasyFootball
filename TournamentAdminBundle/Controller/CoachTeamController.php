@@ -30,6 +30,8 @@ use FantasyFootball\TournamentCoreBundle\Entity\RaceRepository;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use FantasyFootball\TournamentAdminBundle\Form\CoachTeamType;
 
 use Doctrine\ORM\NoResultException;
@@ -130,18 +132,49 @@ class CoachTeamController extends Controller{
     }
     return $data;
   }        
-        
+
+  public function DeleteByEditionAction(Request $request, $edition){
+    $em = $this->getDoctrine()->getManager();
+    $count = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->countGamesByEdition($edition);
+
+    if (0 != $count) {
+      throw $this->createNotFoundException('Il y a des matchs pour cette edition (id : '.$edition);
+    }
+    $form = $this->createFormBuilder([])
+      ->add('delete',SubmitType::class)
+      ->getForm();
+    
+    $form->handleRequest($request);
+    if ($form->isValid()) {
+      $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->deleteByEdition($edition);
+      $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->deleteByEdition($edition);
+      $em->flush();
+      return $this->redirect($this->generateUrl('fantasy_football_tournament_admin_main',['edition'=>$edition,'round'=>0]));
+    }
+    return $this->render('@tournament_admin/CoachTeam/DeleteByEdition.html.twig',
+      ['form' => $form->createView(),'edition'=>$edition]);
+  }
+ 
   public function LoadAction(Request $request,$edition){
     $loadParameters = array();
-    $form = $this->createFormBuilder($loadParameters)
-                  ->add('attachment', FileType::class, array('label'=>'Fichier :'))
-                  ->add('edition', IntegerType::class, array('label'=>'Edition :','data'=>$edition))
-                  ->add('save',SubmitType::class, array('label'=>'Valider'))
-                  ->getForm();
+    $em = $this->getDoctrine()->getManager();
+    $count = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->countGamesByEdition($edition);
+    $formBuilder = $this->createFormBuilder($loadParameters)
+      ->add('attachment', FileType::class, array('label'=>'Fichier :'));
+    if ( 0 == $count ){
+        $formBuilder->add('erase', CheckboxType::class, array('label'=>'Effacer tout ?'));
+    }
+    $formBuilder = $formBuilder->add('edition', HiddenType::class, array('label'=>'Edition :','data'=>$edition))
+      ->add('save',SubmitType::class, array('label'=>'Valider'));
+    $form = $formBuilder->getForm();
     $form->handleRequest($request);
     if ($form->isValid()) {
       $file = $form['attachment']->getData();
       $edition = $form['edition']->getData();
+      if($form['erase']->getData()){
+        $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->deleteByEdition($edition);
+        $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->deleteByEdition($edition);
+      }
       // générer un nom aléatoire et essayer de deviner l'extension (plus sécurisé)
       $extension = $file->guessExtension();
       if ('txt' === $extension) {
@@ -150,7 +183,7 @@ class CoachTeamController extends Controller{
         // Getting the CSV from filesystem
         $fileName = './'.$filename;
         $dataArray = $this->convert($fileName, ',');
-        $em = $this->getDoctrine()->getManager();
+        
         $defaultRace = $em->getRepository('FantasyFootballTournamentCoreBundle:Race')->findOneById(1);
         foreach($dataArray as $row){
           if('' == $row['coach_team_name']){

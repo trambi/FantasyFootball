@@ -46,6 +46,13 @@ class GameRepository extends EntityRepository
     return $qb;
   }
 
+  public function countGamesByEdition($editionId){
+    $qb = $this->createQueryBuilder('g');
+    $qb->select('COUNT(g)')
+        ->where($qb->expr()->eq('g.edition', $editionId));
+    return $qb->getQuery()->getSingleScalarResult();
+  }
+
   public function getMaxTableNumberByEditionAndRound($editionId,$round){
     $qb = $this->createQueryBuilder('g');
     $qb->select('MAX(g.tableNumber)')

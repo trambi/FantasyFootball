@@ -10,6 +10,9 @@
 <a href="{{ path('_unready_coachs_by_edition',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Déclarer tous les coachs absents</a>
 <a href="{{ path('_add_coach_team',{'edition':edition} )  }}" class="btn btn-primary" role="button" >Ajouter une triplette</a>
 <a href="{{ path('_load_coach_team',{'edition':edition} ) }}" class="btn btn-primary" role="button" >Charger le fichier</a>
+{% if enableDeleteCoachs %}
+<a href="{{ path('_delete_coach_team_by_edition',{'edition':edition} ) }}" class="btn btn-danger" role="button" >Supprimer les coachs</a>
+{% endif %}
 {% if currentRound %}
 <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':1} )  }}"class="btn btn-primary" role="button"  >Journ&eacute;e 1</a>
 {% else %}

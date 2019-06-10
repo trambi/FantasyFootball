@@ -33,8 +33,13 @@ class MainController extends Controller{
     $em = $this->getDoctrine()->getManager();
     $coachs = $em->getRepository('FantasyFootballTournamentCoreBundle:Coach')->findByEdition($editionId,array('name'=>'ASC'));
     $coachTeams = $em->getRepository('FantasyFootballTournamentCoreBundle:CoachTeam')->findByEditionJoined($editionId);
+    $count = $em->getRepository('FantasyFootballTournamentCoreBundle:Game')->countGamesByEdition($editionId);
     return $this->render('@tournament_admin/Main/index_not_started.html.twig',
-      ['edition' => $editionId,'currentRound' => $edition->getCurrentRound(),'coachs' => $coachs,'coachTeams' => $coachTeams]);
+      ['edition' => $editionId,
+      'currentRound' => $edition->getCurrentRound(),
+      'coachs' => $coachs,
+      'coachTeams' => $coachTeams,
+      'enableDeleteCoachs' => ($count == 0)]);
   }
 
   protected function _indexActionStarted(\FantasyFootball\TournamentCoreBundle\Entity\Edition $edition, $round) {

@@ -78,5 +78,14 @@ class CoachRepository  extends EntityRepository {
         $qb->orderBy('c.name', 'ASC');
         return $qb;
     }
+
+    public function deleteByEdition($edition){
+        $builder = $this->getEntityManager()
+            ->createQueryBuilder()
+            ->delete('FantasyFootballTournamentCoreBundle:Coach c')
+            ->where('c.edition = :edition')
+            ->setParameter(':edition',$edition);
+        $builder->getQuery()->execute();
+    }
     
 }

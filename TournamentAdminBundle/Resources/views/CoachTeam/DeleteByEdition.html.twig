@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block title %}FantasyFootballTournamentAdminBundle:CoachTeam:DeleteByEdition{% endblock %}
+
+{% block body %}
+<div class="alert alert-info" role="alert">
+  You are currently try to delete all coachTeams and coachs for edition {{edition}}.
+</div>
+  {{ form(form) }}
+  <a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':0} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+{% endblock %}
