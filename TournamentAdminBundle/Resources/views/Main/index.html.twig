@@ -5,16 +5,16 @@
 {% block body %}
 <h1>Administration &Eacute;dition {{edition}} - tour {{round}}</h1>
 {% block menuButtons %}
-<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':round-1} )  }}" class="btn btn-primary " role="button">Ronde précédente</a>
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':round-1} )  }}" class="btn btn-secondary " role="button">Ronde précédente</a>
 <a href="{{ path('_add_game',{'edition':edition,'round':round} )  }}" class="btn btn-primary" role="button">Ajouter un match</a>
 <a href="{{ path('_summarize',{'edition':edition,'round':round} )  }}" class="btn btn-primary " role="button">Synth&egrave;se des matchs</a>
 {% if  (matchesToPlay|length == 0) and (round != roundNumber) %}
 <a href="{{ path('fantasy_football_tournament_admin_next',{'edition':edition} )  }}" class="btn btn-primary " role="button">Générer la prochaine ronde</a>
 {% endif %}
 {% if (matchesToPlay|length != 0) %}
-<a href="{{ path('fantasy_football_tournament_simulate_games',{'edition':edition,'round':round} )  }}" class="btn btn-warning" role="button">Simuler</a>
+<a href="{{ path('fantasy_football_tournament_simulate_games',{'edition':edition,'round':round} )  }}" class="btn btn-danger" role="button">Simuler</a>
 {% endif %}
-{% if  round < roundNumber %}<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':round+1} )  }}" class="btn btn-primary " role="button">Ronde suivante</a>{% endif %}
+{% if  round < roundNumber %}<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':edition,'round':round+1} )  }}" class="btn btn-secondary " role="button">Ronde suivante</a>{% endif %}
 {% for coachRanking in rankings.coach|keys %}
 <a href="{{ path('_coach_ranking',{'edition':edition,'type':coachRanking} )  }}" class="btn btn-info" role="button">Classement individuel ({{coachRanking}})</a>
 {% endfor %}
@@ -29,9 +29,9 @@
 {% endblock %}
 
 {% if matchesToPlay %}
-<h2>Matchs &agrave; jouer <span class="badge">{{ matchesToPlay|length }}</span></h2>
+<h2>Matchs &agrave; jouer <span class="badge badge-info">{{ matchesToPlay|length }}</span></h2>
 
-<table class="table table-striped table-condensed">
+<table id="toPlayGames" class="table table-striped table-condensed">
     <thead>
         <tr>
             <th>Table</th>
@@ -47,8 +47,8 @@
             <td>{% if match.teamName1|length %}({{match.teamName1}}) {% endif %}<a href="{{ path('_view_coach',{'coachId':match.teamId1} )  }}" class="btn btn-info" role="button" >{{match.coach1}}</a></td>
             <td><a href="{{ path('_view_coach',{'coachId':match.teamId2} ) }}" class="btn btn-info" role="button" >{{match.coach2}}</a>{% if match.teamName2|length %} ({{match.teamName2}}) {% endif %}</td>
             <td>
-                <a href="{{ path('_resume_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >R&eacute;sumer</a>
-                <a href="{{ path('_delete_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >Supprimer</a></td>
+                <a href="{{ path('_resume_game',{'gameId':match.id} ) }}" class="btn btn-success" role="button" >R&eacute;sumer</a>
+                <a href="{{ path('_delete_game',{'gameId':match.id} ) }}" class="btn btn-danger" role="button" >Supprimer</a></td>
         </tr>
 {% endfor %}
     </tbody>
@@ -56,8 +56,8 @@
 {{ block('menuButtons') }}
 {% endif %}
 {% if playedMatches %}
-<h2>Matchs jou&eacute;s <span class="badge">{{ playedMatches|length }}</span></h2>
-<table class="table table-striped table-condensed">
+<h2>Matchs jou&eacute;s <span class="badge badge-info">{{ playedMatches|length }}</span></h2>
+<table id="playedGames" class="table table-striped table-condensed">
     <thead>
         <tr>
             <th>Table</th>
@@ -77,18 +77,14 @@
     <td>{{match.casualties1}} - {{match.casualties2}}</td>
     <td>{{match.points1}} - {{match.points2}}</td>
     <td>
-        <a href="{{ path('_modify_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >Modifier</a>
-        <a href="{{ path('_delete_game',{'gameId':match.id} ) }}" class="btn btn-primary" role="button" >Supprimer</a></td>
+        <a href="{{ path('_modify_game',{'gameId':match.id} ) }}" class="btn btn-success" role="button" >Modifier</a>
+        <a href="{{ path('_delete_game',{'gameId':match.id} ) }}" class="btn btn-danger" role="button" >Supprimer</a></td>
     </tr>
 {% endfor %}
 </tbody>
 </table>
-{% endif %}
 {{ block('menuButtons') }}
-
-
-
-
+{% endif %}
 <style>
 @media print {
 table th:last-child,
@@ -99,4 +95,26 @@ body > a {
 }
 </style>
 
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/jquery.js') }}"></script   >
+    <script src="{{ asset('js/datatables.min.js') }}"></script   >
+    <script> 
+        $(document).ready(function() {
+            $('#toPlayGames').DataTable();
+            $('#playedGames').DataTable();
+        } );
+    </script>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <style>
+    @media print {
+        table th:last-child,
+        table td:last-child,
+        body > a {
+            display:none;
+        }
+    }
+    </style>
 {% endblock %}
