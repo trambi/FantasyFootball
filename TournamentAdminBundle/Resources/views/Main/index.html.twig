@@ -101,8 +101,8 @@ body > a {
     <script src="{{ asset('js/datatables.min.js') }}"></script   >
     <script> 
         $(document).ready(function() {
-            $('#toPlayGames').DataTable();
-            $('#playedGames').DataTable();
+            $('#toPlayGames').DataTable({paging:false,search:false});
+            $('#playedGames').DataTable({paging:false,search:false});
         } );
     </script>
 {% endblock %}

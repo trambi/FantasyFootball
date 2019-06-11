@@ -97,8 +97,8 @@
     <script src="{{ asset('js/datatables.min.js') }}"></script   >
     <script> 
         $(document).ready(function() {
-            $('#coach').DataTable();
-            $('#coachTeam').DataTable();
+            $('#coach').DataTable({paging:false,search:false});
+            $('#coachTeam').DataTable({paging:false,search:false});
         } );
     </script>
 {% endblock %}
