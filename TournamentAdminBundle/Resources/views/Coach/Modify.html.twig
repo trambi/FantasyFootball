@@ -4,9 +4,13 @@
 
 {% block body %}
 {% block menuButtons %}
-<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':coach.edition} )  }}"class="btn btn-primary" role="button"  >Administration</a>
+<a href="{{ path('fantasy_football_tournament_admin_main',{'edition':coach.edition} )  }}" class="btn btn-primary" role="button"  >Administration</a>
 {% endblock %}
 <h2>Modification du coach {{coach.name}}</h2>
+<div class="alert alert-primary" role="alert">
+  * champs obligatoires
+</div>
 {{ form(form) }}
+
 {{ block('menuButtons') }}
 {% endblock %}

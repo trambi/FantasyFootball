@@ -93,14 +93,14 @@
 {% endif %}
 {% endblock %}
 {% block javascripts %}
-    <script src="{{ asset('js/datatables.min.js') }}"></script   >
+    <script src="{{ asset('js/datatables.js') }}"></script   >
     <script> 
         $(document).ready(function() {
-            $('#coach').DataTable({paging:false,search:false});
-            $('#coachTeam').DataTable({paging:false,search:false});
+            $('#coach').DataTable({paging:false,searching:false});
+            $('#coachTeam').DataTable({paging:false,searching:false});
         } );
     </script>
 {% endblock %}
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/datatables.css') }}">
 {% endblock %}

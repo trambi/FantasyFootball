@@ -37,8 +37,8 @@ class CoachType extends AbstractType
     {
         
         $editionId = $options['data']->getEdition();
-        $builder->add('teamName', TextType::class,array('label'=>'Nom de l\'équipe :','required' => false));
-        $builder->add('name', TextType::class,array('label'=>'Nom :'));
+        $builder->add('name', TextType::class,array('label'=>'Nom* :'));
+        $builder->add('teamName', TextType::class,array('label'=>'Nom de l\'équipe jouée par le coach:','required' => false));
         $builder->add('race', EntityType::class,
                 array('label'=>'Race :',
                       'class'   => 'FantasyFootballTournamentCoreBundle:Race',
@@ -49,7 +49,7 @@ class CoachType extends AbstractType
                                 return $rr->getQueryBuilderForRaceByEditionOrLesser($editionId);
                             }));
         $builder->add('email', EmailType::class, array('label'=>'Courriel :','required' => false));
-        $builder->add('nafNumber', IntegerType::class, array('label'=>'Numéro NAF :'));
+        $builder->add('nafNumber', IntegerType::class, array('label'=>'Numéro NAF* :'));
         $builder->add('ready', CheckboxType::class, array(
                 'label' => 'Coach prêt ?',
 		'required' => false))
