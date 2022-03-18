@@ -8,8 +8,7 @@
             "FantasyFootball\\TournamentAdminBundle\\": "src/FantasyFootball/TournamentAdminBundle"
         },
         "classmap": [
-            "app/AppKernel.php",
-            "app/AppCache.php"
+            "app/AppKernel.php"
         ]
     },
     "autoload-dev": {
@@ -51,7 +50,10 @@
     },
     "config": {
         "bin-dir": "bin",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+          "symfony/flex": true
+        }
     },
     "extra": {
         "symfony-app-dir": "app",
